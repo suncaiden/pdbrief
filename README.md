@@ -175,6 +175,26 @@ are ignored by the build.
 Adding a Markdown file to `content/pages/` publishes it at `/its-slug/`
 automatically. Add it to the `nav` list in `site.json` if you want it in the menu.
 
+### Questions and feedback from readers
+
+Set `feedback_form_url` in `site.json` to your Google Form address and three
+things switch on automatically:
+
+- a **/ask/** page explaining what readers can send, with the form on it
+- an **Ask a question** link in the footer
+- a short **invitation at the end of every issue**
+
+Leave it empty and all three disappear, with no broken links left behind.
+
+Use the long `docs.google.com/forms/d/e/.../viewform` address if you want the
+form shown inside the page. A `forms.gle` short link cannot be embedded, so it
+is shown as a button that opens the form in a new tab instead — the build tells
+you when it makes that choice. Set `feedback_embed` to `false` to always use the
+button, which avoids loading anything from Google onto your page.
+
+The page carries a standing note asking readers not to send medical questions,
+since answering those is outside what this publication can responsibly do.
+
 ### Newsletter signups
 
 Set `subscribe_url` in `site.json` to a Buttondown, Substack, Mailchimp, or

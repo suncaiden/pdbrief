@@ -837,9 +837,12 @@ def page_shell(cfg, content, title=None, description=None, path="/",
     footer_nav = "".join(
         '<a href="%s">%s</a>' % (item["href"], esc(item["label"]))
         for item in cfg.get("nav", []))
+    links = list(cfg.get("footer_links", []))
+    if cfg.get("feedback_form_url") and not any(l.get("href") == "/ask/" for l in links):
+        links.insert(0, {"label": "Ask a question", "href": "/ask/"})
     footer_links = "".join(
         '<a href="%s">%s</a>' % (item["href"], esc(item["label"]))
-        for item in cfg.get("footer_links", []))
+        for item in links)
     full_title = cfg["title"] if title is None else "%s | %s" % (title, cfg["title"])
     desc = description or cfg["description"]
     return render(
@@ -965,6 +968,107 @@ def build_home(cfg, issues):
     return page_shell(cfg, hero + what + recent + subscribe_block(cfg), path="/")
 
 
+def feedback_link(cfg):
+    """The address of the questions page, if one has been set up."""
+    return "/ask/" if cfg.get("feedback_form_url") else ""
+
+
+def ask_invitation(cfg):
+    """A short invitation shown at the end of each issue."""
+    if not cfg.get("feedback_form_url"):
+        return ""
+    return ('<aside class="ask-invite">'
+            '<h2 class="ask-invite-head">Something here unclear?</h2>'
+            '<p>If a part of this issue did not make sense, or you want to know more about '
+            'the study behind it, ask. Questions shape what gets covered and how it gets '
+            'explained &mdash; and asking one helps the next reader too.</p>'
+            '<a class="btn btn-primary" href="/ask/">Ask a question</a>'
+            '</aside>')
+
+
+def embeddable_form(url):
+    """Turn a Google Form link into one that can be shown inside the page.
+
+    Returns None when the address cannot be embedded, which is the case for
+    forms.gle short links -- those only work as ordinary links.
+    """
+    u = str(url or "").strip()
+    if "docs.google.com/forms" not in u:
+        return None
+    u = u.split("?")[0].rstrip("/")
+    if u.endswith("/edit") or "/d/e/" not in u:
+        return None
+    if not u.endswith("/viewform"):
+        u += "/viewform"
+    return u + "?embedded=true"
+
+
+def build_feedback_page(cfg):
+    url = cfg.get("feedback_form_url", "")
+    embed_url = embeddable_form(url) if cfg.get("feedback_embed", True) else None
+
+    if cfg.get("feedback_embed", True) and not embed_url:
+        warn("The feedback form cannot be shown inside the page, so it is linked instead. "
+             "For an embedded form use the full docs.google.com/forms/d/e/.../viewform "
+             "address rather than a forms.gle short link.")
+
+    if embed_url:
+        form_html = (
+            '<div class="form-frame">'
+            '<iframe src="%s" title="Questions and feedback form" '
+            'width="100%%" height="900" frameborder="0" marginheight="0" marginwidth="0" '
+            'loading="lazy">Loading the form&hellip;</iframe>'
+            '</div>'
+            '<p class="form-note">This form is hosted by Google, so opening this page '
+            'contacts Google&rsquo;s servers. If you would rather not, you can '
+            '<a href="%s" target="_blank" rel="noopener">open the form in a new tab</a> '
+            'instead, or write to us another way.</p>' % (esc(embed_url), esc(url)))
+    else:
+        form_html = (
+            '<div class="form-cta">'
+            '<a class="btn btn-primary btn-big" href="%s" target="_blank" rel="noopener">'
+            'Open the question form</a>'
+            '<p class="form-note">The form opens in a new tab and is hosted by Google.</p>'
+            '</div>' % esc(url))
+
+    content = """<div class="page-head"><div class="wrap wrap-narrow">
+      <h1>Ask a question</h1>
+      <p class="page-lede">If something in an issue did not make sense, or you want to know
+      more about a study, this is the place to say so. There is no such thing as a question
+      that is too basic &mdash; if something was unclear to you, it was probably unclear to
+      other readers too.</p>
+    </div></div>
+
+    <div class="wrap wrap-narrow ask-page">
+      <section class="ask-what">
+        <h2>What you can send</h2>
+        <ul class="ask-list">
+          <li><strong>A question about an issue.</strong> Which part lost you, and what you
+          were trying to understand.</li>
+          <li><strong>A study worth covering.</strong> A link or a title is enough.</li>
+          <li><strong>A correction.</strong> If something here is wrong, we want to know.
+          Corrections are published on the issue itself rather than quietly fixed.</li>
+          <li><strong>A term for the glossary.</strong> Any word you had to look up
+          elsewhere is a word that belongs in the glossary.</li>
+        </ul>
+      </section>
+
+      %s
+
+      <aside class="callout callout-caution">
+        <p class="callout-label">Please do not send medical questions</p>
+        <p>We cannot advise on anyone&rsquo;s treatment, symptoms, or medication, and we will
+        not try. Those questions belong with your neurologist or doctor, who knows your
+        history. What we can do is explain what a piece of research found.</p>
+      </aside>
+    </div>""" % form_html
+
+    return page_shell(cfg, content, title="Ask a question",
+                      description="Send a question, a correction, or a study worth covering "
+                                  "to %s." % cfg["title"],
+                      path="/ask/")
+
+
 def build_issue(cfg, it, prev_issue, next_issue):
     body_html, headings = markdown(it["body"])
 
@@ -1029,11 +1133,13 @@ def build_issue(cfg, it, prev_issue, next_issue):
   </div>
 
   <div class="wrap wrap-narrow">
+    %s
     <nav class="pager" aria-label="Other issues">%s%s</nav>
   </div>
 </article>""" % (it["number"], esc(it["title"]), esc(it["summary"]),
                  it["date"].isoformat(), pretty_date(it["date"]), it["reading_time"],
-                 topics_html, toc, body_html, paper_block(it["papers"]), nav_prev, nav_next)
+                 topics_html, toc, body_html, paper_block(it["papers"]),
+                 ask_invitation(cfg), nav_prev, nav_next)
 
     return page_shell(cfg, content, title=it["title"], description=it["summary"],
                       path=it["url"], og_type="article", body_class="page-issue",
@@ -1327,6 +1433,8 @@ def generate(check_only=False, quiet=False):
         emit("topics/%s/index.html" % slugify(topic), build_topic_page(cfg, topic, items))
 
     emit("glossary/index.html", build_glossary(cfg, glossary_entries))
+    if cfg.get("feedback_form_url"):
+        emit("ask/index.html", build_feedback_page(cfg))
     for page in pages:
         emit("%s/index.html" % page["slug"], build_static_page(cfg, page))
 
@@ -1339,6 +1447,8 @@ def generate(check_only=False, quiet=False):
     urls += [{"path": it["url"], "lastmod": it["date"].isoformat()} for it in issues]
     urls += [{"path": "/topics/%s/" % slugify(t)} for t in topics]
     urls += [{"path": "/%s/" % p["slug"]} for p in pages]
+    if cfg.get("feedback_form_url"):
+        urls.append({"path": "/ask/"})
     emit("sitemap.xml", build_sitemap(cfg, urls))
     emit("robots.txt", "User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n" % cfg["url"].rstrip("/"))
 

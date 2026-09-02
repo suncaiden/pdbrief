@@ -659,3 +659,41 @@ a.tag:hover { border-color: var(--accent-line); color: var(--accent-hover); }
   .prose a::after { content: " (" attr(href) ")"; font-size: 9pt; color: #555; }
   .gloss { text-decoration: none; }
 }
+
+/* --- Ask a question ----------------------------------------------------- */
+.ask-page { padding: 2.5rem 0 4rem; }
+.ask-what { margin-bottom: 2.5rem; }
+.ask-what h2 { font-size: 1.15em; margin-bottom: .8em; }
+.ask-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .9rem; }
+.ask-list li {
+  padding-left: 1.1rem; border-left: 3px solid var(--accent-line);
+  color: var(--text-soft); line-height: 1.6;
+}
+.ask-list strong { color: var(--text); }
+
+.form-frame {
+  border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden; background: var(--surface); margin-bottom: 1rem;
+}
+.form-frame iframe { display: block; width: 100%; border: 0; }
+.form-note { font-size: .87em; color: var(--muted); line-height: 1.6; margin: 0 0 2.5rem; }
+.form-cta {
+  text-align: center; padding: 2.5rem 1.5rem; margin-bottom: 2.5rem;
+  background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius);
+}
+.form-cta .form-note { margin: 1rem 0 0; }
+.btn-big { font-size: 1.05em; padding: .95rem 1.9rem; }
+
+/* The invitation at the foot of each issue */
+.ask-invite {
+  margin: 3rem 0 0; padding: 1.8rem; border-radius: var(--radius);
+  background: var(--accent-soft); border: 1px solid var(--accent-line); text-align: center;
+}
+.ask-invite-head {
+  font-family: var(--font-serif); font-size: 1.35em; font-weight: 600;
+  margin: 0 0 .5em; color: var(--text);
+}
+.ask-invite p {
+  color: var(--text-soft); max-width: 48ch; margin: 0 auto 1.4rem;
+  font-size: .97em; line-height: 1.6;
+}

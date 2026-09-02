@@ -11,31 +11,35 @@ no database, and nothing to keep patched.
 
 ## The weekly routine
 
-Three commands, once a week.
-
-**1. Start the issue**
-
-```bash
-python3 new-issue.py "Your headline goes here"
-```
-
-This creates `content/issues/2026-09-06-your-headline-goes-here.md`, dated to the
-next Saturday, pre-filled with the standard structure and marked `draft: true`
-so it stays off the live site while you work.
-
-**2. Write it, watching the result**
+**1. Open the writing desk**
 
 ```bash
 python3 build.py --serve
 ```
 
-Opens a preview at <http://localhost:8000>. Leave it running: every time you save
-the Markdown file, the site rebuilds within a second. Refresh the browser to see it.
-Editing `build.py` itself restarts the preview automatically.
+Then go to **<http://localhost:8000/admin/>**. That is the writing desk: a proper
+editor for PD Brief, running on your own Mac. You never have to open a text file
+or type any Markdown syntax.
 
-When the issue is ready, delete the `draft: true` line from the file.
+It gives you:
 
-**3. Publish**
+- **Real fields** for the headline, date, summary, topics, and each study's
+  citation — no raw frontmatter
+- **A toolbar** for bold, italic, links, headings, lists, quotations and tables
+- **One-click callout boxes** — Key takeaway, In plain terms, Important caution
+- **Define a term** — select a word, pick a glossary entry, and readers get a
+  tap-to-see definition. No syntax to remember.
+- **Insert structure** — drops in the standard section headings
+- **A live preview** on the right, rendered by the real site, so what you see is
+  exactly what readers get
+- **A Checks tab** that flags missing house sections, undefined glossary terms,
+  and whether the length is in range
+- **A draft switch** — an issue stays off the public site until you flip it
+
+Press **⌘S** or click Save. The file is written for you and the site rebuilds
+in about a second.
+
+**2. Publish**
 
 ```bash
 git add . && git commit -m "Issue 4: your headline" && git push
@@ -43,6 +47,16 @@ git add . && git commit -m "Issue 4: your headline" && git push
 
 GitHub rebuilds and deploys the site automatically. The live version updates in
 a minute or two.
+
+> The writing desk runs only on your own machine, from the preview server. It is
+> never copied into the built site, so it cannot be reached from the public web
+> and needs no password.
+
+### If you prefer plain files
+
+The desk just reads and writes ordinary Markdown, so nothing stops you editing
+the files directly. `python3 new-issue.py "Your headline"` scaffolds one, and the
+preview rebuilds on every save. The two approaches can be mixed freely.
 
 ---
 
@@ -137,6 +151,7 @@ are ignored by the build.
 | A brand new standing page | Add any `.md` file to `content/pages/` |
 | Colours, fonts, spacing | `assets/style.css` — the palette is at the very top |
 | Interface behaviour | `assets/site.js` |
+| The writing desk | `admin.py` and `admin/` — local only, never published |
 
 Adding a Markdown file to `content/pages/` publishes it at `/its-slug/`
 automatically. Add it to the `nav` list in `site.json` if you want it in the menu.
@@ -153,10 +168,10 @@ button. Leave it empty and the banner points at the RSS feed instead.
 
 | Command | What it does |
 | --- | --- |
-| `python3 build.py` | Build the site into `_site/` |
-| `python3 build.py --serve` | Build, preview at localhost:8000, rebuild on save |
+| `python3 build.py --serve` | **The one you want.** Preview at localhost:8000, writing desk at /admin/, rebuilds on save |
+| `python3 build.py` | Build the site into `_site/` once |
 | `python3 build.py --check` | Report problems without writing anything |
-| `python3 new-issue.py "Title"` | Scaffold a new issue |
+| `python3 new-issue.py "Title"` | Scaffold an issue file, if you'd rather not use the desk |
 
 `--check` is worth running before you push. It flags missing titles, unreadable
 dates, duplicate URLs, and glossary terms you used but never defined.

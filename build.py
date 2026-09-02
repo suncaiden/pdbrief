@@ -1384,7 +1384,8 @@ def generate(check_only=False, quiet=False):
 
 def watched_files():
     """Every source file whose modification should trigger a rebuild."""
-    paths = [os.path.join(ROOT, "site.json"), os.path.join(ROOT, "build.py")]
+    paths = [os.path.join(ROOT, "site.json"), os.path.join(ROOT, "build.py"),
+             os.path.join(ROOT, "admin.py")]
     for folder in (CONTENT, ASSETS):
         for dirpath, _dirs, names in os.walk(folder):
             for name in names:
@@ -1409,6 +1410,14 @@ def serve():
     import threading
     import time
 
+    # The writing desk is local-only: it is loaded here, never during a build,
+    # and nothing it serves is written into _site/.
+    try:
+        import admin
+    except Exception as exc:            # the site must still preview without it
+        admin = None
+        print("  (writing desk unavailable: %s)" % exc)
+
     port = 8000
     httpd = None
     while port < 8020:
@@ -1426,9 +1435,17 @@ def serve():
                     self.send_header("Cache-Control", "no-store")
                     super().end_headers()
 
+                def do_POST(self):
+                    path = self.path.split("?")[0]
+                    if admin and admin.handle_post(self, path):
+                        return
+                    self.send_error(404, "Not found")
+
                 def do_GET(self):
                     # Mirror GitHub Pages: clean URLs, and a real 404 page.
                     path = self.path.split("?")[0]
+                    if admin and admin.handle_get(self, path):
+                        return
                     target = os.path.join(OUT, path.lstrip("/"))
                     if (not os.path.exists(target) and not path.endswith("/")
                             and "." not in os.path.basename(path)):
@@ -1491,6 +1508,8 @@ def serve():
     threading.Thread(target=watcher, daemon=True).start()
 
     print("\n  Preview running at http://localhost:%d" % port)
+    if admin:
+        print("  Writing desk  at http://localhost:%d/admin/" % port)
     print("  Watching content/ and assets/ — edits rebuild automatically.")
     print("  Press Control-C to stop.\n")
     try:

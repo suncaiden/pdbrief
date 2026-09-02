@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en" data-theme="">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Writing desk — PD Brief</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/admin/editor.css">
+<script>(function(){try{var t=localStorage.getItem('pdb-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+</head>
+<body>
+
+<header class="desk-header">
+  <div class="desk-brand">
+    <span class="desk-mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M6 24c0-8 4-12 10-12s10 4 10 12"/><circle cx="16" cy="7" r="3"/>
+        <path d="M11 24v-5M16 24v-8M21 24v-5"/>
+      </svg>
+    </span>
+    <div>
+      <p class="desk-title">Writing desk</p>
+      <p class="desk-sub">PD Brief · on your Mac only</p>
+    </div>
+  </div>
+
+  <div class="desk-actions">
+    <span class="save-state" id="save-state">No changes</span>
+    <button class="dbtn" id="btn-theme" title="Light or dark">◐</button>
+    <a class="dbtn" id="btn-view" href="/" target="_blank" rel="noopener">View site ↗</a>
+    <button class="dbtn dbtn-primary" id="btn-save">Save</button>
+  </div>
+</header>
+
+<div class="desk">
+
+  <!-- ── Issue list ─────────────────────────────────────────────── -->
+  <aside class="desk-list" id="desk-list">
+    <div class="list-head">
+      <button class="dbtn dbtn-primary dbtn-wide" id="btn-new">+ New issue</button>
+    </div>
+    <div class="list-scroll" id="issue-list"></div>
+  </aside>
+
+  <!-- ── Editor ─────────────────────────────────────────────────── -->
+  <main class="desk-edit">
+    <div class="edit-scroll">
+
+      <section class="field-block">
+        <label class="fl" for="f-title">Headline</label>
+        <textarea id="f-title" class="fi fi-title" rows="2"
+                  placeholder="Plain language. No jargon."></textarea>
+        <p class="fh">This is what readers see first, on the homepage and in search results.</p>
+      </section>
+
+      <section class="field-row">
+        <div class="field-block">
+          <label class="fl" for="f-date">Publication date</label>
+          <input id="f-date" class="fi" type="date">
+        </div>
+        <div class="field-block">
+          <label class="fl" for="f-slug">Web address</label>
+          <div class="slug-wrap">
+            <span class="slug-prefix">/issues/</span>
+            <input id="f-slug" class="fi fi-slug" type="text" placeholder="auto from headline">
+          </div>
+        </div>
+      </section>
+
+      <section class="field-block">
+        <label class="fl" for="f-summary">Summary</label>
+        <textarea id="f-summary" class="fi" rows="3"
+                  placeholder="Two or three sentences a reader could take away on their own."></textarea>
+        <p class="fh">Appears on the homepage, in the archive, in the email feed, and in Google.
+          <span class="counter" id="summary-count"></span></p>
+      </section>
+
+      <section class="field-block">
+        <label class="fl">Topics</label>
+        <div class="chips" id="topic-chips"></div>
+        <div class="chip-add">
+          <input id="f-topic" class="fi" type="text" placeholder="Add a topic and press Enter"
+                 list="topic-options" autocomplete="off">
+          <datalist id="topic-options"></datalist>
+        </div>
+        <p class="fh">Topics build the pages that let readers follow one thread over time.</p>
+      </section>
+
+      <section class="field-block">
+        <div class="block-head">
+          <label class="fl">The study behind this issue</label>
+          <button class="dbtn dbtn-small" id="btn-add-paper">+ Add another study</button>
+        </div>
+        <div id="papers"></div>
+      </section>
+
+      <section class="field-block">
+        <div class="block-head">
+          <label class="fl" for="f-body">The issue</label>
+          <span class="counter" id="body-count"></span>
+        </div>
+
+        <div class="toolbar" id="toolbar">
+          <div class="tgroup">
+            <button class="tb" data-act="bold"    title="Bold (⌘B)"><b>B</b></button>
+            <button class="tb" data-act="italic"  title="Italic (⌘I)"><i>I</i></button>
+            <button class="tb" data-act="link"    title="Link (⌘K)">Link</button>
+          </div>
+          <div class="tgroup">
+            <button class="tb" data-act="h2" title="Section heading">H2</button>
+            <button class="tb" data-act="h3" title="Sub-heading">H3</button>
+            <button class="tb" data-act="ul" title="Bullet list">• List</button>
+            <button class="tb" data-act="ol" title="Numbered list">1. List</button>
+            <button class="tb" data-act="quote" title="Quotation">&ldquo; &rdquo;</button>
+            <button class="tb" data-act="table" title="Insert a table">Table</button>
+          </div>
+          <div class="tgroup">
+            <button class="tb tb-key"     data-act="key"     title="Key takeaway box">Key</button>
+            <button class="tb tb-plain"   data-act="plain"   title="In plain terms box">Plain</button>
+            <button class="tb tb-caution" data-act="caution" title="Important caution box">Caution</button>
+          </div>
+          <div class="tgroup">
+            <button class="tb tb-gloss" data-act="gloss" title="Explain a term to the reader">
+              Define a term
+            </button>
+          </div>
+          <div class="tgroup tgroup-end">
+            <button class="tb" id="btn-structure" title="House structure">Insert structure</button>
+          </div>
+        </div>
+
+        <textarea id="f-body" class="body-input" spellcheck="true"
+                  placeholder="Open with the finding in plain terms. Assume the reader knows nothing about the topic and has no obligation to keep reading."></textarea>
+      </section>
+
+      <section class="field-block danger-block">
+        <label class="switch">
+          <input type="checkbox" id="f-draft">
+          <span class="switch-track"><span class="switch-dot"></span></span>
+          <span class="switch-label">
+            <strong>Keep as a draft</strong>
+            <span>Hidden from the site until you switch this off.</span>
+          </span>
+        </label>
+        <button class="dbtn dbtn-danger" id="btn-delete">Delete this issue</button>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ── Live preview ───────────────────────────────────────────── -->
+  <aside class="desk-preview">
+    <div class="prev-tabs">
+      <button class="ptab is-active" data-panel="preview">Preview</button>
+      <button class="ptab" data-panel="checks">Checks <span class="badge" id="check-badge"></span></button>
+    </div>
+
+    <div class="prev-scroll" id="panel-preview">
+      <article class="prev-page">
+        <p class="prev-eyebrow" id="prev-meta">Draft</p>
+        <h1 class="prev-title" id="prev-title">Your headline appears here</h1>
+        <p class="prev-summary" id="prev-summary"></p>
+        <div class="prev-tags" id="prev-tags"></div>
+        <hr class="prev-rule">
+        <div class="prose" id="prev-body"></div>
+        <div id="prev-papers"></div>
+      </article>
+    </div>
+
+    <div class="prev-scroll" id="panel-checks" hidden>
+      <div class="checks">
+        <h3 class="checks-head">House structure</h3>
+        <p class="checks-note">The sections that make an issue readable years later.</p>
+        <ul class="check-list" id="structure-list"></ul>
+
+        <h3 class="checks-head">Things to look at</h3>
+        <ul class="check-list" id="warning-list"></ul>
+
+        <h3 class="checks-head">Length</h3>
+        <p class="checks-stat" id="length-stat"></p>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- Glossary picker -->
+<div class="modal" id="gloss-modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="gloss-modal-title">
+    <div class="modal-head">
+      <h2 id="gloss-modal-title">Explain a term</h2>
+      <button class="modal-x" id="gloss-cancel" aria-label="Close">&times;</button>
+    </div>
+    <p class="modal-note">The reader taps the word and sees your definition, without leaving the page.</p>
+    <input type="search" id="gloss-search" class="fi" placeholder="Search your glossary…" autocomplete="off">
+    <div class="gloss-results" id="gloss-results"></div>
+    <p class="modal-foot">Missing a term? Add it to <code>content/glossary.md</code> and it appears here.</p>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="/admin/editor.js"></script>
+</body>
+</html>

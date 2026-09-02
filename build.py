@@ -1507,6 +1507,17 @@ def serve():
 
     threading.Thread(target=watcher, daemon=True).start()
 
+    if "--open" in sys.argv:
+        # The port is only known once the socket is bound, so open the browser here.
+        def launch():
+            time.sleep(0.6)
+            try:
+                import webbrowser
+                webbrowser.open("http://localhost:%d/admin/" % port)
+            except Exception:
+                pass
+        threading.Thread(target=launch, daemon=True).start()
+
     print("\n  Preview running at http://localhost:%d" % port)
     if admin:
         print("  Writing desk  at http://localhost:%d/admin/" % port)

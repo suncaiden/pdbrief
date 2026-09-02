@@ -13,13 +13,24 @@ no database, and nothing to keep patched.
 
 **1. Open the writing desk**
 
+Double-click **Write PD Brief** on your Desktop.
+
+A small black window appears and your browser opens the writing desk. Leave that
+window open while you write; close it when you are done. That is the whole
+startup routine — there is nothing to type.
+
+If you would rather use a terminal:
+
 ```bash
-python3 build.py --serve
+cd ~/pdbrief && python3 build.py --serve
 ```
 
-Then go to **<http://localhost:8000/admin/>**. That is the writing desk: a proper
-editor for PD Brief, running on your own Mac. You never have to open a text file
-or type any Markdown syntax.
+Either way the writing desk is at **<http://localhost:8000/admin/>** and the site
+itself is at **<http://localhost:8000>**. Both live only on your Mac. Nobody else
+can reach them, and neither exists when the window is closed.
+
+The desk is a proper editor for PD Brief. You never open a text file or type any
+Markdown.
 
 It gives you:
 
@@ -176,7 +187,9 @@ button. Leave it empty and the banner points at the RSS feed instead.
 
 | Command | What it does |
 | --- | --- |
-| `python3 build.py --serve` | **The one you want.** Preview at localhost:8000, writing desk at /admin/, rebuilds on save |
+| Double-click `Write PD Brief.command` | **The one you want.** Starts everything and opens the writing desk |
+| `python3 build.py --serve` | The same thing, from a terminal |
+| `python3 build.py --serve --open` | As above, and opens the browser for you |
 | `python3 build.py` | Build the site into `_site/` once |
 | `python3 build.py --check` | Report problems without writing anything |
 | `python3 new-issue.py "Title"` | Scaffold an issue file, if you'd rather not use the desk |

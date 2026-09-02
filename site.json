@@ -1,0 +1,51 @@
+{
+  "title": "PD Brief",
+  "tagline": "Parkinson's research, explained plainly. One week at a time.",
+  "description": "PD Brief is an independent weekly summary of newly published Parkinson's disease research, written in clear, nontechnical language for patients, caregivers, students, and anyone following the field.",
+  "domain": "pdbrief.org",
+  "url": "https://pdbrief.org",
+  "author": "PD Brief",
+  "editor_name": "",
+  "contact_email": "",
+  "language": "en",
+  "founded_year": 2026,
+  "issues_per_page": 12,
+  "nav": [
+    {
+      "label": "Latest",
+      "href": "/"
+    },
+    {
+      "label": "Archive",
+      "href": "/archive/"
+    },
+    {
+      "label": "Topics",
+      "href": "/topics/"
+    },
+    {
+      "label": "Glossary",
+      "href": "/glossary/"
+    },
+    {
+      "label": "About",
+      "href": "/about/"
+    }
+  ],
+  "footer_links": [
+    {
+      "label": "How we read a study",
+      "href": "/how-we-read-a-study/"
+    },
+    {
+      "label": "Editorial policy",
+      "href": "/about/#policy"
+    },
+    {
+      "label": "RSS feed",
+      "href": "/feed.xml"
+    }
+  ],
+  "subscribe_url": "",
+  "subscribe_note": "Add your newsletter signup link in site.json to turn this into a working button."
+}

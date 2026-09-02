@@ -1,0 +1,14 @@
+# The built site. Rebuilt from content/ on every push by GitHub Actions,
+# so there is no reason to commit it.
+_site/
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# Editors
+.vscode/
+.idea/

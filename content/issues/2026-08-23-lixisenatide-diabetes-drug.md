@@ -1,8 +1,8 @@
 ---
 # VERIFY every number and citation below against the original paper before publishing.
 title: "A diabetes drug that seemed to slow Parkinson's down"
-date: 2026-08-23
-slug: lixisenatide-diabetes-drug
+date: "2026-08-23"
+slug: "lixisenatide-diabetes-drug"
 summary: "In a year-long French trial, people with early Parkinson's who took the diabetes drug lixisenatide did not get worse, while those on placebo did. The gap was small, the side effects were not, and the result raised more questions than it settled."
 topics: [Clinical Trials, Drug Repurposing, Disease Modification]
 papers:
@@ -40,7 +40,7 @@ The {{primary endpoint}} was the change in the motor examination portion of the 
 
 ## What they found
 
-| | Lixisenatide | Placebo |
+|   | Lixisenatide | Placebo |
 | --- | --- | --- |
 | Change in motor score over 12 months | roughly no change | worse by about 3 points |
 | Nausea | around 46% of participants | uncommon |

@@ -47,8 +47,24 @@ def _quote(value):
     return '"%s"' % s
 
 
-def to_frontmatter(meta):
+def existing_comments(path):
+    """Comment lines a writer put in the frontmatter, so saving never eats them."""
+    if not path or not os.path.exists(path):
+        return []
+    with open(path, encoding="utf-8") as f:
+        text = f.read().replace("\r\n", "\n")
+    if not text.startswith("---"):
+        return []
+    end = text.find("\n---", 3)
+    if end == -1:
+        return []
+    return [ln for ln in text[3:end].split("\n") if ln.strip().startswith("#")]
+
+
+def to_frontmatter(meta, comments=None):
     lines = ["---"]
+    for line in (comments or []):
+        lines.append(line.rstrip())
     for key in ("title", "date", "slug", "summary"):
         if meta.get(key) not in (None, ""):
             lines.append("%s: %s" % (key, _quote(meta[key])))
@@ -225,7 +241,8 @@ def save_issue(payload):
                     "An issue file named %s already exists. Change the title, the date, "
                     "or the URL slug." % name}
 
-    text = to_frontmatter(meta) + "\n\n" + body.strip() + "\n"
+    keep = existing_comments(old_path if (old_path and os.path.exists(old_path)) else path)
+    text = to_frontmatter(meta, keep) + "\n\n" + body.strip() + "\n"
     with open(path, "w", encoding="utf-8") as f:
         f.write(text)
 

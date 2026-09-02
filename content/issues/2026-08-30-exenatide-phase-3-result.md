@@ -2,8 +2,8 @@
 # VERIFY every number and citation below against the original paper before publishing.
 # The DOI for this trial was not confirmed -- look it up and fill it in before going live.
 title: "The bigger trial arrived, and the answer was no"
-date: 2026-08-30
-slug: exenatide-phase-3-result
+date: "2026-08-30"
+slug: "exenatide-phase-3-result"
 summary: "A large, long, carefully run trial of exenatide — the GLP-1 drug the field had pinned real hope on — found no benefit at all in Parkinson's. It is a disappointing result, and a useful lesson in why small promising trials are not enough."
 topics: [Clinical Trials, Drug Repurposing, Disease Modification]
 papers:
@@ -58,7 +58,7 @@ If you or someone you care for is taking a GLP-1 drug for diabetes or weight man
 
 ## Reading the two trials together
 
-| | Lixisenatide (France, 2024) | Exenatide (UK, 2025) |
+|   | Lixisenatide (France, 2024) | Exenatide (UK, 2025) |
 | --- | --- | --- |
 | Participants | about 156 | about 194 |
 | Duration | 12 months | 96 weeks |

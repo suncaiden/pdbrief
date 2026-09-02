@@ -24,37 +24,37 @@
     </span>
     <div>
       <p class="desk-title">Writing desk</p>
-      <p class="desk-sub">PD Brief · on your Mac only</p>
+      <p class="desk-sub">PD Brief, on your Mac only</p>
     </div>
   </div>
 
   <div class="desk-actions">
-    <span class="save-state" id="save-state">No changes</span>
-    <button class="dbtn" id="btn-theme" title="Light or dark">◐</button>
-    <a class="dbtn" id="btn-view" href="/" target="_blank" rel="noopener">View site ↗</a>
+    <span class="save-state" id="save-state">No changes yet</span>
+    <button class="dbtn" id="btn-theme" title="Switch between light and dark">
+      <span aria-hidden="true">◐</span><span class="sr-only">Switch theme</span>
+    </button>
+    <a class="dbtn" id="btn-view" href="/" target="_blank" rel="noopener">Open the site</a>
     <button class="dbtn dbtn-primary" id="btn-save">Save</button>
   </div>
 </header>
 
 <div class="desk">
 
-  <!-- ── Issue list ─────────────────────────────────────────────── -->
-  <aside class="desk-list" id="desk-list">
+  <aside class="desk-list">
     <div class="list-head">
-      <button class="dbtn dbtn-primary dbtn-wide" id="btn-new">+ New issue</button>
+      <button class="dbtn dbtn-primary dbtn-wide" id="btn-new">Start a new issue</button>
     </div>
     <div class="list-scroll" id="issue-list"></div>
   </aside>
 
-  <!-- ── Editor ─────────────────────────────────────────────────── -->
   <main class="desk-edit">
     <div class="edit-scroll">
 
       <section class="field-block">
         <label class="fl" for="f-title">Headline</label>
         <textarea id="f-title" class="fi fi-title" rows="2"
-                  placeholder="Plain language. No jargon."></textarea>
-        <p class="fh">This is what readers see first, on the homepage and in search results.</p>
+                  placeholder="Say what happened, in plain language"></textarea>
+        <p class="fh">The first thing a reader sees, on the homepage and in search results.</p>
       </section>
 
       <section class="field-row">
@@ -64,77 +64,94 @@
         </div>
         <div class="field-block">
           <label class="fl" for="f-slug">Web address</label>
-          <div class="slug-wrap">
-            <span class="slug-prefix">/issues/</span>
-            <input id="f-slug" class="fi fi-slug" type="text" placeholder="auto from headline">
-          </div>
+          <input id="f-slug" class="fi" type="text" placeholder="taken from the headline">
+          <p class="fh" id="slug-preview">Readers will find this issue at pdbrief.org/issues/…</p>
         </div>
       </section>
 
       <section class="field-block">
         <label class="fl" for="f-summary">Summary</label>
         <textarea id="f-summary" class="fi" rows="3"
-                  placeholder="Two or three sentences a reader could take away on their own."></textarea>
-        <p class="fh">Appears on the homepage, in the archive, in the email feed, and in Google.
+                  placeholder="Two or three sentences a reader could take away on their own"></textarea>
+        <p class="fh">Shown on the homepage, in the archive, in the feed, and in Google.
           <span class="counter" id="summary-count"></span></p>
       </section>
 
       <section class="field-block">
-        <label class="fl">Topics</label>
+        <label class="fl" for="f-topic">Topics</label>
         <div class="chips" id="topic-chips"></div>
-        <div class="chip-add">
-          <input id="f-topic" class="fi" type="text" placeholder="Add a topic and press Enter"
-                 list="topic-options" autocomplete="off">
-          <datalist id="topic-options"></datalist>
-        </div>
-        <p class="fh">Topics build the pages that let readers follow one thread over time.</p>
+        <input id="f-topic" class="fi" type="text" placeholder="Type a topic, then press Return"
+               list="topic-options" autocomplete="off">
+        <datalist id="topic-options"></datalist>
+        <p class="fh">Topics build the pages that let a reader follow one thread across months.</p>
       </section>
 
       <section class="field-block">
         <div class="block-head">
           <label class="fl">The study behind this issue</label>
-          <button class="dbtn dbtn-small" id="btn-add-paper">+ Add another study</button>
+          <button class="dbtn dbtn-small" id="btn-add-paper">Add another study</button>
         </div>
         <div id="papers"></div>
       </section>
 
       <section class="field-block">
         <div class="block-head">
-          <label class="fl" for="f-body">The issue</label>
+          <label class="fl">The issue</label>
           <span class="counter" id="body-count"></span>
         </div>
 
         <div class="toolbar" id="toolbar">
-          <div class="tgroup">
-            <button class="tb" data-act="bold"    title="Bold (⌘B)"><b>B</b></button>
-            <button class="tb" data-act="italic"  title="Italic (⌘I)"><i>I</i></button>
-            <button class="tb" data-act="link"    title="Link (⌘K)">Link</button>
-          </div>
-          <div class="tgroup">
-            <button class="tb" data-act="h2" title="Section heading">H2</button>
-            <button class="tb" data-act="h3" title="Sub-heading">H3</button>
-            <button class="tb" data-act="ul" title="Bullet list">• List</button>
-            <button class="tb" data-act="ol" title="Numbered list">1. List</button>
-            <button class="tb" data-act="quote" title="Quotation">&ldquo; &rdquo;</button>
-            <button class="tb" data-act="table" title="Insert a table">Table</button>
-          </div>
-          <div class="tgroup">
-            <button class="tb tb-key"     data-act="key"     title="Key takeaway box">Key</button>
-            <button class="tb tb-plain"   data-act="plain"   title="In plain terms box">Plain</button>
-            <button class="tb tb-caution" data-act="caution" title="Important caution box">Caution</button>
-          </div>
-          <div class="tgroup">
-            <button class="tb tb-gloss" data-act="gloss" title="Explain a term to the reader">
-              Define a term
-            </button>
-          </div>
-          <div class="tgroup tgroup-end">
-            <button class="tb" id="btn-structure" title="House structure">Insert structure</button>
+          <label class="sr-only" for="style-select">Paragraph style</label>
+          <select class="style-select" id="style-select">
+            <option value="p">Body text</option>
+            <option value="h2">Section heading</option>
+            <option value="h3">Smaller heading</option>
+            <option value="ul">Bulleted list</option>
+            <option value="ol">Numbered list</option>
+            <option value="blockquote">Quotation</option>
+          </select>
+
+          <span class="tsep" aria-hidden="true"></span>
+
+          <button class="tb" data-act="bold" title="Bold (⌘B)"><b>Bold</b></button>
+          <button class="tb" data-act="italic" title="Italic (⌘I)"><i>Italic</i></button>
+          <button class="tb" data-act="link" title="Add a link (⌘K)">Link</button>
+
+          <span class="tsep" aria-hidden="true"></span>
+
+          <button class="tb tb-accent" data-act="term" title="Let readers tap a word for its meaning">
+            Explain a word
+          </button>
+
+          <span class="tsep" aria-hidden="true"></span>
+
+          <div class="tmenu">
+            <button class="tb" id="btn-insert" aria-expanded="false">Insert</button>
+            <div class="tmenu-pop" id="insert-menu" hidden>
+              <button class="tmi" data-act="key">
+                <strong>Key takeaway</strong><span>The one thing to remember</span>
+              </button>
+              <button class="tmi" data-act="plain">
+                <strong>In plain terms</strong><span>A closing summary anyone could repeat</span>
+              </button>
+              <button class="tmi" data-act="caution">
+                <strong>Important caution</strong><span>Warn against over-reading the result</span>
+              </button>
+              <div class="tmenu-rule"></div>
+              <button class="tmi" data-act="table">
+                <strong>Comparison table</strong><span>Set two groups side by side</span>
+              </button>
+              <button class="tmi" data-act="structure">
+                <strong>The standard sections</strong><span>Add the six headings every issue uses</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        <textarea id="f-body" class="body-input" spellcheck="true"
-                  placeholder="Open with the finding in plain terms. Assume the reader knows nothing about the topic and has no obligation to keep reading."></textarea>
+        <div class="compose" id="compose" contenteditable="true" spellcheck="true"
+             role="textbox" aria-multiline="true" aria-label="The issue"></div>
+        <p class="fh compose-hint">Everything you write here appears on the right exactly as readers
+          will see it. Select a word and choose <em>Explain a word</em> to give it a definition.</p>
       </section>
 
       <section class="field-block danger-block">
@@ -142,8 +159,8 @@
           <input type="checkbox" id="f-draft">
           <span class="switch-track"><span class="switch-dot"></span></span>
           <span class="switch-label">
-            <strong>Keep as a draft</strong>
-            <span>Hidden from the site until you switch this off.</span>
+            <strong>Keep this as a draft</strong>
+            <span>Nobody can see it until you switch this off.</span>
           </span>
         </label>
         <button class="dbtn dbtn-danger" id="btn-delete">Delete this issue</button>
@@ -152,11 +169,10 @@
     </div>
   </main>
 
-  <!-- ── Live preview ───────────────────────────────────────────── -->
   <aside class="desk-preview">
     <div class="prev-tabs">
-      <button class="ptab is-active" data-panel="preview">Preview</button>
-      <button class="ptab" data-panel="checks">Checks <span class="badge" id="check-badge"></span></button>
+      <button class="ptab is-active" data-panel="preview">How it will look</button>
+      <button class="ptab" data-panel="checks">Before you publish <span class="badge" id="check-badge"></span></button>
     </div>
 
     <div class="prev-scroll" id="panel-preview">
@@ -173,11 +189,11 @@
 
     <div class="prev-scroll" id="panel-checks" hidden>
       <div class="checks">
-        <h3 class="checks-head">House structure</h3>
-        <p class="checks-note">The sections that make an issue readable years later.</p>
+        <h3 class="checks-head">The sections every issue has</h3>
+        <p class="checks-note">These are what make an issue still readable years from now.</p>
         <ul class="check-list" id="structure-list"></ul>
 
-        <h3 class="checks-head">Things to look at</h3>
+        <h3 class="checks-head">Worth a look</h3>
         <ul class="check-list" id="warning-list"></ul>
 
         <h3 class="checks-head">Length</h3>
@@ -187,18 +203,24 @@
   </aside>
 </div>
 
-<!-- Glossary picker -->
 <div class="modal" id="gloss-modal" hidden>
   <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="gloss-modal-title">
     <div class="modal-head">
-      <h2 id="gloss-modal-title">Explain a term</h2>
+      <h2 id="gloss-modal-title">Explain a word</h2>
       <button class="modal-x" id="gloss-cancel" aria-label="Close">&times;</button>
     </div>
-    <p class="modal-note">The reader taps the word and sees your definition, without leaving the page.</p>
-    <input type="search" id="gloss-search" class="fi" placeholder="Search your glossary…" autocomplete="off">
+    <p class="modal-note">Readers tap the word and see your definition without leaving the page.</p>
+    <input type="search" id="gloss-search" class="fi" placeholder="Search your glossary" autocomplete="off">
     <div class="gloss-results" id="gloss-results"></div>
-    <p class="modal-foot">Missing a term? Add it to <code>content/glossary.md</code> and it appears here.</p>
+    <p class="modal-foot">Missing a word? Add it to your glossary and it will appear here.</p>
   </div>
+</div>
+
+<div class="linkbar" id="linkbar" hidden>
+  <input type="url" id="link-input" class="fi" placeholder="Paste or type a web address">
+  <button class="dbtn dbtn-primary dbtn-small" id="link-apply">Add link</button>
+  <button class="dbtn dbtn-small" id="link-remove">Remove</button>
+  <button class="dbtn dbtn-small" id="link-cancel">Cancel</button>
 </div>
 
 <div class="toast" id="toast" hidden></div>

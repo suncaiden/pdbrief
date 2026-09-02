@@ -25,16 +25,24 @@ It gives you:
 
 - **Real fields** for the headline, date, summary, topics, and each study's
   citation — no raw frontmatter
-- **A toolbar** for bold, italic, links, headings, lists, quotations and tables
-- **One-click callout boxes** — Key takeaway, In plain terms, Important caution
-- **Define a term** — select a word, pick a glossary entry, and readers get a
-  tap-to-see definition. No syntax to remember.
-- **Insert structure** — drops in the standard section headings
+- **A visual writing surface.** Headings look like headings, callouts look like
+  callouts, tables are real tables you type into. You never see `##`, `:::`,
+  or any other markup.
+- **A style menu** — Body text, Section heading, Smaller heading, Bulleted list,
+  Numbered list, Quotation
+- **An Insert menu** for the Key takeaway, In plain terms and Important caution
+  boxes, comparison tables, and the six standard section headings
+- **Explain a word** — select a word, pick a glossary entry, and readers get a
+  tap-to-see definition. Click an explained word again to change or remove it.
 - **A live preview** on the right, rendered by the real site, so what you see is
   exactly what readers get
-- **A Checks tab** that flags missing house sections, undefined glossary terms,
+- **A checks panel** that flags missing house sections, undefined glossary terms,
   and whether the length is in range
 - **A draft switch** — an issue stays off the public site until you flip it
+
+Under the hood it still reads and writes ordinary Markdown files, so nothing is
+locked in. Opening an issue and saving it again leaves the file semantically
+identical, and anything the editor does not recognise is preserved untouched.
 
 Press **⌘S** or click Save. The file is written for you and the site rebuilds
 in about a second.

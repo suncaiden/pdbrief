@@ -1,9 +1,9 @@
 ---
-# VERIFY every number and citation below against the original paper before publishing.
+# Figures verified against the paper (PMC10627170) on 2 September 2026.
 title: "A spinal fluid test that spots Parkinson's before the symptoms"
 date: "2026-08-16"
 slug: "spinal-fluid-test-parkinsons"
-summary: "A test that detects misfolded alpha-synuclein in spinal fluid identified Parkinson's in about 88% of people who had it — and flagged many who had not yet been diagnosed. It is the closest the field has come to a biological test for the disease."
+summary: "A test that detects misfolded alpha-synuclein in spinal fluid identified Parkinson's in 88% of people who had it, and was positive in most people who had warning signs but no diagnosis. It is the closest the field has come to a biological test for the disease."
 topics: [Biomarkers, Diagnosis, Early Detection]
 papers:
   - title: "Assessment of heterogeneity among participants in the Parkinson's Progression Markers Initiative cohort using alpha-synuclein seed amplification: a cross-sectional study"
@@ -19,7 +19,7 @@ For sixty years, diagnosing {{Parkinson's disease|Parkinson's}} has come down to
 This study is a serious attempt to change that. Researchers ran a laboratory test on {{cerebrospinal fluid}} from more than a thousand people and asked a simple question: can we detect the disease itself, rather than the symptoms it causes?
 
 :::key
-The test correctly identified around 88% of people already diagnosed with Parkinson's, and was negative in about 96% of healthy volunteers. More strikingly, it was positive in many people who had warning signs but no diagnosis — suggesting it can see the disease coming.
+The test correctly identified 87.7% of people already diagnosed with Parkinson's, and was negative in 96.3% of healthy volunteers. In a small group who had warning signs but no diagnosis, 44 of 51 tested positive — suggesting it can see the disease coming.
 :::
 
 ## What the researchers were trying to find out
@@ -34,7 +34,7 @@ The question was whether this worked reliably enough, in enough people, to be us
 
 The team used samples from the Parkinson's Progression Markers Initiative, a long-running international study that has been collecting fluid, scans, and clinical data from the same participants for years. That backdrop matters: these were not anonymous samples, but people whose diagnoses and symptoms were documented in detail.
 
-They ran the assay on more than 1,100 participants across several groups:
+They ran the assay on 1,123 participants, of whom 1,104 gave a clear result, across several groups:
 
 - people with a clinical diagnosis of Parkinson's
 - healthy volunteers of similar age
@@ -47,17 +47,20 @@ Each sample was scored positive or negative, and the results were compared again
 
 | Group tested | Share who tested positive |
 | --- | --- |
-| Diagnosed Parkinson's, overall | about 88% |
-| Diagnosed Parkinson's, with reduced sense of smell | about 99% |
-| Healthy volunteers | about 4% |
-| Carriers of LRRK2 variants with Parkinson's | about 68% |
-| People with prodromal warning signs, no diagnosis | about 85% |
+| Diagnosed Parkinson's, overall | 87.7% |
+| Diagnosed Parkinson's, with reduced sense of smell | 98.6% |
+| Healthy volunteers | 3.7% |
+| Carriers of LRRK2 variants with Parkinson's | 67.5% |
+| Warning signs but no diagnosis | 86% (44 of 51) |
+| Gene carriers with no symptoms at all | 8% (25 of 310) |
 
 Three things stand out.
 
-**The test is accurate in typical Parkinson's.** For people with the usual presentation — particularly those who had also lost their sense of smell — it was positive almost every time. Very few healthy volunteers tested positive.
+**The test is accurate in typical Parkinson's.** For people with the usual presentation — particularly those who had also lost their sense of smell — it was positive 98.6% of the time. Fewer than four in a hundred healthy volunteers tested positive.
 
-**It sees the disease before diagnosis.** Most of the people with warning signs but no formal diagnosis tested positive. Their brains already contained the biological signature. Nothing about their symptoms yet met the bar for a diagnosis.
+**It sees the disease before diagnosis, but only once warning signs have started.** Of 51 people who had {{REM sleep behaviour disorder}} or a lost sense of smell without a diagnosis, 44 tested positive. Their brains already carried the biological signature.
+
+That is different from simply carrying a risky gene. Among 310 people who had a Parkinson's-linked gene variant but no symptoms of any kind, only 25 — 8% — tested positive. The assay is not a crystal ball for anyone with a family history. It appears to turn positive somewhere between carrying risk and showing the first subtle signs, which makes *when* it flips the interesting question.
 
 **Genetic Parkinson's behaves differently.** Roughly a third of people with LRRK2-related Parkinson's tested negative despite having the disease. That is not a flaw in the test so much as a finding in its own right: it suggests some people arrive at Parkinson's through a route that does not involve the same alpha-synuclein clumping. "Parkinson's disease" may turn out to be several biologically distinct conditions wearing similar clothes.
 
@@ -80,6 +83,8 @@ This was a {{cohort study}} carried out at a single point in time, not a trial. 
 It does not measure severity or predict speed. A positive result says misfolded protein is present. It does not say how fast anyone will progress, or how badly they will be affected.
 
 It does not prove the prodromal participants will all develop Parkinson's. They have the biological marker and known warning signs. Following them forward over years is the only way to learn what share actually convert, and how long it takes.
+
+And that group was small. Fifty-one people is enough to be interesting and not enough to be certain: shift a handful of results either way and 86% becomes 78% or 94%. The headline number deserves less weight than the direction it points in.
 
 And it does not yet work outside a research setting. The people running these assays were specialists using standardised samples. Reproducing that in ordinary hospital laboratories is a separate undertaking.
 

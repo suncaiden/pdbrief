@@ -149,3 +149,11 @@ A progressive condition in which nerve cells that produce dopamine gradually die
 ## Drug repurposing
 
 Testing a medicine already approved for one condition to see whether it helps with another. Because the drug's safety is already established in large numbers of people, repurposing can move faster and cost far less than developing something new from scratch.
+
+## Expression of concern
+
+A public notice a journal attaches to a paper when a serious question has been raised about it but the investigation is not finished. It is not a retraction and it does not mean the findings are wrong; it means readers should know the paper is under review before relying on it. If the concern is resolved the notice is withdrawn, and if it is not the paper may be corrected or retracted.
+
+## Good clinical practice
+
+The international rules governing how clinical trials must be run: how consent is taken, how data is recorded and checked, and who is accountable for each step. Regulators inspect trial sites against these rules. Findings are graded, and a "critical" finding means a problem serious enough to put participants' rights or the reliability of the data in question.

@@ -1,5 +1,5 @@
 ---
-# VERIFY every number and citation below against the original paper before publishing.
+# Figures verified against the paper (NEJM 2024;390:1176-1185) on 2 September 2026.
 title: "A diabetes drug that seemed to slow Parkinson's down"
 date: "2026-08-23"
 slug: "lixisenatide-diabetes-drug"
@@ -19,7 +19,7 @@ Every medicine currently prescribed for Parkinson's treats the symptoms. {{Levod
 This trial tested an unlikely candidate: a drug developed for type 2 diabetes.
 
 :::key
-After 12 months, people taking lixisenatide showed essentially no worsening in their motor symptoms, while the placebo group declined by about 3 points on the standard rating scale. It is a genuine signal. It is also a small one, in a modest trial, bought at the cost of considerable nausea.
+After 12 months, people taking lixisenatide showed essentially no worsening in their motor symptoms (a change of −0.04 points), while the placebo group declined by 3.04 points on the standard rating scale. It is a genuine signal. It is also a small one, in a modest trial, bought at the cost of considerable nausea.
 :::
 
 ## Why a diabetes drug?
@@ -32,7 +32,7 @@ The logic of {{drug repurposing|repurposing}} is straightforward: these drugs ar
 
 ## What they did
 
-The trial enrolled roughly 156 people with Parkinson's diagnosed within the previous three years, across a network of hospitals in France. Participants were {{randomised controlled trial|randomly assigned}} to a daily injection of lixisenatide or a matching placebo injection, and neither they nor the assessing doctors knew which was which — a {{blinding|double-blind}} design.
+The trial enrolled 156 people with Parkinson's diagnosed within the previous three years, across a network of hospitals in France, with 78 assigned to each group. Participants were {{randomised controlled trial|randomly assigned}} to a daily injection of lixisenatide or a matching placebo injection, and neither they nor the assessing doctors knew which was which — a {{blinding|double-blind}} design.
 
 Everyone stayed on their normal Parkinson's medication throughout. The trial ran for 12 months, followed by a two-month washout period in which everyone stopped the trial drug.
 
@@ -48,9 +48,11 @@ The {{primary endpoint}} was the change in the motor examination portion of the 
 
 The headline is the first row. The placebo group followed the expected trajectory for early Parkinson's: gradual worsening over the year. The lixisenatide group did not measurably worsen at all.
 
-The difference of roughly 3 points was {{statistical significance|statistically significant}}. After the two-month washout, when nobody was taking the study drug, the gap between the groups was still visible — a detail that matters, because it hints the drug had done something lasting rather than simply masking symptoms while it was in the bloodstream.
+The difference of 3.08 points was {{statistical significance|statistically significant}} (95% confidence interval 0.86 to 5.30, p=0.007).
 
-The side effects were not incidental. Close to half the treatment group experienced nausea, and roughly one in eight vomited. Some participants needed their dose reduced.
+After the two-month washout, when nobody had taken the study drug for eight weeks, the gap was still visible: motor scores off medication were 17.7 in the lixisenatide group against 20.6 on placebo. That detail matters, because it hints the drug had done something lasting rather than simply masking symptoms while it was in the bloodstream. But the {{confidence interval}} on that washout difference runs from 0.1 to 5.8 — it only just excludes zero, and a range that wide is consistent with an effect that is real and large, or real and negligible.
+
+The side effects were not incidental. Nearly half the treatment group experienced nausea against 12% on placebo, and 13% vomited against 3%. Some participants needed their dose reduced.
 
 ## Why it matters
 
@@ -72,7 +74,7 @@ Nothing here supports asking your doctor for a GLP-1 drug to treat Parkinson's. 
 
 **Whether the tolerability is workable.** A trial can support participants through nausea with close monitoring. Sustaining a daily injection with that side-effect profile for years, in ordinary life, is a different proposition.
 
-**Whether it holds up at scale.** 156 participants is a reasonable {{phase 2 trial}}. It is not a {{phase 3 trial}}. The history of Parkinson's research is full of promising mid-size trials that did not survive a larger one.
+**Whether it holds up at scale.** 156 participants is a reasonable {{phase 2 trial}}. It is not a {{phase 3 trial}}. The history of Parkinson's research is full of promising mid-size trials that did not survive a larger one — as next week's issue shows.
 
 ## What to watch next
 

@@ -60,12 +60,14 @@ in about a second.
 
 **2. Publish**
 
-```bash
-git add . && git commit -m "Issue 4: your headline" && git push
-```
+Open **GitHub Desktop**. Your changes are listed on the left. Type a short note
+in the Summary box — "Issue 4" is fine — click **Commit to main**, then
+**Push origin**.
 
 GitHub rebuilds and deploys the site automatically. The live version updates in
 a minute or two.
+
+From a terminal instead: `git add . && git commit -m "Issue 4" && git push`
 
 > The writing desk runs only on your own machine, from the preview server. It is
 > never copied into the built site, so it cannot be reached from the public web
@@ -232,7 +234,7 @@ Every build regenerates `_site/` from scratch:
 - `sitemap.xml` and `robots.txt` for search engines
 - Structured data on each issue so Google understands what it is
 - A `404.html` that suggests recent issues
-- `CNAME`, so the custom domain survives every deploy
+- `CNAME`, which only matters if you ever switch to deploying from a branch
 
 `_site/` is deliberately not committed to git — GitHub rebuilds it on every push.
 
@@ -242,37 +244,32 @@ Every build regenerates `_site/` from scratch:
 
 Do this once.
 
-**1. Create the repository**
+**1. Make a GitHub account** at <https://github.com/signup> if you don't have one.
 
-Go to <https://github.com/new>. Name it `pdbrief` (or anything). Public. Do not
-add a README, `.gitignore`, or licence — this folder already has what it needs.
+**2. Install GitHub Desktop** from <https://desktop.github.com> and sign in with
+that account. It handles your login and your git identity for you, so there is
+no terminal setup and no access token to create.
 
-**2. Push this folder**
+**3. Add this folder.** File → Add Local Repository → choose the `pdbrief` folder
+in your home folder.
 
-```bash
-git init -b main
-git add .
-git commit -m "PD Brief: initial site"
-git remote add origin https://github.com/YOUR-USERNAME/pdbrief.git
-git push -u origin main
-```
+**4. Publish it.** Click **Publish repository**. Name it `pdbrief`, and
+**untick "Keep this code private"** — GitHub Pages is free only for public
+repositories. Click Publish.
 
-**3. Turn on Pages**
+**5. Turn on Pages.** On github.com, open the repository → **Settings → Pages →
+Build and deployment → Source**, and choose **GitHub Actions**. Not "Deploy from
+a branch".
 
-In the repository: **Settings → Pages → Build and deployment → Source**, and
-choose **GitHub Actions**. Not "Deploy from a branch" — the workflow in
-`.github/workflows/deploy.yml` handles it.
+**6. Re-run the first build.** The **Actions** tab will show a red failed run.
+That is expected: it ran the moment you published, before Pages was switched on.
+Open it and click **Re-run all jobs**. When it goes green, the site is live at
+`https://YOUR-USERNAME.github.io/pdbrief/` until the domain is connected.
 
-**4. Watch the first build**
-
-The **Actions** tab shows the build running. When it goes green, the site is live
-at `https://YOUR-USERNAME.github.io/pdbrief/` until the domain is connected.
-
-From then on, every `git push` to `main` republishes the site. You can also add
-or edit an issue directly on github.com — press `.` in the repository to open a
-web editor — and it deploys the same way. That works from a phone.
-
----
+From then on, every push to `main` republishes the site. You can also edit an
+issue directly on github.com — press `.` in the repository for a web editor — and
+it deploys the same way. If you do, click **Fetch origin** in GitHub Desktop before
+you next write on your Mac, so the two stay in step.
 
 ## Connecting pdbrief.org from GoDaddy
 
@@ -314,9 +311,10 @@ It should already say:
 "url": "https://pdbrief.org"
 ```
 
-`domain` is what writes the `CNAME` file into every build, which is what stops
-GitHub forgetting the custom domain. `url` is used for the RSS feed, the sitemap,
-and social preview links — it must be the real, final address.
+`url` is used for the RSS feed, the sitemap, and social preview links — it must
+be the real, final address. The custom domain itself is stored in the repository's
+Pages settings, not in any file: because this site deploys through GitHub Actions,
+GitHub ignores the `CNAME` file the build writes.
 
 ### If the domain doesn't work
 
@@ -325,8 +323,8 @@ and social preview links — it must be the real, final address.
   `A`, and confirm the four GitHub addresses appear.
 - **"Domain does not resolve to the GitHub Pages server"** means GoDaddy's
   original parked records are still there. Delete them.
-- **The custom domain empties itself** if the `CNAME` file goes missing from a
-  build. `site.json` prevents that, so make sure `domain` stays set.
+- **The custom domain field is empty again.** Re-enter `pdbrief.org` under
+  Settings → Pages. With Actions deploys the setting lives there, not in a file.
 
 ---
 

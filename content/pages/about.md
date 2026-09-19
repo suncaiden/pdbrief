@@ -57,4 +57,4 @@ Anyone who wants to check the reasoning should follow the links to the source pa
 
 ## Get in touch
 
-Corrections, questions, and suggestions for studies to cover are welcome. Add a contact address to `site.json` and it will appear here.
+Corrections, questions, and suggestions for studies to cover are all welcome. The quickest way to reach us is the [questions page](/ask/), which is read by the editor. Corrections are published on the issue they concern.

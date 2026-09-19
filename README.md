@@ -263,8 +263,12 @@ a branch".
 
 **6. Re-run the first build.** The **Actions** tab will show a red failed run.
 That is expected: it ran the moment you published, before Pages was switched on.
-Open it and click **Re-run all jobs**. When it goes green, the site is live at
-`https://YOUR-USERNAME.github.io/pdbrief/` until the domain is connected.
+Open it and click **Re-run all jobs**. When it goes green, the site is deployed.
+
+Don't judge it at `https://YOUR-USERNAME.github.io/pdbrief/`. The site is built
+to sit at the root of its own domain, so at that temporary address it appears
+unstyled with broken links. That is expected and goes away once pdbrief.org is
+connected.
 
 From then on, every push to `main` republishes the site. You can also edit an
 issue directly on github.com — press `.` in the repository for a web editor — and

@@ -24,8 +24,8 @@
   --warn-ink:      #7f5410;
   --shadow-sm: 0 1px 2px rgba(22, 33, 30, .06), 0 1px 3px rgba(22, 33, 30, .04);
   --shadow-md: 0 2px 6px rgba(22, 33, 30, .06), 0 8px 24px rgba(22, 33, 30, .07);
-  --radius: 12px;
-  --radius-sm: 8px;
+  --radius: 2px;
+  --radius-sm: 2px;
   --wrap: 1140px;
   --narrow: 720px;
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -147,9 +147,8 @@ code {
 /* --- Header ------------------------------------------------------------- */
 .site-header {
   position: sticky; top: 0; z-index: 100;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: saturate(1.4) blur(10px);
-  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  border-bottom: 1px solid var(--text);
 }
 @supports not (backdrop-filter: blur(1px)) { .site-header { background: var(--bg); } }
 
@@ -174,7 +173,7 @@ code {
   color: var(--text-soft); font-weight: 550; font-size: .95em; white-space: nowrap;
 }
 .nav-link:hover { background: var(--surface-alt); color: var(--text); }
-.nav-link.current { color: var(--accent); background: var(--accent-soft); }
+.nav-link.current { color: var(--text); background: none; box-shadow: inset 0 -2px 0 var(--accent); border-radius: 0; }
 
 .nav-tools { display: flex; align-items: center; gap: .5rem; margin-left: .6rem;
   padding-left: .8rem; border-left: 1px solid var(--border); }
@@ -220,7 +219,7 @@ code {
 /* --- Buttons ------------------------------------------------------------ */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
-  padding: .78rem 1.4rem; border-radius: 999px; font-weight: 600; font-size: .97em;
+  padding: .72rem 1.3rem; border-radius: 2px; font-weight: 600; font-size: .95em;
   text-decoration: none; cursor: pointer; border: 1px solid transparent;
   font-family: inherit; transition: background .15s ease, border-color .15s ease, transform .1s ease;
 }
@@ -232,10 +231,8 @@ code {
 
 /* --- Hero --------------------------------------------------------------- */
 .hero {
-  padding: clamp(3rem, 8vw, 5.5rem) 0 clamp(2rem, 4vw, 3rem);
-  background:
-    radial-gradient(ellipse 80% 60% at 20% -10%, var(--accent-soft), transparent 70%),
-    var(--bg);
+  padding: clamp(2.5rem, 6vw, 4rem) 0 clamp(2rem, 4vw, 2.8rem);
+  background: var(--bg);
   border-bottom: 1px solid var(--border);
 }
 .eyebrow {
@@ -272,9 +269,7 @@ code {
 
 /* --- Feature card ------------------------------------------------------- */
 .feature {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: clamp(1.6rem, 4vw, 2.6rem); box-shadow: var(--shadow-md);
-  border-top: 4px solid var(--accent);
+  background: none; border: 0; border-radius: 0; padding: 0; box-shadow: none;
 }
 .feature-title {
   font-family: var(--font-serif); font-size: clamp(1.7rem, 3.6vw, 2.5rem);
@@ -299,16 +294,15 @@ code {
 
 /* --- Cards -------------------------------------------------------------- */
 .card-grid {
-  display: grid; gap: 1.25rem;
-  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  display: grid; gap: 0; grid-template-columns: 1fr;
+  border-top: 1px solid var(--text);
 }
 .card {
-  display: flex; flex-direction: column; background: var(--surface);
-  border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 1.5rem; box-shadow: var(--shadow-sm);
-  transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+  display: flex; flex-direction: column; background: none;
+  border: 0; border-bottom: 1px solid var(--border); border-radius: 0;
+  padding: 1.5rem 0; box-shadow: none;
 }
-.card:hover { border-color: var(--accent-line); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.card:hover { border-color: var(--border); box-shadow: none; transform: none; }
 .card-title { font-family: var(--font-serif); font-size: 1.32em; font-weight: 600; margin: .5em 0 .4em; }
 .card-title a { color: inherit; text-decoration: none; }
 .card-title a:hover { color: var(--accent); }
@@ -323,12 +317,15 @@ code {
 /* --- Tags --------------------------------------------------------------- */
 .tags { display: flex; flex-wrap: wrap; gap: .4rem; }
 .tag {
-  display: inline-block; padding: .28rem .7rem; border-radius: 999px;
-  background: var(--accent-soft); color: var(--accent); border: 1px solid transparent;
-  font-size: .78em; font-weight: 600; text-decoration: none; letter-spacing: .01em;
+  display: inline-block; padding: 0; border-radius: 0; background: none;
+  color: var(--muted); border: 0; font-family: var(--font-sans);
+  font-size: .72em; font-weight: 600; text-decoration: none;
+  letter-spacing: .1em; text-transform: uppercase;
 }
-a.tag:hover { border-color: var(--accent-line); color: var(--accent-hover); }
-.tag-static { background: var(--surface-alt); color: var(--muted); }
+.tags { gap: 0; }
+.tag + .tag::before { content: "·"; margin: 0 .5em; color: var(--border-strong); }
+a.tag:hover { color: var(--accent); }
+.tag-static { color: var(--muted); }
 
 /* --- Explainer strip ---------------------------------------------------- */
 .explainer { border-top: 1px solid var(--border); }
@@ -342,7 +339,7 @@ a.tag:hover { border-color: var(--accent-line); color: var(--accent-hover); }
 .explainer-item p { color: var(--text-soft); font-size: .96em; margin: 0; }
 
 /* --- Subscribe ---------------------------------------------------------- */
-.subscribe { background: var(--accent); color: #fff; padding: clamp(2.5rem, 6vw, 4rem) 0; }
+.subscribe { background: none; color: inherit; padding: 2.5rem 0 3.5rem; border-top: 1px solid var(--border); }
 :root[data-theme="dark"] .subscribe { background: var(--accent-soft); color: var(--text); }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .subscribe { background: var(--accent-soft); color: var(--text); }
@@ -384,8 +381,8 @@ a.tag:hover { border-color: var(--accent-line); color: var(--accent-hover); }
 
 /* --- Table of contents -------------------------------------------------- */
 .toc {
-  background: var(--surface-alt); border: 1px solid var(--border); border-left: 3px solid var(--accent);
-  border-radius: var(--radius-sm); padding: 1.2rem 1.4rem; margin: 0 0 2.4rem;
+  background: none; border: 0; border-left: 2px solid var(--border-strong);
+  border-radius: 0; padding: .1rem 0 .1rem 1.2rem; margin: 0 0 2.6rem;
 }
 .toc-head {
   font-size: .76em; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
@@ -400,13 +397,14 @@ a.tag:hover { border-color: var(--accent-line); color: var(--accent-hover); }
 /* --- Prose -------------------------------------------------------------- */
 .prose { font-family: var(--font-serif); font-size: 1.14em; line-height: 1.75; color: var(--text); }
 .prose > h2 {
-  font-family: var(--font-sans); font-size: 1.42em; font-weight: 650;
-  margin: 2.6em 0 .6em; letter-spacing: -.015em; scroll-margin-top: 6rem;
+  font-family: var(--font-serif); font-size: 1.5em; font-weight: 600;
+  margin: 2.4em 0 .5em; letter-spacing: -.015em; scroll-margin-top: 6rem;
+  padding-top: .9em; border-top: 1px solid var(--border);
 }
 .prose > h2:first-child { margin-top: 0; }
 .prose > h3 {
-  font-family: var(--font-sans); font-size: 1.13em; font-weight: 650;
-  margin: 2em 0 .5em; color: var(--text-soft); scroll-margin-top: 6rem;
+  font-family: var(--font-serif); font-size: 1.2em; font-weight: 600;
+  margin: 2em 0 .5em; color: var(--text); scroll-margin-top: 6rem;
 }
 .prose p { margin: 0 0 1.25em; }
 .prose > p:first-of-type { font-size: 1.06em; }
@@ -442,20 +440,20 @@ a.tag:hover { border-color: var(--accent-line); color: var(--accent-hover); }
 
 /* --- Callouts ----------------------------------------------------------- */
 .callout {
-  margin: 2em 0; padding: 1.3rem 1.5rem; border-radius: var(--radius-sm);
-  background: var(--surface-alt); border: 1px solid var(--border);
-  border-left: 4px solid var(--border-strong); font-family: var(--font-sans); font-size: .95em;
+  margin: 2em 0; padding: .2rem 0 .2rem 1.4rem; border-radius: 0;
+  background: none; border: 0;
+  border-left: 3px solid var(--border-strong); font-family: var(--font-sans); font-size: .95em;
 }
 .callout p:last-child { margin-bottom: 0; }
 .callout-label {
   font-size: .74em; font-weight: 700; letter-spacing: .11em; text-transform: uppercase;
   color: var(--muted); margin: 0 0 .55rem;
 }
-.callout-key { background: var(--accent-soft); border-color: var(--accent-line); border-left-color: var(--accent); }
+.callout-key { background: none; border-left-color: var(--accent); }
 .callout-key .callout-label { color: var(--accent); }
-.callout-plain { background: var(--accent-soft); border-color: var(--accent-line); border-left-color: var(--accent); }
+.callout-plain { background: none; border-left-color: var(--accent); }
 .callout-plain .callout-label { color: var(--accent); }
-.callout-caution { background: var(--warn-soft); border-color: var(--warn-line); border-left-color: var(--warn-line); }
+.callout-caution { background: none; border-left-color: var(--warn-line); }
 .callout-caution .callout-label { color: var(--warn-ink); }
 
 /* --- Glossary term buttons --------------------------------------------- */
@@ -484,8 +482,8 @@ a.tag:hover { border-color: var(--accent-line); color: var(--accent-hover); }
 
 /* --- Source papers box -------------------------------------------------- */
 .papers {
-  margin: 3rem 0 0; padding: 1.6rem; background: var(--surface-alt);
-  border: 1px solid var(--border); border-radius: var(--radius);
+  margin: 3rem 0 0; padding: 1.4rem 0 0; background: none;
+  border: 0; border-top: 1px solid var(--text); border-radius: 0;
 }
 .papers-head {
   font-size: .78em; font-weight: 700; letter-spacing: .11em; text-transform: uppercase;
@@ -514,11 +512,11 @@ a.tag:hover { border-color: var(--accent-line); color: var(--accent-hover); }
   margin: 3rem 0 4rem; padding-top: 2rem; border-top: 1px solid var(--border);
 }
 .pager-item {
-  display: flex; flex-direction: column; gap: .3rem; padding: 1.1rem 1.3rem;
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  display: flex; flex-direction: column; gap: .3rem; padding: 0;
+  background: none; border: 0; border-radius: 0;
   text-decoration: none; color: var(--text);
 }
-.pager-item:hover { border-color: var(--accent-line); color: var(--text); }
+.pager-item:hover .pager-title { text-decoration: underline; }
 .pager-next { text-align: right; }
 .pager-label { font-size: .78em; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
   color: var(--accent); }
@@ -538,7 +536,7 @@ a.tag:hover { border-color: var(--accent-line); color: var(--accent-hover); }
 .search-wrap input::placeholder { color: var(--muted); }
 .filters { display: flex; flex-wrap: wrap; gap: .45rem; }
 .filter {
-  padding: .45rem .95rem; border-radius: 999px; border: 1px solid var(--border-strong);
+  padding: .4rem .8rem; border-radius: 2px; border: 1px solid var(--border-strong);
   background: var(--surface); color: var(--text-soft); font: inherit; font-size: .87em;
   font-weight: 600; cursor: pointer;
 }
@@ -579,15 +577,15 @@ a.tag:hover { border-color: var(--accent-line); color: var(--accent-hover); }
 
 /* --- Topics ------------------------------------------------------------- */
 .topic-grid {
-  display: grid; gap: 1.1rem; padding: 2.5rem 0 4rem;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  display: grid; gap: 0; padding: 2rem 0 4rem; grid-template-columns: 1fr;
+  border-top: 1px solid var(--text);
 }
 .topic-card {
-  display: block; padding: 1.5rem; background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); text-decoration: none; color: var(--text); box-shadow: var(--shadow-sm);
-  transition: border-color .15s ease, transform .15s ease;
+  display: block; padding: 1.3rem 0; background: none; border: 0;
+  border-bottom: 1px solid var(--border); border-radius: 0;
+  text-decoration: none; color: var(--text); box-shadow: none;
 }
-.topic-card:hover { border-color: var(--accent-line); transform: translateY(-2px); color: var(--text); }
+.topic-card:hover { color: var(--accent); }
 .topic-name { font-family: var(--font-serif); font-size: 1.25em; margin: 0 0 .35em; }
 .topic-card:hover .topic-name { color: var(--accent); }
 .topic-count { font-size: .85em; font-weight: 650; color: var(--accent); margin: 0 0 .2em; }
@@ -643,8 +641,9 @@ a.tag:hover { border-color: var(--accent-line); color: var(--accent-hover); }
 .footer-col a:hover { color: var(--accent); text-decoration: underline; }
 .footer-bottom { border-top: 1px solid var(--border); padding-top: 1.8rem; }
 .disclaimer {
-  background: var(--warn-soft); border: 1px solid var(--warn-line); border-radius: var(--radius-sm);
-  padding: 1rem 1.2rem; font-size: .92em; color: var(--text); max-width: 100%; line-height: 1.6;
+  background: none; border: 0; border-left: 3px solid var(--warn-line); border-radius: 0;
+  padding: .1rem 0 .1rem 1.1rem; font-size: .92em; color: var(--text);
+  max-width: 78ch; line-height: 1.6;
 }
 .disclaimer strong { color: var(--warn-ink); }
 .copyright { color: var(--muted); font-size: .86em; line-height: 1.6; margin: 0; max-width: 78ch; }
@@ -678,22 +677,58 @@ a.tag:hover { border-color: var(--accent-line); color: var(--accent-hover); }
 .form-frame iframe { display: block; width: 100%; border: 0; }
 .form-note { font-size: .87em; color: var(--muted); line-height: 1.6; margin: 0 0 2.5rem; }
 .form-cta {
-  text-align: center; padding: 2.5rem 1.5rem; margin-bottom: 2.5rem;
-  background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius);
+  text-align: left; padding: 1.6rem 0 0; margin-bottom: 2.5rem;
+  background: none; border: 0; border-top: 1px solid var(--border); border-radius: 0;
 }
 .form-cta .form-note { margin: 1rem 0 0; }
 .btn-big { font-size: 1.05em; padding: .95rem 1.9rem; }
 
 /* The invitation at the foot of each issue */
 .ask-invite {
-  margin: 3rem 0 0; padding: 1.8rem; border-radius: var(--radius);
-  background: var(--accent-soft); border: 1px solid var(--accent-line); text-align: center;
+  margin: 3rem 0 0; padding: 1.6rem 0 0; border-radius: 0;
+  background: none; border: 0; border-top: 1px solid var(--border); text-align: left;
 }
 .ask-invite-head {
   font-family: var(--font-serif); font-size: 1.35em; font-weight: 600;
   margin: 0 0 .5em; color: var(--text);
 }
 .ask-invite p {
-  color: var(--text-soft); max-width: 48ch; margin: 0 auto 1.4rem;
+  color: var(--text-soft); max-width: 52ch; margin: 0 0 1.2rem;
   font-size: .97em; line-height: 1.6;
 }
+
+/* --- Editorial layout: details the restyled rules above depend on -------- */
+.brand { align-items: baseline; }
+.brand-name { font-family: var(--font-serif); font-size: 1.5em; font-weight: 700; letter-spacing: -.02em; }
+.brand-sub { font-size: .72em; letter-spacing: .04em; }
+
+.hero-title { font-weight: 700; }
+.feature-title { margin-top: .25em; }
+.feature-more { margin: 1.4rem 0 0; font-family: var(--font-sans); font-size: .92em; font-weight: 600; }
+.feature-more a { text-decoration: none; }
+.feature-more a:hover { text-decoration: underline; }
+.feature .tags { margin-bottom: 0; }
+
+/* Ruled entry rows */
+.card:last-child { border-bottom: 0; }
+.card-title { font-size: 1.4em; }
+.card-foot { margin-top: .9rem; }
+.card-link { display: none; }          /* the headline is already the link */
+.recent { background: none; border-top: 1px solid var(--border); }
+.topic-card:last-child { border-bottom: 0; }
+
+/* Callout labels carry the colour now that the boxes are gone */
+.callout-key, .callout-plain { border-left-color: var(--accent); }
+.callout-caution { border-left-color: var(--warn-line); }
+
+/* Quiet closing note */
+.subscribe-inner { text-align: left; }
+.subscribe-inner p { font-family: var(--font-sans); font-size: .95em; color: var(--muted); margin: 0; }
+.subscribe-inner a { color: var(--text); }
+
+/* Archive rows sit on the same hairline grid */
+.arch-link:hover { background: none; }
+.arch-link:hover .arch-title { text-decoration: underline; }
+
+/* The first section heading in an issue needs no rule above it */
+.prose > h2:first-child { padding-top: 0; border-top: 0; }

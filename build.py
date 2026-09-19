@@ -566,12 +566,6 @@ var s=localStorage.getItem('pdb-textsize'); if(s){d.setAttribute('data-textsize'
 <header class="site-header">
   <div class="wrap header-inner">
     <a class="brand" href="/">
-      <span class="brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <path d="M6 24c0-8 4-12 10-12s10 4 10 12"/><circle cx="16" cy="7" r="3"/>
-          <path d="M11 24v-5M16 24v-8M21 24v-5"/>
-        </svg>
-      </span>
       <span class="brand-text">
         <span class="brand-name">{{site_title}}</span>
         <span class="brand-sub">Parkinson's research, explained</span>
@@ -868,19 +862,16 @@ def page_shell(cfg, content, title=None, description=None, path="/",
 
 
 def subscribe_block(cfg):
+    """A quiet closing line rather than a call-to-action panel."""
     if cfg.get("subscribe_url"):
-        return ("""<section class="subscribe"><div class="wrap subscribe-inner">
-        <h2>Get each issue by email</h2>
-        <p>One short email a week. No cost, no advertising, unsubscribe whenever you like.</p>
-        <a class="btn btn-primary" href="%s" target="_blank" rel="noopener">Subscribe</a>
+        return ("""<section class="subscribe"><div class="wrap wrap-narrow subscribe-inner">
+        <p>A new issue every week. <a href="%s" target="_blank" rel="noopener">Get it by email</a>,
+        follow the <a href="/feed.xml">RSS feed</a>, or read the
+        <a href="/archive/">archive</a>.</p>
         </div></section>""" % esc(cfg["subscribe_url"]))
-    return """<section class="subscribe"><div class="wrap subscribe-inner">
-      <h2>Follow along</h2>
-      <p>New issues land every week. Subscribe with any RSS reader, or bookmark the archive.</p>
-      <div class="subscribe-actions">
-        <a class="btn btn-primary" href="/feed.xml">RSS feed</a>
-        <a class="btn btn-quiet" href="/archive/">Browse the archive</a>
-      </div>
+    return """<section class="subscribe"><div class="wrap wrap-narrow subscribe-inner">
+      <p>A new issue every week. Follow the <a href="/feed.xml">RSS feed</a> in any reader,
+      or read the <a href="/archive/">archive</a>.</p>
     </div></section>"""
 
 
@@ -921,7 +912,7 @@ def build_home(cfg, issues):
       <h3 class="feature-title"><a href="%s">%s</a></h3>
       <p class="feature-summary">%s</p>
       <div class="tags">%s</div>
-      <a class="btn btn-primary" href="%s">Read this issue</a>
+      <p class="feature-more"><a href="%s">Read this issue</a></p>
     </article>
   </div>
 </section>""" % (esc(cfg["tagline"]), esc(cfg["description"]),
@@ -932,30 +923,7 @@ def build_home(cfg, issues):
                  latest["reading_time"], latest["url"], esc(latest["title"]),
                  esc(latest["summary"]), topics_html, latest["url"])
 
-    what = """<section class="explainer">
-  <div class="wrap">
-    <div class="explainer-grid">
-      <div class="explainer-item">
-        <span class="explainer-num">1</span>
-        <h3>We read the new research</h3>
-        <p>Every week we go through newly published Parkinson's studies in the medical
-        journals and pick one or two that genuinely move the field.</p>
-      </div>
-      <div class="explainer-item">
-        <span class="explainer-num">2</span>
-        <h3>We translate it</h3>
-        <p>No jargon without an explanation. We say what the researchers did, what they
-        found, and how confident anyone should be about it.</p>
-      </div>
-      <div class="explainer-item">
-        <span class="explainer-num">3</span>
-        <h3>The archive builds up</h3>
-        <p>Each issue joins a growing record, so you can follow how an idea developed
-        over months and years instead of seeing one headline in isolation.</p>
-      </div>
-    </div>
-  </div>
-</section>"""
+    what = ""   # the numbered marketing strip has been removed
 
     recent = ""
     if rest:

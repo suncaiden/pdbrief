@@ -555,7 +555,6 @@ LAYOUT = """<!doctype html>
 (function(){try{
 var d=document.documentElement;
 var t=localStorage.getItem('pdb-theme'); if(t){d.setAttribute('data-theme',t);}
-var s=localStorage.getItem('pdb-textsize'); if(s){d.setAttribute('data-textsize',s);}
 }catch(e){}})();
 </script>
 {{extra_head}}
@@ -580,12 +579,6 @@ var s=localStorage.getItem('pdb-textsize'); if(s){d.setAttribute('data-textsize'
     <nav id="site-nav" class="site-nav" aria-label="Main">
       {{nav_links}}
       <div class="nav-tools">
-        <div class="tool-group" role="group" aria-label="Text size">
-          <span class="tool-label" aria-hidden="true">Text</span>
-          <button class="tool-btn" data-size="normal" title="Normal text size">A</button>
-          <button class="tool-btn" data-size="large" title="Large text size">A</button>
-          <button class="tool-btn" data-size="xlarge" title="Largest text size">A</button>
-        </div>
         <button class="tool-btn theme-btn" id="theme-btn" title="Switch between light and dark">
           <span class="theme-icon" aria-hidden="true"></span>
           <span class="sr-only">Switch colour theme</span>

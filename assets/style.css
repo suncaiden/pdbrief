@@ -59,9 +59,6 @@
 /* The page defaults to light. Dark is opt-in through the toggle in the header,
    which sets data-theme="dark" — the browser's own setting no longer decides. */
 
-/* Reader-controlled text size. */
-:root[data-textsize="large"]  { --step: 1.125rem; }
-:root[data-textsize="xlarge"] { --step: 1.28rem; }
 
 /* --- Base --------------------------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; }
@@ -154,18 +151,12 @@ code {
 
 .nav-tools { display: flex; align-items: center; gap: .5rem; margin-left: .6rem;
   padding-left: .8rem; border-left: 1px solid var(--border); }
-.tool-group { display: flex; align-items: center; gap: .15rem; }
-.tool-label { font-size: .72em; color: var(--muted); margin-right: .25rem; text-transform: uppercase;
-  letter-spacing: .07em; font-weight: 600; }
 .tool-btn {
   display: grid; place-items: center; min-width: 2.1rem; height: 2.1rem; padding: 0 .35rem;
   border: 1px solid var(--border); background: var(--surface); color: var(--text-soft);
   border-radius: 7px; cursor: pointer; font-family: inherit; font-weight: 650; line-height: 1;
 }
 .tool-btn:hover { border-color: var(--accent-line); color: var(--text); }
-.tool-btn[data-size="normal"] { font-size: .75rem; }
-.tool-btn[data-size="large"]  { font-size: .95rem; }
-.tool-btn[data-size="xlarge"] { font-size: 1.15rem; }
 .tool-btn.is-active { background: var(--accent); border-color: var(--accent); color: #fff; }
 .theme-btn { font-size: 1rem; }
 .theme-icon::before { content: "◐"; }

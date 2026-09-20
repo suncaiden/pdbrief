@@ -12,27 +12,6 @@
     try { return localStorage.getItem(key); } catch (e) { return null; }
   }
 
-  /* --- Text size ------------------------------------------------------- */
-  var sizeButtons = document.querySelectorAll(".tool-btn[data-size]");
-
-  function markSize() {
-    var current = root.getAttribute("data-textsize") || "normal";
-    sizeButtons.forEach(function (b) {
-      var on = b.getAttribute("data-size") === current;
-      b.classList.toggle("is-active", on);
-      b.setAttribute("aria-pressed", on ? "true" : "false");
-    });
-  }
-  sizeButtons.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      var size = btn.getAttribute("data-size");
-      root.setAttribute("data-textsize", size);
-      store("pdb-textsize", size);
-      markSize();
-    });
-  });
-  markSize();
-
   /* --- Theme ----------------------------------------------------------- */
   var themeBtn = document.getElementById("theme-btn");
 

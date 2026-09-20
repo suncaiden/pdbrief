@@ -862,17 +862,19 @@ def page_shell(cfg, content, title=None, description=None, path="/",
 
 
 def subscribe_block(cfg):
-    """A quiet closing line rather than a call-to-action panel."""
+    """A closing invitation. Readers are sent to the questions page, never to
+    the raw feed file, which looks broken to anyone without a reader app."""
+    ask = '<a href="/ask/">send a question or a suggestion</a>' if cfg.get("feedback_form_url") else ""
     if cfg.get("subscribe_url"):
-        return ("""<section class="subscribe"><div class="wrap wrap-narrow subscribe-inner">
-        <p>A new issue every week. <a href="%s" target="_blank" rel="noopener">Get it by email</a>,
-        follow the <a href="/feed.xml">RSS feed</a>, or read the
-        <a href="/archive/">archive</a>.</p>
-        </div></section>""" % esc(cfg["subscribe_url"]))
-    return """<section class="subscribe"><div class="wrap wrap-narrow subscribe-inner">
-      <p>A new issue every week. Follow the <a href="/feed.xml">RSS feed</a> in any reader,
-      or read the <a href="/archive/">archive</a>.</p>
-    </div></section>"""
+        lead = ('A new issue every week. <a href="%s" target="_blank" rel="noopener">Get it by '
+                'email</a>, or read the <a href="/archive/">archive</a>.' % esc(cfg["subscribe_url"]))
+    else:
+        lead = ('A new issue every week. Read the <a href="/archive/">archive</a> for '
+                'everything published so far.')
+    tail = (" Something unclear, or a study worth covering? You can %s." % ask) if ask else ""
+    return ("""<section class="subscribe"><div class="wrap wrap-narrow subscribe-inner">
+      <p>%s%s</p>
+    </div></section>""" % (lead, tail))
 
 
 def build_home(cfg, issues):
@@ -883,6 +885,9 @@ def build_home(cfg, issues):
 
     latest = issues[0]
     rest = issues[1:7]
+    # "This week's issue" is only true while it is; otherwise it reads as stale.
+    age = (date.today() - latest["date"]).days
+    latest_label = "This week's issue" if age <= 7 else "The latest issue"
     topics_html = "".join('<a class="tag" href="/topics/%s/">%s</a>' % (slugify(t), esc(t))
                           for t in latest["topics"][:4])
 
@@ -898,7 +903,7 @@ def build_home(cfg, issues):
 <section class="latest">
   <div class="wrap">
     <div class="section-head">
-      <h2 class="section-title">This week's issue</h2>
+      <h2 class="section-title">%s</h2>
       <a class="section-link" href="/archive/">All issues <span aria-hidden="true">&rarr;</span></a>
     </div>
     <article class="feature">
@@ -919,6 +924,7 @@ def build_home(cfg, issues):
                  "%d issue%s published since %s." % (
                      len(issues), "" if len(issues) == 1 else "s",
                      issues[-1]["date"].strftime("%B %Y")),
+                 latest_label,
                  latest["number"], latest["date"].isoformat(), pretty_date(latest["date"]),
                  latest["reading_time"], latest["url"], esc(latest["title"]),
                  esc(latest["summary"]), topics_html, latest["url"])

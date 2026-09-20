@@ -140,11 +140,6 @@ code {
 }
 
 .brand { display: flex; align-items: center; gap: .7rem; text-decoration: none; color: var(--text); }
-.brand-mark {
-  display: grid; place-items: center; width: 2.6rem; height: 2.6rem; flex: none;
-  background: var(--accent); color: #fff; border-radius: 10px;
-}
-.brand-mark svg { width: 1.6rem; height: 1.6rem; }
 .brand-text { display: flex; flex-direction: column; line-height: 1.15; }
 .brand-name { font-weight: 700; font-size: 1.18em; letter-spacing: -.02em; }
 .brand-sub { font-size: .74em; color: var(--muted); letter-spacing: .01em; }
@@ -236,8 +231,7 @@ code {
 }
 
 /* --- Sections ----------------------------------------------------------- */
-.latest, .recent, .explainer { padding: clamp(2.5rem, 6vw, 4rem) 0; }
-.recent { background: var(--bg-alt); border-top: 1px solid var(--border); }
+.latest, .recent, .recent { background: var(--bg-alt); border-top: 1px solid var(--border); }
 .section-head {
   display: flex; align-items: baseline; justify-content: space-between;
   gap: 1rem; margin-bottom: 1.8rem; flex-wrap: wrap;
@@ -309,16 +303,6 @@ code {
 a.tag:hover { color: var(--accent); }
 .tag-static { color: var(--muted); }
 
-/* --- Explainer strip ---------------------------------------------------- */
-.explainer { border-top: 1px solid var(--border); }
-.explainer-grid { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
-.explainer-num {
-  display: grid; place-items: center; width: 2.2rem; height: 2.2rem; border-radius: 50%;
-  background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: .95em;
-  margin-bottom: .9rem;
-}
-.explainer-item h3 { font-size: 1.1em; margin-bottom: .4em; }
-.explainer-item p { color: var(--text-soft); font-size: .96em; margin: 0; }
 
 /* --- Subscribe ---------------------------------------------------------- */
 .subscribe { background: none; color: inherit; padding: 2.5rem 0 3.5rem; border-top: 1px solid var(--border); }

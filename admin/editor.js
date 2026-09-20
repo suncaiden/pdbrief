@@ -1183,8 +1183,7 @@
 
   $("btn-theme").addEventListener("click", function () {
     var root = document.documentElement;
-    var dark = root.getAttribute("data-theme") === "dark" ||
-      (!root.getAttribute("data-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    var dark = root.getAttribute("data-theme") === "dark";
     var next = dark ? "light" : "dark";
     root.setAttribute("data-theme", next);
     try { localStorage.setItem("pdb-theme", next); } catch (e) {}

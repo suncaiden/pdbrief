@@ -36,14 +36,10 @@
   /* --- Theme ----------------------------------------------------------- */
   var themeBtn = document.getElementById("theme-btn");
 
-  function systemPrefersDark() {
-    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-  }
+  /* The site is light unless the reader has chosen dark here. The computer's
+     own dark setting is deliberately ignored. */
   function currentlyDark() {
-    var set = root.getAttribute("data-theme");
-    if (set === "dark") return true;
-    if (set === "light") return false;
-    return systemPrefersDark();
+    return root.getAttribute("data-theme") === "dark";
   }
   if (themeBtn) {
     themeBtn.addEventListener("click", function () {

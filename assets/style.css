@@ -31,9 +31,11 @@
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-serif: "Source Serif 4", ui-serif, Georgia, "Iowan Old Style", "Times New Roman", serif;
   --step: 1rem;
+  color-scheme: light;
 }
 
 :root[data-theme="dark"] {
+  color-scheme: dark;
   --bg:            #17150f;
   --bg-alt:        #1d1a13;
   --surface:       #211e16;
@@ -54,28 +56,8 @@
   --shadow-md: 0 2px 6px rgba(0, 0, 0, .28), 0 10px 28px rgba(0, 0, 0, .32);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg:            #17150f;
-    --bg-alt:        #1d1a13;
-    --surface:       #211e16;
-    --surface-alt:   #29251c;
-    --text:          #ece7dc;
-    --text-soft:     #ccc5b6;
-    --muted:         #9d9584;
-    --border:        #373227;
-    --border-strong: #4a4335;
-    --accent:        #e08a6e;
-    --accent-hover:  #eda88f;
-    --accent-soft:   #2e211b;
-    --accent-line:   #5d4034;
-    --warn-soft:     #2c2417;
-    --warn-line:     #6b5527;
-    --warn-ink:      #e6c58a;
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .3);
-    --shadow-md: 0 2px 6px rgba(0, 0, 0, .28), 0 10px 28px rgba(0, 0, 0, .32);
-  }
-}
+/* The page defaults to light. Dark is opt-in through the toggle in the header,
+   which sets data-theme="dark" — the browser's own setting no longer decides. */
 
 /* Reader-controlled text size. */
 :root[data-textsize="large"]  { --step: 1.125rem; }
@@ -340,20 +322,6 @@ a.tag:hover { color: var(--accent); }
 
 /* --- Subscribe ---------------------------------------------------------- */
 .subscribe { background: none; color: inherit; padding: 2.5rem 0 3.5rem; border-top: 1px solid var(--border); }
-:root[data-theme="dark"] .subscribe { background: var(--accent-soft); color: var(--text); }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .subscribe { background: var(--accent-soft); color: var(--text); }
-}
-.subscribe-inner { text-align: center; }
-.subscribe h2 { font-family: var(--font-serif); font-size: clamp(1.6rem, 3.5vw, 2.2rem); margin-bottom: .4em; }
-.subscribe p { opacity: .92; max-width: 50ch; margin: 0 auto 1.6rem; }
-.subscribe-actions { display: flex; gap: .8rem; justify-content: center; flex-wrap: wrap; }
-.subscribe .btn-primary { background: #fff; color: var(--accent); }
-.subscribe .btn-primary:hover { background: #eef7f6; color: var(--accent-hover); }
-.subscribe .btn-quiet { background: transparent; color: #fff; border-color: rgba(255,255,255,.5); }
-.subscribe .btn-quiet:hover { border-color: #fff; color: #fff; background: rgba(255,255,255,.1); }
-:root[data-theme="dark"] .subscribe .btn-primary { background: var(--accent); color: #10221f; }
-:root[data-theme="dark"] .subscribe .btn-quiet { color: var(--text); border-color: var(--border-strong); }
 
 /* --- Page heads --------------------------------------------------------- */
 .page-head {

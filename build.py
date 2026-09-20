@@ -543,9 +543,15 @@ LAYOUT = """<!doctype html>
 <meta property="og:description" content="{{page_description}}">
 <meta property="og:url" content="{{canonical}}">
 <meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="{{social_image}}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{site_title}} — Parkinson's research, explained plainly">
+<meta name="twitter:image" content="{{social_image}}">
 <meta name="theme-color" content="#fcfaf5">
 <link rel="alternate" type="application/rss+xml" title="{{site_title}} weekly issues" href="/feed.xml">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+{{verification}}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
@@ -830,14 +836,19 @@ def page_shell(cfg, content, title=None, description=None, path="/",
     footer_links = "".join(
         '<a href="%s">%s</a>' % (item["href"], esc(item["label"]))
         for item in links)
-    full_title = cfg["title"] if title is None else "%s | %s" % (title, cfg["title"])
+    if title is None:
+        full_title = cfg["title"]
+    elif len(title) > 52:
+        full_title = title          # adding the site name would overflow the result
+    else:
+        full_title = "%s | %s" % (title, cfg["title"])
     desc = description or cfg["description"]
     return render(
         LAYOUT,
         lang=cfg.get("language", "en"),
         page_title=esc(full_title),
         og_title=esc(title or cfg["title"]),
-        page_description=esc(plain_text(desc, 300)),
+        page_description=esc(plain_text(desc, 155)),
         canonical=cfg["url"].rstrip("/") + path,
         og_type=og_type,
         site_title=esc(cfg["title"]),
@@ -851,6 +862,11 @@ def page_shell(cfg, content, title=None, description=None, path="/",
         extra_head=extra_head,
         extra_body=extra_body,
         cachebust=CACHEBUST,
+        social_image=cfg["url"].rstrip("/") + "/assets/social-card.png",
+        verification=(
+            '<meta name="google-site-verification" content="%s">'
+            % esc(cfg["google_site_verification"])
+            if cfg.get("google_site_verification") else ""),
     )
 
 
@@ -1207,11 +1223,16 @@ def build_topic_page(cfg, topic, items):
       <h1>%s</h1>
       <p class="page-lede">%d issue%s on this topic, newest first.</p>
     </div></div>
-    <div class="wrap"><div class="card-grid">%s</div></div>""" % (
+    <div class="wrap">
+      <div class="section-head"><h2 class="section-title">Issues on this topic</h2></div>
+      <div class="card-grid">%s</div>
+    </div>""" % (
         esc(topic), len(items), "" if len(items) == 1 else "s",
         "".join(issue_card(it) for it in items))
     return page_shell(cfg, content, title=topic,
-                      description="Parkinson's research summaries about %s." % topic,
+                      description="Every %s issue about %s: plain-language summaries of newly "
+                                  "published Parkinson's disease research, written for readers "
+                                  "without a scientific background." % (cfg["title"], topic),
                       path="/topics/%s/" % slugify(topic))
 
 
@@ -1275,8 +1296,15 @@ def build_404(cfg, issues):
       every issue we have published.</p>
       <p><a class="btn btn-primary" href="/archive/">Go to the archive</a></p>
     </div>
-    <div class="wrap"><div class="card-grid">%s</div></div>""" % recent
-    return page_shell(cfg, content, title="Page not found", path="/404.html")
+    <div class="wrap">
+      <div class="section-head"><h2 class="section-title">Recent issues</h2></div>
+      <div class="card-grid">%s</div>
+    </div>""" % recent
+    return page_shell(cfg, content, title="Page not found",
+                      description="That page could not be found. Browse the %s archive of "
+                                  "plain-language Parkinson's research summaries instead."
+                                  % cfg["title"],
+                      path="/404.html")
 
 
 # --------------------------------------------------------------------------

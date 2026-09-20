@@ -46,5 +46,7 @@
   "subscribe_note": "Add your newsletter signup link in site.json to turn this into a working button.",
   "feedback_form_url": "https://docs.google.com/forms/d/e/1FAIpQLSdGhW76NYAEW_xPVIwflyBjDGnNsZmQoggvPRBk3tKSFg5IdA/viewform",
   "feedback_embed": true,
-  "feedback_note": "Paste your Google Form address here to switch on the 'Ask a question' page. Use the full docs.google.com/forms/... /viewform link if you want the form shown inside the page; a forms.gle short link will be shown as a button instead."
+  "feedback_note": "Paste your Google Form address here to switch on the 'Ask a question' page. Use the full docs.google.com/forms/... /viewform link if you want the form shown inside the page; a forms.gle short link will be shown as a button instead.",
+  "google_site_verification": "",
+  "google_site_verification_note": "Paste the content value from Google Search Console's HTML tag method here, then push. Leave empty if you verify another way."
 }

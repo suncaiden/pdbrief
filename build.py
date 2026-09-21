@@ -546,7 +546,7 @@ LAYOUT = """<!doctype html>
 <meta property="og:image" content="{{social_image}}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="{{site_title}} — Parkinson's research, explained plainly">
+<meta property="og:image:alt" content="{{site_title}}: Parkinson's research, explained plainly">
 <meta name="twitter:image" content="{{social_image}}">
 <meta name="theme-color" content="#fcfaf5">
 <link rel="alternate" type="application/rss+xml" title="{{site_title}} weekly issues" href="/feed.xml">
@@ -880,8 +880,8 @@ def subscribe_block(cfg):
     else:
         lead = ('A new issue every week. Read the <a href="/archive/">archive</a> for '
                 'everything published so far.')
-    tail = (" Something unclear, or a study worth covering? You can %s." % ask) if ask else ""
-    return ("""<section class="subscribe"><div class="wrap wrap-narrow subscribe-inner">
+    tail = (" Spotted a study we should cover, or found something unclear? You can %s." % ask) if ask else ""
+    return ("""<section class="subscribe" aria-label="Keeping up with PD Brief"><div class="wrap wrap-narrow subscribe-inner">
       <p>%s%s</p>
     </div></section>""" % (lead, tail))
 
@@ -963,8 +963,8 @@ def ask_invitation(cfg):
     return ('<aside class="ask-invite">'
             '<h2 class="ask-invite-head">Something here unclear?</h2>'
             '<p>If a part of this issue did not make sense, or you want to know more about '
-            'the study behind it, ask. Questions shape what gets covered and how it gets '
-            'explained &mdash; and asking one helps the next reader too.</p>'
+            'the study behind it, ask. Questions shape what gets covered here, and how it '
+            'gets explained.</p>'
             '<a class="btn btn-primary" href="/ask/">Ask a question</a>'
             '</aside>')
 
@@ -999,8 +999,7 @@ def build_feedback_page(cfg):
         form_html = (
             '<div class="form-frame">'
             '<iframe src="%s" title="Questions and feedback form" '
-            'width="100%%" height="900" frameborder="0" marginheight="0" marginwidth="0" '
-            'loading="lazy">Loading the form&hellip;</iframe>'
+            'height="900" loading="lazy"></iframe>'
             '</div>'
             '<p class="form-note">This form is hosted by Google, so opening this page '
             'contacts Google&rsquo;s servers. If you would rather not, you can '
@@ -1017,9 +1016,8 @@ def build_feedback_page(cfg):
     content = """<div class="page-head"><div class="wrap wrap-narrow">
       <h1>Ask a question</h1>
       <p class="page-lede">If something in an issue did not make sense, or you want to know
-      more about a study, this is the place to say so. There is no such thing as a question
-      that is too basic &mdash; if something was unclear to you, it was probably unclear to
-      other readers too.</p>
+      more about a study, this is the place to say so. No question is too basic. If something
+      was unclear to you, it was probably unclear to other readers too.</p>
     </div></div>
 
     <div class="wrap wrap-narrow ask-page">
@@ -1028,9 +1026,9 @@ def build_feedback_page(cfg):
         <ul class="ask-list">
           <li><strong>A question about an issue.</strong> Which part lost you, and what you
           were trying to understand.</li>
-          <li><strong>A study worth covering.</strong> A link or a title is enough.</li>
+          <li><strong>A study we should cover.</strong> A link or a title is enough.</li>
           <li><strong>A correction.</strong> If something here is wrong, we want to know.
-          Corrections are published on the issue itself rather than quietly fixed.</li>
+          Corrections are published on the issue itself, not edited away without a word.</li>
           <li><strong>A term for the glossary.</strong> Any word you had to look up
           elsewhere is a word that belongs in the glossary.</li>
         </ul>
@@ -1047,7 +1045,7 @@ def build_feedback_page(cfg):
     </div>""" % form_html
 
     return page_shell(cfg, content, title="Ask a question",
-                      description="Send a question, a correction, or a study worth covering "
+                      description="Send a question, a correction, or a study we should cover "
                                   "to %s." % cfg["title"],
                       path="/ask/")
 

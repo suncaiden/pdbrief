@@ -6,13 +6,13 @@ description: "Why PD Brief exists, who writes it, how studies are chosen, and wh
 
 Parkinson's research is moving faster than at any point in its history. Very little of that reaches the people it is actually about.
 
-The findings are published in journals that cost money to read, written in language built for other specialists. What escapes into the wider world usually arrives as a headline — *breakthrough*, *cure within reach*, *hope for millions* — that overstates a small study and leaves out everything needed to judge it. Somewhere between an inaccessible paper and a misleading headline, there should be an honest account of what was actually found.
+The findings are published in journals that cost money to read, written in language built for other specialists. What escapes into the wider world usually arrives as a headline (*breakthrough*, *cure within reach*, *hope for millions*) that overstates a small study and leaves out everything needed to judge it. Somewhere between an inaccessible paper and a misleading headline, there should be an honest account of what was actually found.
 
 That is what this is.
 
 ## What PD Brief does
 
-Every week, we read newly published Parkinson's research and write up one or two studies in plain language. Each issue explains what the researchers set out to learn, what they did, what they found, why it matters, and — the part most coverage skips — what the study does not tell us.
+Every week, we read newly published Parkinson's research and write up one or two studies in plain language. Each issue explains what the researchers set out to learn, what they did, what they found and why it matters. It also covers the part most coverage skips: what the study does not tell us.
 
 Issues take about five to ten minutes to read. No scientific background is assumed. Technical terms are explained where they appear, and every one of them is collected in the [glossary](/glossary/).
 
@@ -45,7 +45,7 @@ Negative results are covered deliberately. A well-run trial showing that a promi
 
 **No medical advice.** PD Brief explains research. It does not recommend treatments, and nothing in it should be used to make decisions about anyone's care. Those conversations belong with your neurologist.
 
-**Corrections.** Mistakes will happen. When one is found, the issue is corrected and the correction is noted at the bottom of that issue rather than quietly edited away.
+**Corrections.** Mistakes will happen. When one is found, the issue is corrected and the correction is noted at the bottom of that issue rather than edited away without a word.
 
 **Credit.** Every issue links to the original paper, with authors, journal, and DOI. The findings belong to the researchers who did the work. This publication only translates them.
 

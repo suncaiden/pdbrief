@@ -410,6 +410,7 @@ a.tag:hover { color: var(--accent); }
 
 .gloss-pop {
   position: absolute; z-index: 150; max-width: min(22rem, calc(100vw - 2rem));
+  max-height: min(60vh, 24rem); overflow-y: auto;
   background: var(--surface); border: 1px solid var(--accent-line);
   border-radius: var(--radius-sm); padding: 1rem 2.2rem 1rem 1.1rem;
   box-shadow: var(--shadow-md); font-family: var(--font-sans); font-size: .92rem;
@@ -617,7 +618,7 @@ a.tag:hover { color: var(--accent); }
   border: 1px solid var(--border); border-radius: var(--radius);
   overflow: hidden; background: var(--surface); margin-bottom: 1rem;
 }
-.form-frame iframe { display: block; width: 100%; border: 0; }
+.form-frame iframe { display: block; width: 100%; min-height: 900px; border: 0; }
 .form-note { font-size: .87em; color: var(--muted); line-height: 1.6; margin: 0 0 2.5rem; }
 .form-cta {
   text-align: left; padding: 1.6rem 0 0; margin-bottom: 2.5rem;

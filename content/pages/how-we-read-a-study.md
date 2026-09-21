@@ -1,7 +1,7 @@
 ---
 title: How we read a study
 slug: how-we-read-a-study
-description: "A short guide to judging medical research for yourself — the questions that separate a strong finding from a fragile one."
+description: "A short guide to judging medical research for yourself: the questions that separate a strong finding from a fragile one."
 ---
 
 You do not need a science degree to tell a strong study from a weak one. You need a handful of questions, and the willingness to ask them before getting excited. This is the checklist behind every issue of PD Brief, written out so you can apply it to anything you read.
@@ -14,7 +14,7 @@ A rough guide for treatment trials: under 50 people is preliminary, 50 to 200 is
 
 ## 2. Was there a comparison group, chosen at random?
 
-If everyone in a study received the treatment, and they improved, that improvement could be the treatment — or the natural fluctuation of the disease, or the attention that comes with being in a study, or the {{placebo}} effect.
+If everyone in a study received the treatment, and they improved, that improvement could be the treatment. It could equally be the natural fluctuation of the disease, the attention that comes with being in a study, or the {{placebo}} effect.
 
 Parkinson's has an unusually strong placebo response. Expecting a benefit can trigger real dopamine release and produce measurable improvement in movement. Any Parkinson's trial without a placebo group should be read with that firmly in mind.
 
@@ -28,7 +28,7 @@ If participants know they are on the real drug, they tend to report feeling bett
 
 ## 4. Was it in people, or in mice?
 
-A great deal of exciting Parkinson's coverage describes work in mice, rats, or cells in a dish. This research is essential — it is where ideas come from — but the failure rate on the way to humans is brutal. Many treatments have cured Parkinson's-like conditions in rodents. None of them has cured Parkinson's.
+A great deal of exciting Parkinson's coverage describes work in mice, rats, or cells in a dish. This research is essential, because it is where ideas come from, but the failure rate on the way to humans is brutal. Many treatments have cured Parkinson's-like conditions in rodents. None of them has cured Parkinson's.
 
 When you read a hopeful headline, check what the subjects were. It is often the whole story.
 
@@ -36,13 +36,13 @@ When you read a hopeful headline, check what the subjects were. It is often the 
 
 Some studies measure how a person feels and functions. Others measure a number in a scan or a blood sample. The second kind is faster and cheaper, but a drug can move a laboratory measurement without helping anyone.
 
-Ask what changed: a person's ability to walk, dress, and sleep — or a marker that is merely believed to correspond to those things.
+Ask what changed: a person's ability to walk, dress and sleep, or a marker that is merely believed to correspond to those things.
 
 ## 6. Did it hit the target it named in advance?
 
 Researchers declare a {{primary endpoint}} before a trial starts: the one main question it will answer. This exists to prevent a trial that failed from being rewritten around whichever measurement happened to look good.
 
-If a report emphasises a benefit in a subgroup — "worked well in women under 60" — while the main result was negative, that is a hypothesis for a future study, not a finding.
+If a report emphasises a benefit in a subgroup ("worked well in women under 60") while the main result was negative, that is a hypothesis for a future study, not a finding.
 
 ## 7. Is the effect big enough to feel?
 

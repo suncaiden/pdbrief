@@ -8,7 +8,7 @@ A protein that every human brain makes. In Parkinson's disease it misfolds into 
 
 ## Biomarker
 
-Something measurable in the body — in blood, spinal fluid, skin, or on a scan — that tells you about a disease. A good biomarker can show whether someone has a condition, how far it has advanced, or whether a drug is working. Parkinson's has historically lacked good biomarkers, which has made trials slow and expensive.
+Something measurable in the body, whether in blood, spinal fluid, skin or on a scan, that tells you about a disease. A good biomarker can show whether someone has a condition, how far it has advanced, or whether a drug is working. Parkinson's has historically lacked good biomarkers, which has made trials slow and expensive.
 
 ## Blinding
 
@@ -96,7 +96,7 @@ A mid-stage trial, usually a few dozen to a few hundred people, designed to look
 
 ## Phase 3 trial
 
-A large, long, rigorous trial — often hundreds of participants across many hospitals — designed to give a definitive answer about whether a treatment works. This is the evidence regulators require before approving a drug.
+A large, long, rigorous trial, often hundreds of participants across many hospitals, designed to give a definitive answer about whether a treatment works. This is the evidence regulators require before approving a drug.
 
 ## Placebo
 

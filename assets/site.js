@@ -76,10 +76,17 @@
     var margin = 12;
     left = Math.max(margin, Math.min(left, document.documentElement.clientWidth - w - margin));
     var top = r.bottom + window.scrollY + 8;
-    // Flip above the word if there is not enough room below.
+    // Flip above the word if there is not enough room below it.
     if (r.bottom + pop.offsetHeight + 20 > window.innerHeight) {
       top = r.top + window.scrollY - pop.offsetHeight - 8;
     }
+    // Then keep it inside the window whatever happened above, so a long
+    // definition near an edge is never cut off.
+    var minTop = window.scrollY + margin;
+    var maxTop = window.scrollY + window.innerHeight - pop.offsetHeight - margin;
+    if (maxTop < minTop) maxTop = minTop;
+    top = Math.max(minTop, Math.min(top, maxTop));
+
     pop.style.left = left + "px";
     pop.style.top = top + "px";
 

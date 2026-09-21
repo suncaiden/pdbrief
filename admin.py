@@ -234,6 +234,24 @@ def save_issue(payload):
     renamed = bool(old_path and os.path.exists(old_path)
                    and os.path.basename(old_path) != name)
 
+    # Two issues sharing a web address means one quietly disappears from the
+    # site, so refuse that even when the filenames differ.
+    wanted_slug = build.slugify(meta["slug"])
+    for other in list_issues():
+        if other["file"] == name or other["template"]:
+            continue
+        if old_path and other["file"] == os.path.basename(old_path):
+            continue
+        data = read_issue(other["file"])
+        if not data:
+            continue
+        other_slug = build.slugify(data["slug"] or data["title"])
+        if other_slug == wanted_slug:
+            return {"ok": False, "error":
+                    "\u201c%s\u201d already uses the web address /issues/%s/. "
+                    "Change the URL slug so the two issues do not collide."
+                    % (data["title"], wanted_slug)}
+
     # Refuse to silently overwrite a different existing issue.
     if os.path.exists(path) and (not old_path or os.path.basename(old_path) != name):
         if not payload.get("overwrite"):

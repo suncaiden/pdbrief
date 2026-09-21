@@ -12,12 +12,17 @@ what you see while writing is what readers will get.
 import json
 import os
 import re
+import shutil
 import threading
 from datetime import date, datetime
 
 import build
 
 ADMIN_DIR = os.path.join(build.ROOT, "admin")
+
+# Deleted and replaced issues are moved here rather than destroyed, so the
+# desk can offer Undo. The folder is ignored by git and by the build.
+TRASH_DIR = os.path.join(build.ROOT, ".trash")
 
 # Files the editor is allowed to serve, so a stray request cannot read the disk.
 STATIC = {
@@ -259,12 +264,29 @@ def _render_preview(payload):
     expected = ["what they did", "what they found", "why it matters",
                 "what this doesn't tell us", "what to watch next"]
 
+    # Things a reader would miss, checked on the form fields as well as the text.
+    warnings = list(build.WARNINGS)
+    summary = str(meta.get("summary") or "").strip()
+    if not summary:
+        warnings.append("Add a summary. It is what shows on the homepage, in the archive "
+                        "and in Google.")
+    elif len(summary) > 300:
+        warnings.append("The summary is %d characters. Under 300 reads best on the homepage."
+                        % len(summary))
+    if not [t for t in (meta.get("topics") or []) if str(t).strip()]:
+        warnings.append("Add at least one topic, so the issue appears on a topic page.")
+    if not papers:
+        warnings.append("Fill in the study behind this issue, so readers can find the "
+                        "original paper.")
+    elif not all(str(p.get("doi") or p.get("url") or "").strip() for p in papers):
+        warnings.append("A study has no DOI, so readers cannot follow a link to it.")
+
     return {
         "html": html,
         "papers_html": build.paper_block(papers),
         "words": words,
         "minutes": max(1, round(words / 200.0)),
-        "warnings": list(build.WARNINGS),
+        "warnings": warnings,
         "headings": [{"text": h["text"], "level": h["level"]} for h in headings],
         "checklist": [{"section": e, "present": any(e in h for h in heads)} for e in expected],
     }
@@ -292,35 +314,64 @@ def save_issue(payload):
     renamed = bool(old_path and os.path.exists(old_path)
                    and os.path.basename(old_path) != name)
 
-    # Two issues sharing a web address means one quietly disappears from the
-    # site, so refuse that even when the filenames differ.
+    # Two published issues sharing a web address means one quietly disappears
+    # from the site. A draft may share it, though: that is how a rewrite is
+    # written while the original stays live. Publishing the draft then offers
+    # to replace the original, which is moved to the trash.
     wanted_slug = build.slugify(meta["slug"])
+    is_draft = bool(meta.get("draft"))
+    replace = os.path.basename(str(payload.get("replace") or ""))
+    replacing = None
     for other in list_issues():
-        if other["file"] == name or other["template"]:
+        if other["template"]:
             continue
         if old_path and other["file"] == os.path.basename(old_path):
             continue
         data = read_issue(other["file"])
         if not data:
             continue
-        other_slug = build.slugify(data["slug"] or data["title"])
-        if other_slug == wanted_slug:
-            return {"ok": False, "error":
-                    "\u201c%s\u201d already uses the web address /issues/%s/. "
-                    "Change the URL slug so the two issues do not collide."
-                    % (data["title"], wanted_slug)}
+        if issue_slug(data, other["file"]) != wanted_slug:
+            continue
+        if is_draft != other["draft"]:
+            continue    # one is a draft, so only one of them is ever on the site
+        if not is_draft:
+            if replace == other["file"]:
+                replacing = other["file"]
+                continue
+            return {"ok": False, "conflict": other["file"], "conflict_title": data["title"],
+                    "error": "\u201c%s\u201d is already published at /issues/%s/."
+                             % (data["title"], wanted_slug)}
+        return {"ok": False, "error":
+                "\u201c%s\u201d already uses the web address /issues/%s/. Change the "
+                "web address so the two do not collide." % (data["title"], wanted_slug)}
+
+    # A rewrite given the original's date would share its file name, so the
+    # draft gets a suffix on disk. The web address comes from the slug, not
+    # the file name, so readers never see it.
+    if (is_draft and os.path.exists(path) and path != old_path
+            and issue_slug(read_issue(name) or {}, name) == wanted_slug
+            and not (read_issue(name) or {}).get("draft")):
+        name = name[:-3] + "-rewrite.md"
+        path = safe_issue_path(name)
+        renamed = bool(old_path and os.path.exists(old_path)
+                       and os.path.basename(old_path) != name)
 
     # Refuse to silently overwrite a different existing issue.
-    if os.path.exists(path) and (not old_path or os.path.basename(old_path) != name):
+    if (os.path.exists(path) and (not old_path or os.path.basename(old_path) != name)
+            and replacing != name):
         if not payload.get("overwrite"):
             return {"ok": False, "error":
-                    "An issue file named %s already exists. Change the title, the date, "
-                    "or the URL slug." % name}
+                    "An issue file named %s already exists. Change the headline, the "
+                    "date, or the web address." % name}
 
     source = old_path if (old_path and os.path.exists(old_path)) else path
     keep = existing_comments(source)
     extra = preserved_lines(source)
     text = to_frontmatter(meta, keep, extra) + "\n\n" + body.strip() + "\n"
+
+    # The version being replaced goes to the trash first, so it can be restored.
+    trashed = move_to_trash(replacing) if replacing else None
+
     with open(path, "w", encoding="utf-8") as f:
         f.write(text)
 
@@ -330,18 +381,75 @@ def save_issue(payload):
         except OSError:
             pass
 
-    return {"ok": True, "file": name, "renamed": renamed,
+    return {"ok": True, "file": name, "renamed": renamed, "replaced": replacing,
+            "trashed": trashed,
             "slug": build.slugify(meta["slug"]),
             "url": "/issues/%s/" % build.slugify(meta["slug"]),
             "saved_at": datetime.now().strftime("%H:%M:%S")}
 
 
-def delete_issue(filename):
+def issue_slug(data, filename):
+    """The web address the build will give an issue: its slug, or failing that
+    its filename without the date, exactly as build.load_issues() decides."""
+    return build.slugify(data.get("slug") or re.sub(r"^\d{4}-\d{2}-\d{2}-", "", filename[:-3]))
+
+
+def move_to_trash(filename):
+    """Move an issue file into .trash/ and return the name it was given there."""
     path = safe_issue_path(filename)
     if not path or not os.path.exists(path):
+        return None
+    os.makedirs(TRASH_DIR, exist_ok=True)
+    stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    trashed, n = "%s--%s" % (stamp, os.path.basename(path)), 2
+    while os.path.exists(os.path.join(TRASH_DIR, trashed)):     # never overwrite
+        trashed, n = "%s-%d--%s" % (stamp, n, os.path.basename(path)), n + 1
+    shutil.move(path, os.path.join(TRASH_DIR, trashed))
+    return trashed
+
+
+def delete_issue(filename):
+    trashed = move_to_trash(filename)
+    if not trashed:
         return {"ok": False, "error": "No such issue."}
-    os.remove(path)
-    return {"ok": True}
+    return {"ok": True, "trashed": trashed}
+
+
+def restore_issue(trashed):
+    """Put a trashed issue back where it was, unless something has taken its place."""
+    name = os.path.basename(str(trashed or ""))
+    src = os.path.join(TRASH_DIR, name)
+    if "--" not in name or not os.path.exists(src):
+        return {"ok": False, "error": "That issue is no longer in the trash."}
+    original = name.split("--", 1)[1]
+    dest = safe_issue_path(original)
+    if not dest:
+        return {"ok": False, "error": "That file name is not usable."}
+    if os.path.exists(dest):
+        return {"ok": False, "error": "Another issue now uses the file name %s." % original}
+    shutil.move(src, dest)
+    return {"ok": True, "file": original}
+
+
+def add_glossary_term(payload):
+    """Append a new entry to content/glossary.md from the desk."""
+    term = re.sub(r"\s+", " ", str(payload.get("term", ""))).strip()
+    definition = re.sub(r"\s+", " ", str(payload.get("definition", ""))).strip()
+    if not term or not definition:
+        return {"ok": False, "error": "Give the word and a definition."}
+    if len(term) > 80 or term.startswith("#"):
+        return {"ok": False, "error": "That word is too long or starts with a symbol."}
+    with RENDER_LOCK:
+        build.GLOSSARY.clear()
+        existing = {e["slug"] for e in build.load_glossary()}
+    if build.slugify(term) in existing:
+        return {"ok": False, "error": "\u201c%s\u201d is already in the glossary." % term}
+    path = os.path.join(build.CONTENT, "glossary.md")
+    with open(path, encoding="utf-8") as f:
+        current = f.read()
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(current.rstrip("\n") + "\n\n## %s\n\n%s\n" % (term, definition))
+    return {"ok": True, "term": term, "terms": glossary_terms()}
 
 
 # --------------------------------------------------------------------------
@@ -457,6 +565,12 @@ def handle_post(handler, path):
         return True
     if path == "/api/delete":
         _send(handler, delete_issue(payload.get("file")))
+        return True
+    if path == "/api/restore":
+        _send(handler, restore_issue(payload.get("trashed")))
+        return True
+    if path == "/api/glossary/add":
+        _send(handler, add_glossary_term(payload))
         return True
 
     _send(handler, {"ok": False, "error": "Unknown endpoint."}, 404)

@@ -164,7 +164,11 @@
             <span>Nobody can see it until you switch this off.</span>
           </span>
         </label>
-        <button class="dbtn dbtn-danger" id="btn-delete">Delete this issue</button>
+        <div class="danger-actions">
+          <button class="dbtn" id="btn-rewrite" hidden
+                  title="Start a fresh draft with this issue's study, topics and web address">Rewrite from scratch</button>
+          <button class="dbtn dbtn-danger" id="btn-delete">Delete this issue</button>
+        </div>
       </section>
 
     </div>
@@ -190,14 +194,14 @@
 
     <div class="prev-scroll" id="panel-checks" hidden>
       <div class="checks">
-        <h3 class="checks-head">The sections every issue has</h3>
+        <h2 class="checks-head">The sections every issue has</h2>
         <p class="checks-note">These are what make an issue still readable years from now.</p>
         <ul class="check-list" id="structure-list"></ul>
 
-        <h3 class="checks-head">Worth a look</h3>
+        <h2 class="checks-head">Worth a look</h2>
         <ul class="check-list" id="warning-list"></ul>
 
-        <h3 class="checks-head">Length</h3>
+        <h2 class="checks-head">Length</h2>
         <p class="checks-stat" id="length-stat"></p>
       </div>
     </div>
@@ -213,7 +217,14 @@
     <p class="modal-note">Readers tap the word and see your definition without leaving the page.</p>
     <input type="search" id="gloss-search" class="fi" placeholder="Search your glossary" autocomplete="off">
     <div class="gloss-results" id="gloss-results"></div>
-    <p class="modal-foot">Missing a word? Add it to your glossary and it will appear here.</p>
+      <details class="gloss-add" id="gloss-add">
+        <summary>Add a new word to the glossary</summary>
+        <label class="paper-mini" for="gloss-new-term">Word or phrase</label>
+        <input type="text" id="gloss-new-term" class="fi" autocomplete="off">
+        <label class="paper-mini" for="gloss-new-def">What it means, in plain language</label>
+        <textarea id="gloss-new-def" class="fi" rows="3"></textarea>
+        <button type="button" class="dbtn dbtn-primary dbtn-small" id="gloss-new-save">Add it and use it here</button>
+      </details>
   </div>
 </div>
 
@@ -224,7 +235,9 @@
   <button class="dbtn dbtn-small" id="link-cancel">Cancel</button>
 </div>
 
-<div class="toast" id="toast" hidden></div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden>
+  <span id="toast-text"></span><button type="button" class="toast-action" id="toast-action" hidden></button>
+</div>
 
 <script src="/admin/editor.js"></script>
 </body>

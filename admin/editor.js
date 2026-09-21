@@ -36,13 +36,19 @@
   }
 
   var toastTimer;
-  function toast(msg, bad) {
-    var t = $("toast");
-    t.textContent = msg;
+  function toast(msg, bad, action) {
+    var t = $("toast"), btn = $("toast-action");
+    $("toast-text").textContent = msg;
     t.className = "toast" + (bad ? " bad" : "");
+    btn.hidden = !action;
+    btn.onclick = null;
+    if (action) {
+      btn.textContent = action.label;
+      btn.onclick = function () { t.hidden = true; action.run(); };
+    }
     t.hidden = false;
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { t.hidden = true; }, bad ? 5000 : 2600);
+    toastTimer = setTimeout(function () { t.hidden = true; }, action ? 9000 : (bad ? 5000 : 2600));
   }
 
   function esc(s) {
@@ -556,20 +562,24 @@
                                      ["Participants", "", ""], ["Result", "", ""]]));
       placeCaretAtEnd(t.querySelector("tbody td"));
     } else if (act === "structure") {
-      ["What the researchers were trying to find out", "What they did", "What they found",
-       "Why it matters", "What this doesn't tell us", "What to watch next"].forEach(function (h) {
-        var head = document.createElement("h2");
-        head.textContent = h;
-        els.compose.appendChild(head);
-        var p = document.createElement("p");
-        p.innerHTML = "<br>";
-        els.compose.appendChild(p);
-      });
-      ensureTrailingParagraph();
+      addStandardSections();
       markDirty();
       toast("Added the six standard sections");
     }
   });
+
+  function addStandardSections() {
+    ["What the researchers were trying to find out", "What they did", "What they found",
+     "Why it matters", "What this doesn't tell us", "What to watch next"].forEach(function (h) {
+      var head = document.createElement("h2");
+      head.textContent = h;
+      els.compose.appendChild(head);
+      var p = document.createElement("p");
+      p.innerHTML = "<br>";
+      els.compose.appendChild(p);
+    });
+    ensureTrailingParagraph();
+  }
 
   /* Remove a callout but keep what was written inside it. */
   els.compose.addEventListener("click", function (e) {
@@ -692,6 +702,7 @@
 
   function openGlossary(existing) {
     editingTerm = existing || null;
+    $("gloss-add").open = false;
     saveRange();
     var seed = existing ? existing.getAttribute("data-term")
                         : String(window.getSelection()).trim();
@@ -780,6 +791,28 @@
   }
 
   $("gloss-search").addEventListener("input", function () { renderGlossResults(this.value); });
+
+  $("gloss-add").addEventListener("toggle", function () {
+    if (this.open && !$("gloss-new-term").value) {
+      $("gloss-new-term").value = $("gloss-search").value.trim();
+      $("gloss-new-def").focus();
+    }
+  });
+  $("gloss-new-save").addEventListener("click", function () {
+    var term = $("gloss-new-term").value.trim(), def = $("gloss-new-def").value.trim();
+    if (!term || !def) { toast("Give the word and what it means.", true); return; }
+    api("/api/glossary/add", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ term: term, definition: def })
+    }).then(function (res) {
+      if (!res.ok) { toast(res.error || "Could not add that word.", true); return; }
+      state.glossary = res.terms || state.glossary;
+      $("gloss-new-term").value = ""; $("gloss-new-def").value = "";
+      $("gloss-add").open = false;
+      applyTerm(res.term);
+      toast("Added \u201c" + res.term + "\u201d to the glossary");
+    });
+  });
   $("gloss-cancel").addEventListener("click", closeGlossary);
   $("gloss-modal").addEventListener("click", function (e) { if (e.target === this) closeGlossary(); });
   document.addEventListener("keydown", function (e) {
@@ -858,6 +891,8 @@
         })
       : [blankPaper()];
     state.file = data.file || null;
+    state.replaces = data.replaces || null;
+    $("btn-rewrite").hidden = !(state.file && !data.draft);
     renderChips();
     renderPapers();
     autosize(els.title);
@@ -1011,7 +1046,7 @@
       $("prev-papers").innerHTML = res.papers_html || "";
       $("body-count").textContent = res.words + " words, about " + res.minutes + " minutes to read";
       $("length-stat").textContent = res.words + " words, about " + res.minutes +
-        " minutes to read. Issues usually run between 900 and 1,400 words.";
+        " minutes to read. Most issues run between 600 and 1,400 words.";
       renderChecks(res);
     }).catch(function () { /* the preview is best-effort */ });
   }
@@ -1123,7 +1158,7 @@
 
   /* ----------------------------------------------------------------- saving */
 
-  function save() {
+  function save(replace) {
     if (state.saving) return;
     var meta = collect();
     if (!meta.title) { toast("Give the issue a headline first.", true); els.title.focus(); return; }
@@ -1135,15 +1170,28 @@
 
     api("/api/save", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ meta: meta, body: getBody(), original_file: state.file })
+      body: JSON.stringify({ meta: meta, body: getBody(), original_file: state.file,
+                             replace: typeof replace === "string" ? replace : null })
     }).then(function (res) {
+      if (!res.ok && res.conflict) {
+        markDirty();
+        if (confirm(res.error + "\n\nPublish this version in its place? The current one " +
+                    "is taken off the site (you can still get it back from the trash).")) {
+          state.saving = false;
+          save(res.conflict);
+        }
+        return;
+      }
       if (!res.ok) { toast(res.error || "Could not save.", true); markDirty(); return; }
       state.file = res.file;
       // Pin the web address. Otherwise it would follow the headline, and editing
       // the headline of a published issue would quietly break every link to it.
       if (!els.slug.value.trim() && res.slug) els.slug.value = res.slug;
       markClean(res.saved_at);
+      $("btn-rewrite").hidden = !!meta.draft;
+      state.replaces = null;
       toast(meta.draft ? "Saved as a draft"
+                       : res.replaced ? "Published in place of the old version. Push it in GitHub Desktop."
                        : "Saved. Push it in GitHub Desktop to put it on pdbrief.org");
       loadList(res.file);
     }).catch(function (err) {
@@ -1155,7 +1203,7 @@
     });
   }
 
-  els.saveBtn.addEventListener("click", save);
+  els.saveBtn.addEventListener("click", function () { save(); });
   document.addEventListener("keydown", function (e) {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") { e.preventDefault(); save(); }
   });
@@ -1168,12 +1216,38 @@
       body: JSON.stringify({ file: state.file })
     }).then(function (res) {
       if (!res.ok) { toast(res.error || "Could not delete.", true); return; }
-      toast("Issue deleted");
       state.file = null; state.dirty = false;
       return api("/api/new").then(function (r) {
         fill({ date: r.date, draft: true, papers: [blankPaper()], topics: [], body: "" });
         loadList(null);
+        toast("Issue deleted", false, { label: "Undo", run: function () {
+          api("/api/restore", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ trashed: res.trashed })
+          }).then(function (back) {
+            if (!back.ok) { toast(back.error || "Could not restore it.", true); return; }
+            state.dirty = false;
+            openIssue(back.file);
+            toast("Restored");
+          });
+        } });
       });
+    });
+  });
+
+  $("btn-rewrite").addEventListener("click", function () {
+    if (!state.file) return;
+    if (state.dirty && !confirm("This issue has changes you have not saved. Start a rewrite anyway?")) return;
+    var old = collect(), oldFile = state.file;
+    if (!old.slug) old.slug = slugify(old.title);
+    api("/api/new").then(function (res) {
+      fill({ title: old.title, date: res.date, slug: old.slug, summary: "", draft: true,
+             topics: old.topics, papers: old.papers, body: "", replaces: oldFile });
+      addStandardSections();
+      loadList(null);
+      markDirty();
+      els.title.focus();
+      toast("New draft started. The published version stays live until you publish this one.");
     });
   });
 

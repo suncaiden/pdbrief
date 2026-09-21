@@ -12,3 +12,6 @@ __pycache__/
 # Editors
 .vscode/
 .idea/
+
+# Issues deleted from the writing desk, kept so they can be restored
+.trash/

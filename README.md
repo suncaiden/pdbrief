@@ -17,7 +17,9 @@ Double-click **Write PD Brief** on your Desktop.
 
 A small black window appears and your browser opens the writing desk. Leave that
 window open while you write; close it when you are done. That is the whole
-startup routine — there is nothing to type.
+startup routine — there is nothing to type. If the desk is already running,
+double-clicking again just opens it in your browser rather than starting a
+second copy.
 
 If you would rather use a terminal:
 
@@ -45,11 +47,20 @@ It gives you:
   boxes, comparison tables, and the six standard section headings
 - **Explain a word** — select a word, pick a glossary entry, and readers get a
   tap-to-see definition. Click an explained word again to change or remove it.
+  If the word is not in the glossary yet, open **Add a new word to the glossary**
+  at the bottom of the same window: it is added and used in one step.
 - **A live preview** on the right, rendered by the real site, so what you see is
   exactly what readers get
 - **A checks panel** that flags missing house sections, undefined glossary terms,
-  and whether the length is in range
+  a missing summary, topic or study link, and whether the length is in range
 - **A draft switch** — an issue stays off the public site until you flip it
+- **Rewrite from scratch** — on a published issue, starts a fresh draft with the
+  same study, topics and web address, while the original stays live. When you
+  switch the draft off and save, the desk offers to publish it in place of the
+  original, which is set aside rather than destroyed.
+- **Undo** — deleting an issue shows an Undo button for a few seconds. Deleted
+  and replaced issues are kept in a hidden `.trash` folder in the project, which
+  is never published or committed.
 
 Under the hood it still reads and writes ordinary Markdown files, so nothing is
 locked in. Opening an issue and saving it again leaves the file semantically

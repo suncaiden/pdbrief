@@ -1,3 +1,6 @@
+/* Anything marked hidden stays hidden, whatever display a class gives it. */
+[hidden] { display: none !important; }
+
 /* PD Brief writing desk — local editor chrome.
    Reuses the site's colour tokens from /assets/style.css so the live preview
    is a true reflection of the published page. */
@@ -437,3 +440,15 @@ body {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
+
+/* --- Rewrite, undo and glossary additions ------------------------------ */
+.danger-actions { display: flex; gap: .6rem; flex-wrap: wrap; }
+.toast-action {
+  margin-left: .8rem; border: 0; background: none; color: inherit; font: inherit;
+  font-weight: 700; text-decoration: underline; cursor: pointer; padding: 0;
+}
+.gloss-add { margin-top: .9rem; border-top: 1px solid var(--border); padding-top: .8rem; }
+.gloss-add summary { cursor: pointer; font-size: .84rem; font-weight: 600; color: var(--accent); }
+.gloss-add .paper-mini { display: block; margin-top: .7rem; }
+.gloss-add textarea { resize: vertical; }
+.gloss-add .dbtn { margin-top: .8rem; }

@@ -4,7 +4,7 @@
 title: "The bigger trial said no. Then the paper was flagged."
 date: "2026-08-30"
 slug: "exenatide-phase-3-result"
-summary: "A large trial of exenatide, the GLP-1 drug the field had pinned real hope on, found no benefit in Parkinson's. Eighteen months later the paper was placed under an expression of concern after inspectors found serious problems at one of its hospitals. Both facts matter."
+summary: "A large trial of exenatide, the GLP-1 drug the field had pinned real hope on, found no benefit in Parkinson's. More than a year later, the journal flagged the paper after inspectors found serious problems at one of the hospitals that ran it."
 topics: [Clinical Trials, Drug Repurposing, Disease Modification, Research Integrity]
 papers:
   - title: "Exenatide once a week versus placebo as a potential disease-modifying treatment for people with Parkinson's disease in the UK: a phase 3, multicentre, double-blind, parallel-group, randomised, placebo-controlled trial"
@@ -15,9 +15,9 @@ papers:
     access: "Free abstract"
 ---
 
-Last week's issue covered a French trial in which a diabetes drug appeared to hold Parkinson's symptoms steady for a year. It ended by noting that a larger trial of a related drug was due, and that its result would matter a great deal.
+Last week's issue covered a French trial in which a diabetes drug appeared to hold Parkinson's symptoms steady for a year. It ended on a larger trial of a closely related drug, exenatide, published in early 2025.
 
-That result is in. It is negative. And in the months since it was published, the paper reporting it has been placed under formal review.
+That trial found nothing. And in May this year, the paper reporting it was placed under formal review.
 
 :::key
 In a {{phase 3 trial}} of 194 people followed for almost two years, weekly exenatide made no difference to Parkinson's symptoms compared with placebo. Separately, in May 2026 *The Lancet* attached an {{expression of concern}} to the paper after regulators inspecting one of the six hospitals found serious problems with how trials there were run. The finding and the flag are two different things, and both are worth understanding.
@@ -48,7 +48,7 @@ Both groups got worse, at almost exactly the same rate.
 | Confidence interval | −1.56 to 3.39 |   |
 | p-value | 0.47 |   |
 
-The numbers slightly favoured placebo, though nowhere near enough to mean anything. A {{p-value}} of 0.47 is roughly what you get from tossing a coin. The {{confidence interval}} is the more useful number here: it comfortably includes zero, and its narrowness means the trial was large enough to rule out the sort of benefit the 2017 study had suggested.
+The numbers slightly favoured placebo, though nowhere near enough to mean anything. A {{p-value}} of 0.47 means that if the drug did nothing at all, a gap this size would still turn up almost half the time. The {{confidence interval}} is the more useful number here: it comfortably includes zero, and its narrowness means the trial was large enough to rule out the sort of benefit the 2017 study had suggested.
 
 The absence of an effect held across the secondary measures too: {{non-motor symptoms}}, quality of life, medication requirements and imaging. There was no subgroup that clearly benefited. The drug was safe and well tolerated. It simply did not work.
 
@@ -90,7 +90,7 @@ The last part is the one almost nobody writes about. An inspection turned up pro
 | Result | 3.08-point benefit | no difference |
 | Status | published, no concerns raised | under an expression of concern |
 
-Nobody yet knows which of these is right, and several are still in play.
+Nobody yet knows which trial is closer to the truth, and there is more than one way to explain the gap.
 
 It may be that assessing people on their usual medication, as the French trial did, is more forgiving, capturing a modest symptomatic effect rather than true disease modification. It may be that 12 months is short enough for a small early difference to appear and 96 weeks long enough for it to wash out. It may be that the two drugs genuinely differ in how much reaches the brain. Or the French result may simply have been a false positive, of the same kind the 2017 exenatide trial now appears to have been.
 

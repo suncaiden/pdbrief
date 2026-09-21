@@ -1269,7 +1269,7 @@ def build_archive(cfg, issues):
   <div class="archive-controls">
     <div class="search-wrap">
       <label class="sr-only" for="archive-search">Search issues</label>
-      <input type="search" id="archive-search" placeholder="Search titles, summaries, topics&hellip;"
+      <input type="search" id="archive-search" placeholder="Search every issue&hellip;"
              autocomplete="off">
     </div>
     <div class="filters" role="group" aria-label="Filter by topic">

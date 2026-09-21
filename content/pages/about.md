@@ -18,9 +18,11 @@ Issues take about five to ten minutes to read. No scientific background is assum
 
 ## About the editor {#editor}
 
-PD Brief is run by me, Caiden Sun. I'm a high school student, and I started it in 2026. I choose the studies, read the papers and put each issue together.
+I'm Caiden Sun, a high school student, and I founded PD Brief in August 2026.
 
-I'm not a doctor or a researcher, so I stick to what each paper actually reports and link to it so you can check my reading against the original. If something looks wrong, tell me on the [questions page](/ask/). Corrections go on the issue they concern, where everyone can see them.
+I started it to spread awareness and to make research like this accessible to the general public, not just to scientists. Parkinson's affects my grandfather, so making the disease and the challenges that come with it clearer for everybody is important to me.
+
+I'm not a doctor or a researcher. Each issue links to the paper it's based on, so you can check what I wrote. If I got something wrong, tell me on the [questions page](/ask/) and I'll fix it and note the correction on that issue.
 
 ## Who this is for
 

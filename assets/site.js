@@ -44,6 +44,13 @@
         navToggle.focus();
       }
     });
+    document.addEventListener("click", function (e) {
+      if (nav.classList.contains("is-open") && !nav.contains(e.target) &&
+          !navToggle.contains(e.target)) {
+        nav.classList.remove("is-open");
+        navToggle.setAttribute("aria-expanded", "false");
+      }
+    });
   }
 
   /* --- Glossary pop-ups ------------------------------------------------- */
@@ -53,11 +60,12 @@
   var popClose = document.getElementById("gloss-close");
   var activeTrigger = null;
 
-  function hidePop() {
+  function hidePop(returnFocus) {
     if (!pop) return;
     pop.hidden = true;
     if (activeTrigger) {
       activeTrigger.setAttribute("aria-expanded", "false");
+      if (returnFocus === true) activeTrigger.focus();
       activeTrigger = null;
     }
   }
@@ -99,9 +107,16 @@
     if (btn) { e.preventDefault(); showPop(btn); return; }
     if (pop && !pop.hidden && !e.target.closest(".gloss-pop")) hidePop();
   });
-  if (popClose) popClose.addEventListener("click", hidePop);
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape") hidePop(); });
-  window.addEventListener("resize", hidePop);
+  if (popClose) popClose.addEventListener("click", function () { hidePop(true); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && pop && !pop.hidden) hidePop(true);
+  });
+  // Phones fire "resize" whenever the address bar slides away during a scroll,
+  // so only a real change of width (rotating, resizing a window) closes it.
+  var lastWidth = window.innerWidth;
+  window.addEventListener("resize", function () {
+    if (window.innerWidth !== lastWidth) { lastWidth = window.innerWidth; hidePop(); }
+  });
 
   /* --- Archive search and topic filter --------------------------------- */
   var search = document.getElementById("archive-search");
@@ -163,9 +178,13 @@
 
   if (search) search.addEventListener("input", applyArchiveFilters);
   filters.forEach(function (btn) {
+    btn.setAttribute("aria-pressed", btn.classList.contains("is-active") ? "true" : "false");
     btn.addEventListener("click", function () {
       activeTopic = btn.getAttribute("data-topic");
-      filters.forEach(function (b) { b.classList.toggle("is-active", b === btn); });
+      filters.forEach(function (b) {
+        b.classList.toggle("is-active", b === btn);
+        b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+      });
       applyArchiveFilters();
     });
   });
@@ -178,6 +197,25 @@
       if (match) match.click();
     }
   }
+
+  /* --- Wide tables ------------------------------------------------------ */
+  // A table wider than the screen scrolls sideways. Keyboard users can only
+  // scroll it if it can take focus, so give it that, and a name, when needed.
+  function markScrollableTables() {
+    document.querySelectorAll(".table-wrap").forEach(function (wrap) {
+      if (wrap.scrollWidth > wrap.clientWidth + 1) {
+        wrap.setAttribute("tabindex", "0");
+        wrap.setAttribute("role", "region");
+        wrap.setAttribute("aria-label", "Table, scrolls sideways");
+      } else {
+        wrap.removeAttribute("tabindex");
+        wrap.removeAttribute("role");
+        wrap.removeAttribute("aria-label");
+      }
+    });
+  }
+  markScrollableTables();
+  window.addEventListener("resize", markScrollableTables);
 
   /* --- Glossary page search -------------------------------------------- */
   var glossSearch = document.getElementById("gloss-search");

@@ -9,6 +9,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:      # lets you trigger a rebuild by hand from the Actions tab
+  schedule:
+    # A quiet daily rebuild, so wording that depends on today's date stays true
+    # ("This week's issue" turns into "The latest issue", the footer year rolls
+    # over) even in a week when nothing is pushed.
+    - cron: "17 6 * * *"
 
 permissions:
   contents: read

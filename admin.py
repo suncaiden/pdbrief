@@ -12,6 +12,7 @@ what you see while writing is what readers will get.
 import json
 import os
 import re
+import threading
 from datetime import date, datetime
 
 import build
@@ -40,11 +41,21 @@ def _quote(value):
     """Emit a YAML scalar our own parser will read back correctly.
 
     Frontmatter is one line per field, so any newline the writer types into a
-    field is folded into a space. Inner double quotes survive: the reader only
-    strips one matching pair from the ends.
+    field is folded into a space. Quotes and backslashes are escaped, and the
+    reader in build.py undoes that.
     """
     s = re.sub(r"\s+", " ", str(value)).strip()
-    return '"%s"' % s
+    return '"%s"' % s.replace("\\", "\\\\").replace('"', '\\"')
+
+
+def _topic(value):
+    """A topic inside [a, b]: quoted only when it would otherwise be misread,
+    such as one containing a comma or one that looks like yes, no or a number."""
+    t = re.sub(r"\s+", " ", str(value)).strip()
+    if (re.search(r"[,\[\]\"'#:]", t) or t.lower() in ("yes", "no", "true", "false", "null", "~")
+            or re.fullmatch(r"-?\d+(\.\d+)?", t)):
+        return _quote(t)
+    return t
 
 
 KNOWN_KEYS = {"title", "date", "slug", "summary", "topics", "papers", "draft"}
@@ -104,7 +115,7 @@ def to_frontmatter(meta, comments=None, preserved=None):
 
     topics = [t for t in meta.get("topics", []) if str(t).strip()]
     if topics:
-        lines.append("topics: [%s]" % ", ".join(str(t).strip() for t in topics))
+        lines.append("topics: [%s]" % ", ".join(_topic(t) for t in topics))
 
     papers = [p for p in meta.get("papers", []) if str(p.get("title", "")).strip()]
     if papers:
@@ -203,8 +214,9 @@ def read_issue(filename):
 
 
 def glossary_terms():
-    build.GLOSSARY.clear()
-    entries = build.load_glossary()
+    with RENDER_LOCK:
+        build.GLOSSARY.clear()
+        entries = build.load_glossary()
     return [{"term": e["term"], "slug": e["slug"], "definition": e["definition"]}
             for e in entries]
 
@@ -221,7 +233,17 @@ def all_topics():
 # Live preview, rendered with the real site pipeline
 # --------------------------------------------------------------------------
 
+# The preview and the glossary list share the renderer's module-level state,
+# and requests now arrive on separate threads, so they take turns.
+RENDER_LOCK = threading.Lock()
+
+
 def render_preview(payload):
+    with RENDER_LOCK:
+        return _render_preview(payload)
+
+
+def _render_preview(payload):
     body = payload.get("body", "") or ""
     del build.WARNINGS[:]
     build.GLOSSARY.clear()
@@ -233,7 +255,7 @@ def render_preview(payload):
               if str(p.get("title", "")).strip()]
 
     words = len(re.findall(r"[A-Za-z0-9'-]+", body))
-    heads = [h["text"].lower() for h in headings]
+    heads = [h["text"].lower().replace("\u2019", "'") for h in headings]
     expected = ["what they did", "what they found", "why it matters",
                 "what this doesn't tell us", "what to watch next"]
 
@@ -309,6 +331,7 @@ def save_issue(payload):
             pass
 
     return {"ok": True, "file": name, "renamed": renamed,
+            "slug": build.slugify(meta["slug"]),
             "url": "/issues/%s/" % build.slugify(meta["slug"]),
             "saved_at": datetime.now().strftime("%H:%M:%S")}
 
@@ -350,7 +373,31 @@ def _send_file(handler, name):
     handler.wfile.write(data)
 
 
+def _local_request(handler):
+    """True only for requests from this computer's own browser.
+
+    The server already listens on 127.0.0.1 alone. Checking the Host header as
+    well stops a web page from reaching it by pointing its own domain name at
+    this machine, and checking Origin stops any other site open in the browser
+    from sending the desk a save or delete.
+    """
+    host = (handler.headers.get("Host") or "").rsplit(":", 1)[0].strip("[]").lower()
+    if host not in ("localhost", "127.0.0.1", "::1"):
+        return False
+    origin = handler.headers.get("Origin")
+    if origin and not re.match(r"^http://(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$", origin):
+        return False
+    return True
+
+
+def _refuse(handler):
+    _send(handler, {"ok": False, "error": "The writing desk only answers this computer."}, 403)
+    return True
+
+
 def handle_get(handler, path):
+    if (path in STATIC or path.startswith("/api/")) and not _local_request(handler):
+        return _refuse(handler)
     if path in STATIC:
         if path == "/admin":
             handler.send_response(301)
@@ -388,6 +435,13 @@ def handle_get(handler, path):
 def handle_post(handler, path):
     if not path.startswith("/api/"):
         return False
+    if not _local_request(handler):
+        return _refuse(handler)
+    # The editor always sends JSON. Requiring it means another site cannot
+    # slip a request through as a plain form post.
+    if not (handler.headers.get("Content-Type") or "").startswith("application/json"):
+        _send(handler, {"ok": False, "error": "Expected JSON."}, 415)
+        return True
     try:
         length = int(handler.headers.get("Content-Length") or 0)
         payload = json.loads(handler.rfile.read(length).decode("utf-8")) if length else {}

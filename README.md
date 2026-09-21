@@ -71,13 +71,24 @@ in the Summary box — "Issue 4" is fine — click **Commit to main**, then
 **Push origin**.
 
 GitHub rebuilds and deploys the site automatically. The live version updates in
-a minute or two.
+a minute or two. Saving in the writing desk only changes the copy on your Mac;
+nothing reaches pdbrief.org until you push.
+
+GitHub also rebuilds the site once a day on its own, so date-dependent wording
+("This week's issue" becoming "The latest issue") stays accurate in a week when
+you do not push anything.
 
 From a terminal instead: `git add . && git commit -m "Issue 4" && git push`
 
 > The writing desk runs only on your own machine, from the preview server. It is
 > never copied into the built site, so it cannot be reached from the public web
-> and needs no password.
+> and needs no password. The preview server also refuses connections from other
+> devices on the same Wi-Fi, and requests from other websites open in your
+> browser, so nobody else can edit or delete an issue through it.
+>
+> Once an issue has been saved, its web address stays fixed even if you later
+> change the headline, so links people have shared keep working. To move it
+> deliberately, edit the **Web address** field.
 
 ### If you prefer plain files
 
@@ -223,8 +234,9 @@ since answering those is outside what this publication can responsibly do.
 ### Newsletter signups
 
 Set `subscribe_url` in `site.json` to a Buttondown, Substack, Mailchimp, or
-similar signup page, and the homepage banner turns into a working Subscribe
-button. Leave it empty and the banner points at the RSS feed instead.
+similar signup page, and the closing note at the foot of the homepage gains a
+"Get it by email" link. Leave it empty and the note points readers at the
+archive instead.
 
 ---
 
@@ -371,16 +383,16 @@ GitHub ignores the `CNAME` file the build writes.
 
 Because every page is real HTML written to disk, the site works without
 JavaScript, loads fast on a poor connection, and is fully readable by search
-engines and screen readers. JavaScript only adds the extras: text size, dark
-mode, glossary pop-ups, archive search.
+engines and screen readers. JavaScript only adds the extras: dark mode,
+glossary pop-ups, archive search.
 
 ### Accessibility
 
 The audience includes people with tremor, reduced dexterity, and changing vision,
 so this is treated as a feature and not an afterthought:
 
-- a reader-controlled text size, remembered between visits
-- a light/dark toggle that also respects the system setting
+- a light/dark toggle, remembered between visits (light is the default)
+- browser zoom works everywhere, since nothing is sized in fixed pixels
 - large touch targets and visible focus outlines throughout
 - semantic HTML, a skip link, and labelled controls for screen readers
 - honours `prefers-reduced-motion`

@@ -45,7 +45,11 @@ def _scalar(raw):
     if s == "":
         return ""
     if len(s) >= 2 and s[0] == s[-1] and s[0] in "\"'":
-        return s[1:-1]
+        inner = s[1:-1]
+        if s[0] == '"':
+            # \" and \\ are the only escapes a writer is likely to type.
+            return re.sub(r'\\(["\\])', r"\1", inner)
+        return inner.replace("''", "'")
     low = s.lower()
     if low in ("true", "yes"):
         return True
@@ -111,7 +115,7 @@ def parse_yaml_block(lines, base_indent=0, start=0):
             if cur < indent or not line.lstrip().startswith("- "):
                 break
             rest = line.lstrip()[2:]
-            if ":" in rest and not rest.strip().startswith("http"):
+            if re.match(r"[A-Za-z_][\w-]*:(\s|$)", rest.strip()):
                 # list of mappings -- rebuild as a sub-block
                 sub = [" " * (indent + 2) + rest]
                 i += 1
@@ -337,7 +341,7 @@ def inline(text):
         GLOSSARY_USED.add(key)
         return stash(
             '<button type="button" class="gloss" data-term="%s" data-def="%s" '
-            'aria-expanded="false">%s</button>'
+            'aria-expanded="false" aria-controls="gloss-pop">%s</button>'
             % (esc(entry["term"]), esc(entry["definition"]), shown))
     text = re.sub(r"\{\{([^}]+)\}\}", gloss_sub, text)
 
@@ -353,15 +357,25 @@ def inline(text):
 
 def _is_block_start(line):
     ls = line.lstrip()
-    return (ls.startswith("#") or ls.startswith("> ") or ls.startswith("- ")
+    return (re.match(r"#{1,6}\s", ls) or ls.startswith("> ") or ls.startswith("- ")
             or ls.startswith("* ") or ls.startswith(":::") or ls.startswith("|")
             or re.match(r"^\d+\.\s", ls) or re.match(r"^-{3,}$", ls.strip()))
 
 
-def markdown(src):
+# Ids the page layout already uses, so a heading can never collide with them.
+RESERVED_IDS = {"main", "site-nav", "theme-btn", "gloss-pop", "gloss-pop-term",
+                "gloss-pop-def", "gloss-close", "archive-search", "gloss-search",
+                "results-count", "no-results", "gl-no-results", "corrections-head",
+                "ask-invite-head"}
+
+
+def markdown(src, _ids=None):
     lines = src.replace("\r\n", "\n").split("\n")
     out = []
     headings = []
+    # One set per document, shared with nested blocks, so an issue covering two
+    # studies can repeat "What they found" without two headings sharing an id.
+    ids = set(RESERVED_IDS) if _ids is None else _ids
     i = 0
     n = len(lines)
 
@@ -388,10 +402,13 @@ def markdown(src):
             while i < n and lines[i].strip() != ":::":
                 body.append(lines[i])
                 i += 1
+            if i >= n:
+                warn("A '%s' box is never closed, so it runs to the end of the text. "
+                     "Put ::: on its own line where the box should end." % label)
             i += 1  # consume closing :::
-            inner, _ = markdown("\n".join(body))
+            inner, _ = markdown("\n".join(body), ids)
             out.append(
-                '<aside class="callout callout-%s"><p class="callout-label">%s</p>%s</aside>'
+                '<div class="callout callout-%s" role="note"><p class="callout-label">%s</p>%s</div>'
                 % (esc(slugify(name)), esc(label), inner))
             continue
 
@@ -406,9 +423,14 @@ def markdown(src):
                 hid = custom.group(1)
                 text = text[:custom.start()].strip()
             else:
-                hid = slugify(text)
+                hid = slugify(plain_inline(text))
+            base, k = hid, 2
+            while hid in ids:
+                hid = "%s-%d" % (base, k)
+                k += 1
+            ids.add(hid)
             if level in (2, 3):
-                headings.append({"level": level, "text": re.sub(r"[*`]", "", text), "id": hid})
+                headings.append({"level": level, "text": plain_inline(text), "id": hid})
             out.append('<h%d id="%s">%s</h%d>' % (level, hid, inline(text), level))
             i += 1
             continue
@@ -428,7 +450,7 @@ def markdown(src):
             while i < n and lines[i].strip().startswith(">"):
                 body.append(re.sub(r"^\s*>\s?", "", lines[i]))
                 i += 1
-            inner, _ = markdown("\n".join(body))
+            inner, _ = markdown("\n".join(body), ids)
             out.append("<blockquote>%s</blockquote>" % inner)
             continue
 
@@ -440,8 +462,10 @@ def markdown(src):
 
         # Ordered list
         if re.match(r"^\d+\.\s+", stripped):
+            first = int(re.match(r"\d+", stripped).group(0))
             items, i = collect_list(lines, i, r"^\d+\.\s+")
-            out.append("<ol>%s</ol>" % "".join("<li>%s</li>" % it for it in items))
+            start = (' start="%d"' % first) if first != 1 else ""
+            out.append("<ol%s>%s</ol>" % (start, "".join("<li>%s</li>" % it for it in items)))
             continue
 
         # Standalone image becomes a figure
@@ -500,7 +524,8 @@ def render_table(rows):
     if body_rows and re.fullmatch(r"[\s|:-]+", body_rows[0]):
         body_rows = body_rows[1:]
 
-    head_html = "".join("<th scope='col'>%s</th>" % inline(c) for c in header)
+    head_html = "".join(("<th scope='col'>%s</th>" % inline(c)) if c else "<td></td>"
+                        for c in header)
     body_html = ""
     for r in body_rows:
         cs = cells(r)
@@ -516,18 +541,34 @@ def render_table(rows):
 
 def plain_text(md_src, limit=None):
     """Strip markdown to plain text, for summaries and feed descriptions."""
-    t = re.sub(r"^---.*?^---", "", md_src, flags=re.S | re.M)
-    t = re.sub(r":::\w*", "", t)
-    t = re.sub(r"`([^`]*)`", r"\1", t)
-    t = re.sub(r"!\[[^\]]*\]\([^)]*\)", "", t)
-    t = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", t)
-    t = re.sub(r"\{\{([^}|]+)(\|[^}]*)?\}\}", r"\1", t)
-    t = re.sub(r"[#>*_|]", "", t)
-    t = re.sub(r"\s+", " ", t).strip()
+    t = str(md_src)
+    t = re.sub(r"(?m)^:::[\w-]*\s*$", "", t)                  # callout fences
+    t = re.sub(r"(?m)^\s*(?:-{3,}|\*{3,})\s*$", "", t)        # horizontal rules
+    t = re.sub(r"(?m)^\s*\|?[\s:|-]*-[\s:|-]*\|?\s*$", "", t)  # table divider rows
+    t = re.sub(r"(?m)^\s{0,3}#{1,6}\s+", "", t)                # heading marks
+    t = re.sub(r"(?m)^\s*>\s?", "", t)                         # quotation marks
+    t = re.sub(r"(?m)^\s*(?:[-*+]|\d+\.)\s+", "", t)          # list markers
+    t = re.sub(r"\s*\{#[A-Za-z0-9_-]+\}\s*$", "", t, flags=re.M)  # heading anchors
+    t = plain_inline(t)
     if limit and len(t) > limit:
         cut = t[:limit].rsplit(" ", 1)[0]
         return cut.rstrip(",.;:") + "…"
     return t
+
+
+def plain_inline(t):
+    """Strip inline markup (links, glossary terms, emphasis) from one run of text."""
+    t = re.sub(r"`([^`]*)`", r"\1", t)
+    t = re.sub(r"!\[[^\]]*\]\([^)]*\)", "", t)
+    t = re.sub(r"\[([^\]]+)\]\(((?:[^()\s]|\([^()\s]*\))+)\)", r"\1", t)
+    # {{term|words shown}} reads as the words shown, just as it does on the page.
+    t = re.sub(r"\{\{([^}|]+)\|([^}]*)\}\}",
+               lambda m: m.group(2).strip() or m.group(1).strip(), t)
+    t = re.sub(r"\{\{([^}]+)\}\}", r"\1", t)
+    t = re.sub(r"\*+", "", t)
+    t = re.sub(r"(?<![\w])_+|_+(?![\w])", "", t)             # _emphasis_, not snake_case
+    t = t.replace("|", " ").replace("--", "\u2014")
+    return re.sub(r"\s+", " ", t).strip()
 
 
 # --------------------------------------------------------------------------
@@ -552,7 +593,7 @@ LAYOUT = """<!doctype html>
 <meta property="og:image" content="{{social_image}}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="{{site_title}}: Parkinson's research, explained plainly">
+<meta property="og:image:alt" content="{{site_title}}: {{site_tagline}}">
 <meta name="twitter:image" content="{{social_image}}">
 <meta name="theme-color" content="#fcfaf5">
 <link rel="alternate" type="application/rss+xml" title="{{site_title}} weekly issues" href="/feed.xml">
@@ -563,7 +604,7 @@ LAYOUT = """<!doctype html>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
 <link rel="stylesheet" href="/assets/style.css?v={{cachebust}}">
 <script>
-/* Applied before paint so the page never flashes the wrong theme or size. */
+/* Applied before paint so the page never flashes the wrong theme. */
 (function(){try{
 var d=document.documentElement;
 var t=localStorage.getItem('pdb-theme'); if(t){d.setAttribute('data-theme',t);}
@@ -583,7 +624,7 @@ var t=localStorage.getItem('pdb-theme'); if(t){d.setAttribute('data-theme',t);}
       </span>
     </a>
 
-    <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
+    <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
       <span class="nav-toggle-bars" aria-hidden="true"><span></span><span></span><span></span></span>
       <span class="nav-toggle-label">Menu</span>
     </button>
@@ -591,7 +632,7 @@ var t=localStorage.getItem('pdb-theme'); if(t){d.setAttribute('data-theme',t);}
     <nav id="site-nav" class="site-nav" aria-label="Main">
       {{nav_links}}
       <div class="nav-tools">
-        <button class="tool-btn theme-btn" id="theme-btn" title="Switch between light and dark">
+        <button type="button" class="tool-btn theme-btn" id="theme-btn" title="Switch between light and dark">
           <span class="theme-icon" aria-hidden="true"></span>
           <span class="sr-only">Switch colour theme</span>
         </button>
@@ -620,19 +661,18 @@ var t=localStorage.getItem('pdb-theme'); if(t){d.setAttribute('data-theme',t);}
     </div>
   </div>
   <div class="wrap footer-bottom">
-    <p class="disclaimer"><strong>This is not medical advice.</strong> {{site_title}} summarises published
-    research for general understanding. Nothing here is a recommendation for your own care. Always talk to
-    your neurologist or doctor before changing anything about your treatment.</p>
-    <p class="copyright">&copy; {{year}} {{site_title}}. Independent and not affiliated with any journal,
-    university, company, or advocacy organisation. Summaries are written by a human editor; all findings
-    belong to the researchers who published them.</p>
+    <p class="disclaimer"><strong>This is not medical advice.</strong> {{site_title}} explains published
+    research. It can&rsquo;t tell you what is right for your own care, so talk to your neurologist or doctor
+    before changing anything about your treatment.</p>
+    <p class="copyright">&copy; {{year}} {{site_title}}{{editor_credit}}. Not affiliated with any journal,
+    university, drug company or patient group. The findings belong to the researchers who published them.</p>
   </div>
 </footer>
 
-<div class="gloss-pop" id="gloss-pop" role="dialog" aria-live="polite" hidden>
+<div class="gloss-pop" id="gloss-pop" role="dialog" aria-labelledby="gloss-pop-term" aria-live="polite" hidden>
   <p class="gloss-term" id="gloss-pop-term"></p>
   <p class="gloss-def" id="gloss-pop-def"></p>
-  <button class="gloss-close" id="gloss-close" aria-label="Close definition">&times;</button>
+  <button type="button" class="gloss-close" id="gloss-close" aria-label="Close definition">&times;</button>
 </div>
 
 <script src="/assets/site.js?v={{cachebust}}"></script>
@@ -711,10 +751,9 @@ def paper_block(papers):
     heading = "The study behind this issue" if len(papers) == 1 else "The studies behind this issue"
     return ('<section class="papers" aria-label="Source studies"><h2 class="papers-head">%s</h2>'
             '<ul class="paper-list">%s</ul>'
-            '<p class="papers-note">Follow the links to read the original papers. '
-            'Some journals charge for access; abstracts are usually free. '
-            'Every study covered so far is listed on the '
-            '<a href="/sources/">sources page</a>.</p></section>'
+            '<p class="papers-note">The links go to the original papers. Some journals '
+            'charge to read the full text, but the abstract is usually free. Every study '
+            'covered so far is also on the <a href="/sources/">sources page</a>.</p></section>'
             % (heading, "".join(rows)))
 
 
@@ -900,8 +939,9 @@ def load_pages():
 def page_shell(cfg, content, title=None, description=None, path="/",
                og_type="website", body_class="", extra_head="", extra_body=""):
     nav_links = "".join(
-        '<a class="nav-link%s" href="%s">%s</a>'
-        % (" current" if item["href"] == path else "", item["href"], esc(item["label"]))
+        '<a class="nav-link%s" href="%s"%s>%s</a>'
+        % (" current" if item["href"] == path else "", item["href"],
+           ' aria-current="page"' if item["href"] == path else "", esc(item["label"]))
         for item in cfg.get("nav", []))
     footer_nav = "".join(
         '<a href="%s">%s</a>' % (item["href"], esc(item["label"]))
@@ -913,7 +953,9 @@ def page_shell(cfg, content, title=None, description=None, path="/",
         '<a href="%s">%s</a>' % (item["href"], esc(item["label"]))
         for item in links)
     if title is None:
-        full_title = cfg["title"]
+        # The homepage carries the tagline too, so search results say what this is.
+        full_title = ("%s: %s" % (cfg["title"], cfg["tagline"].rstrip(".")) if path == "/"
+                      and cfg.get("tagline") else cfg["title"])
     elif len(title) > 52:
         full_title = title          # adding the site name would overflow the result
     else:
@@ -929,6 +971,9 @@ def page_shell(cfg, content, title=None, description=None, path="/",
         og_type=og_type,
         site_title=esc(cfg["title"]),
         site_description=esc(cfg["description"]),
+        site_tagline=esc(cfg.get("tagline", "").rstrip(".")),
+        editor_credit=(", by %s" % esc(cfg["editor_name"].strip())
+                       if cfg.get("editor_name", "").strip() else ""),
         nav_links=nav_links,
         footer_nav=footer_nav,
         footer_links=footer_links,
@@ -938,7 +983,7 @@ def page_shell(cfg, content, title=None, description=None, path="/",
         extra_head=extra_head,
         extra_body=extra_body,
         cachebust=CACHEBUST,
-        social_image=cfg["url"].rstrip("/") + "/assets/social-card.png",
+        social_image=cfg["url"].rstrip("/") + "/assets/social-card.png?v=" + SOCIAL_VERSION,
         author_meta=('<meta name="author" content="%s">' % esc(cfg["editor_name"].strip())
                      if cfg.get("editor_name", "").strip() else ""),
         verification=(
@@ -953,12 +998,14 @@ def subscribe_block(cfg):
     the raw feed file, which looks broken to anyone without a reader app."""
     ask = '<a href="/ask/">send a question or a suggestion</a>' if cfg.get("feedback_form_url") else ""
     if cfg.get("subscribe_url"):
-        lead = ('A new issue every week. <a href="%s" target="_blank" rel="noopener">Get it by '
-                'email</a>, or read the <a href="/archive/">archive</a>.' % esc(cfg["subscribe_url"]))
+        lead = ('A new issue comes out every week. <a href="%s" target="_blank" rel="noopener">Get '
+                'it by email</a>, or catch up in the <a href="/archive/">archive</a>.'
+                % esc(cfg["subscribe_url"]))
     else:
-        lead = ('A new issue every week. Read the <a href="/archive/">archive</a> for '
-                'everything published so far.')
-    tail = (" Spotted a study we should cover, or found something unclear? You can %s." % ask) if ask else ""
+        lead = ('A new issue comes out every week, and everything so far is in the '
+                '<a href="/archive/">archive</a>.')
+    tail = (" If you&rsquo;ve seen a study worth covering, or something here didn&rsquo;t make "
+            "sense, %s." % ask) if ask else ""
     return ("""<section class="subscribe" aria-label="Keeping up with PD Brief"><div class="wrap wrap-narrow subscribe-inner">
       <p>%s%s</p>
     </div></section>""" % (lead, tail))
@@ -980,7 +1027,7 @@ def build_home(cfg, issues):
 
     hero = """<section class="hero">
   <div class="wrap">
-    <p class="eyebrow">Independent &middot; Weekly &middot; Free to read</p>
+    <p class="eyebrow">Free to read, new every week</p>
     <h1 class="hero-title">%s</h1>
     <p class="hero-tagline">%s</p>
     <p class="hero-note">%s</p>
@@ -1017,8 +1064,6 @@ def build_home(cfg, issues):
                  latest["reading_time"], latest["url"], esc(latest["title"]),
                  esc(latest["summary"]), topics_html, latest["url"])
 
-    what = ""   # the numbered marketing strip has been removed
-
     recent = ""
     if rest:
         recent = ("""<section class="recent"><div class="wrap">
@@ -1027,7 +1072,7 @@ def build_home(cfg, issues):
     <div class="center"><a class="btn btn-quiet" href="/archive/">See the full archive</a></div>
     </div></section>""" % "".join(issue_card(it) for it in rest))
 
-    return page_shell(cfg, hero + what + recent + subscribe_block(cfg), path="/")
+    return page_shell(cfg, hero + recent + subscribe_block(cfg), path="/")
 
 
 def corrections_block(it):
@@ -1050,8 +1095,9 @@ def corrections_block(it):
             except Exception:
                 d = '<span class="corr-date">%s</span> ' % esc(when)
         rows.append("<li>%s%s</li>" % (d, inline(str(note))))
-    return ('<aside class="corrections"><h2 class="corr-head">Corrections</h2>'
-            '<ul class="corr-list">%s</ul></aside>' % "".join(rows))
+    return ('<section class="corrections" aria-labelledby="corrections-head">'
+            '<h2 class="corr-head" id="corrections-head">Corrections</h2>'
+            '<ul class="corr-list">%s</ul></section>' % "".join(rows))
 
 
 def feedback_link(cfg):
@@ -1063,13 +1109,12 @@ def ask_invitation(cfg):
     """A short invitation shown at the end of each issue."""
     if not cfg.get("feedback_form_url"):
         return ""
-    return ('<aside class="ask-invite">'
-            '<h2 class="ask-invite-head">Something here unclear?</h2>'
-            '<p>If a part of this issue did not make sense, or you want to know more about '
-            'the study behind it, ask. Questions shape what gets covered here, and how it '
-            'gets explained.</p>'
+    return ('<section class="ask-invite" aria-labelledby="ask-invite-head">'
+            '<h2 class="ask-invite-head" id="ask-invite-head">Something here unclear?</h2>'
+            '<p>If part of this issue didn&rsquo;t make sense, or you want to know more about '
+            'the study behind it, ask. Your question might end up shaping a future issue.</p>'
             '<a class="btn btn-primary" href="/ask/">Ask a question</a>'
-            '</aside>')
+            '</section>')
 
 
 def embeddable_form(url):
@@ -1104,10 +1149,9 @@ def build_feedback_page(cfg):
             '<iframe src="%s" title="Questions and feedback form" '
             'height="900" loading="lazy"></iframe>'
             '</div>'
-            '<p class="form-note">This form is hosted by Google, so opening this page '
-            'contacts Google&rsquo;s servers. If you would rather not, you can '
-            '<a href="%s" target="_blank" rel="noopener">open the form in a new tab</a> '
-            'instead, or write to us another way.</p>' % (esc(embed_url), esc(url)))
+            '<p class="form-note">The form is run by Google. If it doesn&rsquo;t load, '
+            '<a href="%s" target="_blank" rel="noopener">open it in a new tab</a>.</p>'
+            % (esc(embed_url), esc(url)))
     else:
         form_html = (
             '<div class="form-cta">'
@@ -1118,33 +1162,33 @@ def build_feedback_page(cfg):
 
     content = """<div class="page-head"><div class="wrap wrap-narrow">
       <h1>Ask a question</h1>
-      <p class="page-lede">If something in an issue did not make sense, or you want to know
-      more about a study, this is the place to say so. No question is too basic. If something
-      was unclear to you, it was probably unclear to other readers too.</p>
+      <p class="page-lede">If something in an issue didn&rsquo;t make sense, or you want to know
+      more about a study, this is the place to ask. No question is too basic. If it confused
+      you, it probably confused other readers too.</p>
     </div></div>
 
     <div class="wrap wrap-narrow ask-page">
       <section class="ask-what">
         <h2>What you can send</h2>
         <ul class="ask-list">
-          <li><strong>A question about an issue.</strong> Which part lost you, and what you
-          were trying to understand.</li>
+          <li><strong>A question about an issue.</strong> Say which part lost you and what
+          you were trying to understand.</li>
           <li><strong>A study we should cover.</strong> A link or a title is enough.</li>
-          <li><strong>A correction.</strong> If something here is wrong, we want to know.
-          Corrections are published on the issue itself, not edited away without a word.</li>
-          <li><strong>A term for the glossary.</strong> Any word you had to look up
-          elsewhere is a word that belongs in the glossary.</li>
+          <li><strong>A correction.</strong> If something here is wrong, please tell us. The
+          fix gets noted at the bottom of the issue.</li>
+          <li><strong>A word for the glossary.</strong> If you had to look something up,
+          other readers probably did too.</li>
         </ul>
       </section>
 
       %s
 
-      <aside class="callout callout-caution">
-        <p class="callout-label">Please do not send medical questions</p>
-        <p>We cannot advise on anyone&rsquo;s treatment, symptoms, or medication, and we will
-        not try. Those questions belong with your neurologist or doctor, who knows your
-        history. What we can do is explain what a piece of research found.</p>
-      </aside>
+      <div class="callout callout-caution" role="note">
+        <p class="callout-label">Please don&rsquo;t send medical questions</p>
+        <p>We can&rsquo;t give advice about anyone&rsquo;s treatment, symptoms or medication.
+        Your neurologist or doctor knows your history and is the right person to ask. PD Brief
+        can only explain what the research found.</p>
+      </div>
     </div>""" % form_html
 
     return page_shell(cfg, content, title="Ask a question",
@@ -1193,7 +1237,7 @@ def build_issue(cfg, it, prev_issue, next_issue):
              "identifier": ("https://doi.org/%s" % p["doi"]) if p.get("doi") else p.get("url", "")}
             for p in it["papers"]]
     extra_head = ('<script type="application/ld+json">%s</script>'
-                  % json.dumps(schema, ensure_ascii=False))
+                  % json.dumps(schema, ensure_ascii=False).replace("</", "<\\/"))
     if it.get("is_draft"):
         extra_head = '<meta name="robots" content="noindex, nofollow">' + extra_head
 
@@ -1251,7 +1295,7 @@ def build_archive(cfg, issues):
         by_year.setdefault(it["date"].year, []).append(it)
 
     all_topics = sorted({t for it in issues for t in it["topics"]}, key=str.lower)
-    filters = "".join('<button class="filter" data-topic="%s">%s</button>'
+    filters = "".join('<button type="button" class="filter" data-topic="%s">%s</button>'
                       % (slugify(t), esc(t)) for t in all_topics)
 
     sections = []
@@ -1278,8 +1322,7 @@ def build_archive(cfg, issues):
     content = """<div class="page-head">
   <div class="wrap">
     <h1>Archive</h1>
-    <p class="page-lede">Every issue of %s, newest first. %d issue%s so far, covering
-    %d topic%s. Search or filter to find what you need.</p>
+    <p class="page-lede">%s Search for a word or pick a topic to narrow the list.</p>
   </div>
 </div>
 <div class="wrap archive">
@@ -1290,18 +1333,19 @@ def build_archive(cfg, issues):
              autocomplete="off">
     </div>
     <div class="filters" role="group" aria-label="Filter by topic">
-      <button class="filter is-active" data-topic="all">All</button>%s
+      <button type="button" class="filter is-active" data-topic="all">All</button>%s
     </div>
   </div>
   <p class="results-count" id="results-count" aria-live="polite"></p>
   %s
   <p class="no-results" id="no-results" hidden>No issues match that. Try a different word or clear the filter.</p>
-</div>""" % (esc(cfg["title"]), len(issues), "" if len(issues) == 1 else "s",
-             len(all_topics), "" if len(all_topics) == 1 else "s", filters, "".join(sections))
+</div>""" % ("All %d issues so far, newest first." % len(issues) if len(issues) != 1
+             else "The first issue is below.", filters, "".join(sections))
 
     return page_shell(cfg, content, title="Archive",
-                      description="Every issue of %s -- weekly plain-language summaries of "
-                                  "newly published Parkinson's disease research." % cfg["title"],
+                      description="Every issue of %s, newest first: newly published "
+                                  "Parkinson's research explained in everyday language."
+                                  % cfg["title"],
                       path="/archive/", body_class="page-archive")
 
 
@@ -1346,9 +1390,9 @@ def build_topic_page(cfg, topic, items):
         esc(topic), len(items), "" if len(items) == 1 else "s",
         "".join(issue_card(it) for it in items))
     return page_shell(cfg, content, title=topic,
-                      description="Every %s issue about %s: plain-language summaries of newly "
-                                  "published Parkinson's disease research, written for readers "
-                                  "without a scientific background." % (cfg["title"], topic),
+                      description="%s issues about %s, newest first. Newly published "
+                                  "Parkinson's research explained in everyday language."
+                                  % (cfg["title"], topic),
                       path="/topics/%s/" % slugify(topic))
 
 
@@ -1399,8 +1443,8 @@ def build_sources_page(cfg, issues):
       <p class="page-lede">%s</p>
     </div></div>
     <div class="wrap wrap-narrow sources">%s
-      <p class="src-note">Some journals charge for the full paper. Abstracts are almost always
-      free, and a DOI link will always reach the paper's permanent home.</p>
+      <p class="src-note">Some journals charge for the full paper, but the abstract is almost
+      always free. DOI links keep working even if a journal moves its website.</p>
     </div>""" % (lede, "".join(blocks) or
                  '<p class="empty-note">No studies recorded yet.</p>')
 
@@ -1431,9 +1475,9 @@ def build_glossary(cfg, entries):
 
     content = """<div class="page-head"><div class="wrap">
       <h1>Glossary</h1>
-      <p class="page-lede">Plain-language definitions of the terms that come up in Parkinson's
-      research. Any underlined word inside an issue can be tapped to see its meaning without
-      leaving the page.</p>
+      <p class="page-lede">Definitions for the terms that keep coming up in Parkinson&rsquo;s
+      research. Inside an issue, tap any word with a dotted underline to see its meaning
+      without leaving the page.</p>
     </div></div>
     <div class="wrap wrap-narrow">
       <nav class="gl-jump" aria-label="Jump to letter">%s</nav>
@@ -1466,8 +1510,8 @@ def build_404(cfg, issues):
     content = """<div class="wrap wrap-narrow notfound">
       <p class="eyebrow">404</p>
       <h1>That page isn't here</h1>
-      <p class="page-lede">The link may be old, or the address may have a typo. The archive has
-      every issue we have published.</p>
+      <p class="page-lede">The link might be old, or there could be a typo in the address.
+      Every issue is listed in the archive.</p>
       <p><a class="btn btn-primary" href="/archive/">Go to the archive</a></p>
     </div>
     <div class="wrap">
@@ -1490,8 +1534,14 @@ def build_feed(cfg, issues):
     base = cfg["url"].rstrip("/")
     items = []
     PLAIN_GLOSS = True
-    for it in issues[:25]:
-        body_html, _ = markdown(it["body"])
+    try:
+        rendered = [markdown(it["body"])[0] for it in issues[:25]]
+    finally:
+        PLAIN_GLOSS = False
+    for it, body_html in zip(issues[:25], rendered):
+        # Feed readers show the article away from the site, so links must be absolute.
+        body_html = re.sub(r'(href|src)="/(?!/)', r'\1="%s/' % base, body_html)
+        body_html = body_html.replace("]]>", "]]]]><![CDATA[>")
         items.append("""  <item>
     <title>%s</title>
     <link>%s%s</link>
@@ -1503,7 +1553,6 @@ def build_feed(cfg, issues):
                   rfc822(it["date"]), esc(it["summary"]), body_html,
                   "".join("    <category>%s</category>\n" % esc(t) for t in it["topics"])))
 
-    PLAIN_GLOSS = False
     last = rfc822(issues[0]["date"]) if issues else rfc822(date.today())
     return """<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"
@@ -1546,6 +1595,20 @@ FAVICON = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
 
 CACHEBUST = datetime.now().strftime("%Y%m%d%H%M")
 
+
+def _file_version(path):
+    """A short fingerprint of a file, so a changed image gets a new address and
+    sites that cache link previews (iMessage, Slack, Facebook) fetch it again."""
+    import hashlib
+    try:
+        with open(path, "rb") as f:
+            return hashlib.md5(f.read()).hexdigest()[:8]
+    except OSError:
+        return "1"
+
+
+SOCIAL_VERSION = _file_version(os.path.join(ASSETS, "social-card.png"))
+
 # Drafts are built only by the local preview server, never by a real build,
 # so an unfinished issue can be read as a full page without any risk of it
 # reaching the published site.
@@ -1568,8 +1631,9 @@ def clear_output():
 
 def generate(check_only=False, quiet=False):
     """Build the whole site. Returns the number of issues published."""
-    global CACHEBUST
+    global CACHEBUST, SOCIAL_VERSION
     CACHEBUST = datetime.now().strftime("%Y%m%d%H%M%S")
+    SOCIAL_VERSION = _file_version(os.path.join(ASSETS, "social-card.png"))
     del WARNINGS[:]
     GLOSSARY.clear()
     GLOSSARY_USED.clear()
@@ -1718,9 +1782,14 @@ def serve():
 
     port = 8000
     httpd = None
+
+    class Server(socketserver.ThreadingMixIn, socketserver.TCPServer):
+        # Threads, so one stalled browser connection cannot freeze the preview.
+        daemon_threads = True
+        allow_reuse_address = True
+
     while port < 8020:
         try:
-            socketserver.TCPServer.allow_reuse_address = True
 
             class Handler(http.server.SimpleHTTPRequestHandler):
                 def __init__(self, *a, **kw):
@@ -1741,7 +1810,7 @@ def serve():
 
                 def do_GET(self):
                     # Mirror GitHub Pages: clean URLs, and a real 404 page.
-                    path = self.path.split("?")[0]
+                    path = "/" + self.path.split("?")[0].split("#")[0].lstrip("/")
                     if admin and admin.handle_get(self, path):
                         return
                     target = os.path.join(OUT, path.lstrip("/"))
@@ -1763,7 +1832,9 @@ def serve():
                             return
                     return super().do_GET()
 
-            httpd = socketserver.TCPServer(("", port), Handler)
+            # 127.0.0.1 only: the writing desk can change files, so nothing else on
+            # the same Wi-Fi network may reach it.
+            httpd = Server(("127.0.0.1", port), Handler)
             break
         except OSError:
             port += 1

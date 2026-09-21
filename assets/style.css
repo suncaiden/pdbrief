@@ -1,7 +1,7 @@
 /* ==========================================================================
    PD Brief — stylesheet
-   Built around long-form reading: high contrast, generous spacing, large
-   touch targets, and a reader-controlled text size.
+   Built around long-form reading: high contrast, generous spacing and large
+   touch targets.
    ========================================================================== */
 
 /* --- Design tokens ------------------------------------------------------ */
@@ -19,6 +19,7 @@
   --accent-hover:  #6d2618;
   --accent-soft:   #f6ebe6;
   --accent-line:   #dcb5a9;
+  --on-accent:     #ffffff;
   --warn-soft:     #fbf1de;
   --warn-line:     #e0c186;
   --warn-ink:      #7f5410;
@@ -49,6 +50,7 @@
   --accent-hover:  #eda88f;
   --accent-soft:   #2e211b;
   --accent-line:   #5d4034;
+  --on-accent:     #17150f;   /* the light clay accent needs dark text on it */
   --warn-soft:     #2c2417;
   --warn-line:     #6b5527;
   --warn-ink:      #e6c58a;
@@ -113,11 +115,11 @@ code {
 
 .skip {
   position: absolute; left: 50%; transform: translateX(-50%) translateY(-200%);
-  z-index: 200; background: var(--accent); color: #fff; padding: .8rem 1.4rem;
+  z-index: 200; background: var(--accent); color: var(--on-accent); padding: .8rem 1.4rem;
   border-radius: 0 0 var(--radius-sm) var(--radius-sm); font-weight: 600;
   text-decoration: none; transition: transform .15s ease;
 }
-.skip:focus { transform: translateX(-50%) translateY(0); color: #fff; }
+.skip:focus { transform: translateX(-50%) translateY(0); color: var(--on-accent); }
 
 .wrap { width: 100%; max-width: var(--wrap); margin: 0 auto; padding: 0 1.5rem; }
 .wrap-narrow { max-width: var(--narrow); }
@@ -129,7 +131,6 @@ code {
   background: var(--bg);
   border-bottom: 1px solid var(--text);
 }
-@supports not (backdrop-filter: blur(1px)) { .site-header { background: var(--bg); } }
 
 .header-inner {
   display: flex; align-items: center; justify-content: space-between;
@@ -157,7 +158,7 @@ code {
   border-radius: 7px; cursor: pointer; font-family: inherit; font-weight: 650; line-height: 1;
 }
 .tool-btn:hover { border-color: var(--accent-line); color: var(--text); }
-.tool-btn.is-active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.tool-btn.is-active { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .theme-btn { font-size: 1rem; }
 .theme-icon::before { content: "◐"; }
 
@@ -192,8 +193,8 @@ code {
   font-family: inherit; transition: background .15s ease, border-color .15s ease, transform .1s ease;
 }
 .btn:active { transform: translateY(1px); }
-.btn-primary { background: var(--accent); color: #fff; }
-.btn-primary:hover { background: var(--accent-hover); color: #fff; }
+.btn-primary { background: var(--accent); color: var(--on-accent); }
+.btn-primary:hover { background: var(--accent-hover); color: var(--on-accent); }
 .btn-quiet { background: var(--surface); color: var(--text); border-color: var(--border-strong); }
 .btn-quiet:hover { border-color: var(--accent); color: var(--accent); }
 
@@ -222,7 +223,8 @@ code {
 }
 
 /* --- Sections ----------------------------------------------------------- */
-.latest, .recent, .recent { background: var(--bg-alt); border-top: 1px solid var(--border); }
+.latest, .recent { padding: clamp(2.5rem, 6vw, 4rem) 0; }
+.latest, .recent { background: var(--bg-alt); border-top: 1px solid var(--border); }
 .section-head {
   display: flex; align-items: baseline; justify-content: space-between;
   gap: 1rem; margin-bottom: 1.8rem; flex-wrap: wrap;
@@ -269,7 +271,6 @@ code {
   border: 0; border-bottom: 1px solid var(--border); border-radius: 0;
   padding: 1.5rem 0; box-shadow: none;
 }
-.card:hover { border-color: var(--border); box-shadow: none; transform: none; }
 .card-title { font-family: var(--font-serif); font-size: 1.32em; font-weight: 600; margin: .5em 0 .4em; }
 .card-title a { color: inherit; text-decoration: none; }
 .card-title a:hover { color: var(--accent); }
@@ -290,7 +291,7 @@ code {
   letter-spacing: .1em; text-transform: uppercase;
 }
 .tags { gap: 0; }
-.tag + .tag::before { content: "·"; margin: 0 .5em; color: var(--border-strong); }
+.tag:not(:last-child)::after { content: "·"; margin: 0 .5em; color: var(--border-strong); }
 a.tag:hover { color: var(--accent); }
 .tag-static { color: var(--muted); }
 
@@ -383,6 +384,7 @@ a.tag:hover { color: var(--accent); }
   background: var(--surface-alt); font-size: .82em; text-transform: uppercase;
   letter-spacing: .06em; color: var(--muted); font-weight: 700; white-space: nowrap;
 }
+.prose thead td { background: var(--surface-alt); border-bottom: 1px solid var(--border); }
 .prose tbody th { font-weight: 650; }
 .prose tbody tr:last-child th, .prose tbody tr:last-child td { border-bottom: 0; }
 
@@ -490,7 +492,7 @@ a.tag:hover { color: var(--accent); }
   font-weight: 600; cursor: pointer;
 }
 .filter:hover { border-color: var(--accent); color: var(--accent); }
-.filter.is-active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.filter.is-active { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .results-count { font-size: .87em; color: var(--muted); margin: 0 0 1.5rem; }
 
 .arch-year { margin-bottom: 2.5rem; }
@@ -599,7 +601,17 @@ a.tag:hover { color: var(--accent); }
 
 /* --- Print -------------------------------------------------------------- */
 @media print {
-  .site-header, .site-footer, .pager, .toc, .subscribe, .skip, .gloss-pop { display: none !important; }
+  /* Paper is white whatever theme is on screen. */
+  :root, :root[data-theme="dark"] {
+    color-scheme: light;
+    --bg: #fff; --bg-alt: #fff; --surface: #fff; --surface-alt: #f4f4f4;
+    --text: #000; --text-soft: #222; --muted: #555;
+    --border: #ccc; --border-strong: #999;
+    --accent: #7a2a1d; --accent-soft: #f6ebe6; --accent-line: #c9a397;
+    --warn-soft: #fff; --warn-line: #b08a3e; --warn-ink: #5c3d0a;
+  }
+  .site-header, .site-footer, .pager, .toc, .subscribe, .skip, .gloss-pop,
+  .ask-invite, .draft-banner { display: none !important; }
   body { background: #fff; color: #000; font-size: 11pt; }
   .prose { font-size: 11pt; }
   .wrap { max-width: none; padding: 0; }

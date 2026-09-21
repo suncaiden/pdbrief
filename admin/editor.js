@@ -965,7 +965,7 @@
 
   /* ------------------------------------------------------------ live preview */
 
-  var previewTimer;
+  var previewTimer, previewSeq = 0;
   function schedulePreview() {
     clearTimeout(previewTimer);
     previewTimer = setTimeout(refreshPreview, 350);
@@ -1000,10 +1000,12 @@
     sc.textContent = n ? n + " characters" : "";
     sc.className = "counter" + (n > 300 ? " over" : "");
 
+    var seq = ++previewSeq;
     api("/api/preview", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ body: getBody(), meta: meta })
     }).then(function (res) {
+      if (seq !== previewSeq) return;   // a newer preview is already on its way
       $("prev-body").innerHTML = res.html ||
         '<p style="color:var(--muted)">Your writing will appear here as you type.</p>';
       $("prev-papers").innerHTML = res.papers_html || "";
@@ -1137,8 +1139,12 @@
     }).then(function (res) {
       if (!res.ok) { toast(res.error || "Could not save.", true); markDirty(); return; }
       state.file = res.file;
+      // Pin the web address. Otherwise it would follow the headline, and editing
+      // the headline of a published issue would quietly break every link to it.
+      if (!els.slug.value.trim() && res.slug) els.slug.value = res.slug;
       markClean(res.saved_at);
-      toast(meta.draft ? "Saved as a draft" : "Saved and published to your site");
+      toast(meta.draft ? "Saved as a draft"
+                       : "Saved. Push it in GitHub Desktop to put it on pdbrief.org");
       loadList(res.file);
     }).catch(function (err) {
       toast(String(err.message || err), true);

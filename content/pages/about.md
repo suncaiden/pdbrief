@@ -20,7 +20,7 @@ Issues take about five to ten minutes to read. No scientific background is assum
 
 I'm Caiden Sun, a high school student, and I founded PD Brief in August 2026.
 
-I started it to spread awareness and to make research like this accessible to the general public, not just to scientists. Parkinson's affects my grandfather, so making the disease and the challenges that come with it clearer for everybody is important to me.
+I started it to spread awareness and to make research like this accessible to the general public, not just to scientists. My grandfather has Parkinson's, so making the disease and the challenges that come with it clearer for everybody is important to me.
 
 I'm not a doctor or a researcher. Each issue links to the paper it's based on, so you can check what I wrote. If I got something wrong, tell me on the [questions page](/ask/) and I'll fix it and note the correction on that issue.
 

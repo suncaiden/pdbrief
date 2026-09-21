@@ -676,3 +676,27 @@ a.tag:hover { color: var(--accent); }
 
 /* The first section heading in an issue needs no rule above it */
 .prose > h2:first-child { padding-top: 0; border-top: 0; }
+
+/* --- Corrections -------------------------------------------------------- */
+.corrections {
+  margin: 2.6rem 0 0; padding: 1.3rem 0 0;
+  border-top: 1px solid var(--warn-line);
+}
+.corr-head {
+  font-family: var(--font-sans); font-size: .78em; font-weight: 700;
+  letter-spacing: .11em; text-transform: uppercase; color: var(--warn-ink);
+  margin: 0 0 .8rem;
+}
+.corr-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .7rem; }
+.corr-list li {
+  font-family: var(--font-sans); font-size: .93em; line-height: 1.6; color: var(--text-soft);
+}
+.corr-date { font-weight: 650; color: var(--text); }
+
+/* --- Draft banner (local preview only) ---------------------------------- */
+.draft-banner {
+  background: var(--warn-soft); border-bottom: 1px solid var(--warn-line);
+  padding: .9rem 0; font-family: var(--font-sans); font-size: .92em;
+  color: var(--text); margin-bottom: 1.5rem;
+}
+.draft-banner strong { color: var(--warn-ink); }

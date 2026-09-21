@@ -47,6 +47,39 @@ def _quote(value):
     return '"%s"' % s
 
 
+KNOWN_KEYS = {"title", "date", "slug", "summary", "topics", "papers", "draft"}
+
+
+def preserved_lines(path):
+    """Frontmatter the editor does not manage, returned as raw lines.
+
+    Anything the writer added by hand -- a forced `issue:` number, a
+    `corrections:` list -- would otherwise be dropped the next time the issue
+    was saved from the editor.
+    """
+    if not path or not os.path.exists(path):
+        return []
+    with open(path, encoding="utf-8") as f:
+        text = f.read().replace("\r\n", "\n")
+    if not text.startswith("---"):
+        return []
+    end = text.find("\n---", 3)
+    if end == -1:
+        return []
+
+    out, keeping = [], False
+    for line in text[3:end].split("\n"):
+        if line.strip().startswith("#") or not line.strip():
+            keeping = False
+            continue
+        if line[:1] not in (" ", "\t"):          # a new top-level key
+            key = line.split(":", 1)[0].strip()
+            keeping = key not in KNOWN_KEYS
+        if keeping:
+            out.append(line.rstrip())
+    return out
+
+
 def existing_comments(path):
     """Comment lines a writer put in the frontmatter, so saving never eats them."""
     if not path or not os.path.exists(path):
@@ -61,7 +94,7 @@ def existing_comments(path):
     return [ln for ln in text[3:end].split("\n") if ln.strip().startswith("#")]
 
 
-def to_frontmatter(meta, comments=None):
+def to_frontmatter(meta, comments=None, preserved=None):
     lines = ["---"]
     for line in (comments or []):
         lines.append(line.rstrip())
@@ -91,6 +124,9 @@ def to_frontmatter(meta, comments=None):
 
     if meta.get("draft"):
         lines.append("draft: true")
+
+    for line in (preserved or []):
+        lines.append(line)
 
     lines.append("---")
     return "\n".join(lines)
@@ -259,8 +295,10 @@ def save_issue(payload):
                     "An issue file named %s already exists. Change the title, the date, "
                     "or the URL slug." % name}
 
-    keep = existing_comments(old_path if (old_path and os.path.exists(old_path)) else path)
-    text = to_frontmatter(meta, keep) + "\n\n" + body.strip() + "\n"
+    source = old_path if (old_path and os.path.exists(old_path)) else path
+    keep = existing_comments(source)
+    extra = preserved_lines(source)
+    text = to_frontmatter(meta, keep, extra) + "\n\n" + body.strip() + "\n"
     with open(path, "w", encoding="utf-8") as f:
         f.write(text)
 

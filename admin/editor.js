@@ -79,7 +79,9 @@
       return '<span class="term" data-term="' + t.replace(/"/g, "&quot;") + '">' +
              ((shown || term).trim()) + "</span>";
     });
-    s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2">$1</a>');
+    // Addresses may contain balanced brackets (DOIs often do), so match those
+    // rather than stopping at the first closing bracket.
+    s = s.replace(/\[([^\]]+)\]\(((?:[^()\s]|\([^()\s]*\))+)\)/g, '<a href="$2">$1</a>');
     s = s.replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>");
     s = s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
     s = s.replace(/(^|[^\w*])\*(?!\s)(.+?)(?<!\s)\*(?![\w*])/g, "$1<em>$2</em>");

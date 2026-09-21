@@ -13,6 +13,11 @@ papers:
     year: 2026
     doi: "10.xxxx/xxxxx"
     access: "Free abstract"
+# If you correct a published issue, record it here rather than editing silently.
+# It appears at the foot of the issue, as the editorial policy promises.
+# corrections:
+#   - date: 2026-10-01
+#     note: "Corrected the participant count from 190 to 194."
 # Set draft: true to keep an issue out of the built site while you work on it.
 draft: true
 ---

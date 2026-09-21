@@ -303,14 +303,22 @@ def inline(text):
         return stash('<img src="%s" alt="%s" loading="lazy">' % (src, alt))
     text = re.sub(r"!\[([^\]]*)\]\(([^)\s]+)\)", img_sub, text)
 
-    # Links
+    # Emphasis, defined here so link labels can use it too.
+    def emphasis(t):
+        t = re.sub(r"\*\*\*(.+?)\*\*\*", r"<strong><em>\1</em></strong>", t)
+        t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
+        t = re.sub(r"(^|[^\w*])\*(?!\s)(.+?)(?<!\s)\*(?![\w*])", r"\1<em>\2</em>", t)
+        return t
+
+    # Links. The address may contain balanced brackets, which DOIs often do:
+    # 10.1016/S0140-6736(24)02808-3 would otherwise be cut at the first one.
     def link_sub(m):
         label, href = m.group(1), m.group(2)
         ext = href.startswith("http")
         attrs = ' target="_blank" rel="noopener"' if ext else ""
         cls = ' class="ext"' if ext else ""
-        return stash('<a href="%s"%s%s>%s</a>' % (href, cls, attrs, label))
-    text = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)", link_sub, text)
+        return stash('<a href="%s"%s%s>%s</a>' % (href, cls, attrs, emphasis(label)))
+    text = re.sub(r"\[([^\]]+)\]\(((?:[^()\s]|\([^()\s]*\))+)\)", link_sub, text)
 
     # Glossary terms: {{term}} or {{term|words shown}}
     def gloss_sub(m):
@@ -333,10 +341,7 @@ def inline(text):
             % (esc(entry["term"]), esc(entry["definition"]), shown))
     text = re.sub(r"\{\{([^}]+)\}\}", gloss_sub, text)
 
-    # Emphasis
-    text = re.sub(r"\*\*\*(.+?)\*\*\*", r"<strong><em>\1</em></strong>", text)
-    text = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", text)
-    text = re.sub(r"(?<![\w*])\*(?!\s)(.+?)(?<!\s)\*(?![\w*])", r"<em>\1</em>", text)
+    text = emphasis(text)
 
     # Typography
     text = text.replace("--", "—")
@@ -797,6 +802,66 @@ def load_issues(cfg):
     return items
 
 
+def load_drafts(cfg):
+    """The issues load_issues() skips, for local preview only."""
+    drafts = []
+    if not os.path.isdir(ISSUES_DIR):
+        return drafts
+    for name in sorted(os.listdir(ISSUES_DIR), reverse=True):
+        if not name.endswith(".md") or name.startswith("_"):
+            continue
+        with open(os.path.join(ISSUES_DIR, name), encoding="utf-8") as f:
+            meta, body = parse_frontmatter(f.read())
+        if str(meta.get("draft", "")).lower() not in ("true", "yes", "1"):
+            continue
+        slug = slugify(meta.get("slug") or re.sub(r"^\d{4}-\d{2}-\d{2}-", "", name[:-3]))
+        papers = [p if isinstance(p, dict) else {"title": str(p)}
+                  for p in as_list(meta.get("papers"))]
+        drafts.append({
+            "file": name,
+            "title": str(meta.get("title") or name),
+            "date": parse_date(meta.get("date", name[:10]), name),
+            "slug": slug,
+            "url": "/drafts/%s/" % slug,
+            "topics": [str(t) for t in as_list(meta.get("topics"))],
+            "papers": papers,
+            "summary": str(meta.get("summary") or plain_text(body, 200)),
+            "body": body,
+            "reading_time": reading_time(body),
+            "number": meta.get("issue") or "draft",
+            "meta": meta,
+        })
+    return drafts
+
+
+def build_draft_index(cfg, drafts):
+    if drafts:
+        rows = "".join(
+            '<article class="card"><div class="card-meta"><span class="issue-no">Draft</span>'
+            '<span class="dot" aria-hidden="true">&middot;</span><time datetime="%s">%s</time>'
+            '<span class="dot" aria-hidden="true">&middot;</span><span>%s min read</span></div>'
+            '<h3 class="card-title"><a href="%s">%s</a></h3>'
+            '<p class="card-summary">%s</p></article>'
+            % (d["date"].isoformat(), short_date(d["date"]), d["reading_time"],
+               d["url"], esc(d["title"]), esc(plain_text(d["summary"], 160)))
+            for d in drafts)
+        body = '<div class="card-grid">%s</div>' % rows
+    else:
+        body = '<p class="empty-note">Nothing in progress. Start an issue in the writing desk.</p>'
+
+    content = """<div class="page-head"><div class="wrap">
+      <h1>Drafts</h1>
+      <p class="page-lede">Unfinished issues, visible only on your own machine. These are never
+      built into the published site.</p>
+    </div></div>
+    <div class="wrap"><div class="archive">%s</div></div>""" % body
+    return page_shell(cfg, content, title="Drafts",
+                      description="Unfinished issues of %s, visible only on the editor's own "
+                                  "machine and never built into the published site." % cfg["title"],
+                      path="/drafts/",
+                      extra_head='<meta name="robots" content="noindex, nofollow">')
+
+
 def load_pages():
     pages = []
     if not os.path.isdir(PAGES_DIR):
@@ -951,6 +1016,30 @@ def build_home(cfg, issues):
     return page_shell(cfg, hero + what + recent + subscribe_block(cfg), path="/")
 
 
+def corrections_block(it):
+    """Corrections are published on the issue itself, as the editorial policy
+    promises, rather than edited away silently."""
+    entries = as_list(it["meta"].get("corrections"))
+    if not entries:
+        return ""
+    rows = []
+    for c in entries:
+        if isinstance(c, dict):
+            when = c.get("date", "")
+            note = c.get("note", "")
+        else:
+            when, note = "", str(c)
+        d = ""
+        if when:
+            try:
+                d = '<span class="corr-date">%s</span> ' % esc(pretty_date(parse_date(when, it["file"])))
+            except Exception:
+                d = '<span class="corr-date">%s</span> ' % esc(when)
+        rows.append("<li>%s%s</li>" % (d, inline(str(note))))
+    return ('<aside class="corrections"><h2 class="corr-head">Corrections</h2>'
+            '<ul class="corr-list">%s</ul></aside>' % "".join(rows))
+
+
 def feedback_link(cfg):
     """The address of the questions page, if one has been set up."""
     return "/ask/" if cfg.get("feedback_form_url") else ""
@@ -1088,8 +1177,17 @@ def build_issue(cfg, it, prev_issue, next_issue):
             for p in it["papers"]]
     extra_head = ('<script type="application/ld+json">%s</script>'
                   % json.dumps(schema, ensure_ascii=False))
+    if it.get("is_draft"):
+        extra_head = '<meta name="robots" content="noindex, nofollow">' + extra_head
+
+    banner = ("" if not it.get("is_draft") else
+              '<div class="draft-banner"><div class="wrap wrap-narrow">'
+              '<strong>Draft.</strong> Only you can see this. It is not part of the '
+              'published site and will not appear until you switch the draft setting off.'
+              '</div></div>')
 
     content = """<article class="issue">
+  %s
   <header class="issue-header">
     <div class="wrap wrap-narrow">
       <div class="issue-crumbs"><a href="/archive/">Archive</a>
@@ -1115,12 +1213,13 @@ def build_issue(cfg, it, prev_issue, next_issue):
 
   <div class="wrap wrap-narrow">
     %s
+    %s
     <nav class="pager" aria-label="Other issues">%s%s</nav>
   </div>
-</article>""" % (it["number"], esc(it["title"]), esc(it["summary"]),
+</article>""" % (banner, it["number"], esc(it["title"]), esc(it["summary"]),
                  it["date"].isoformat(), pretty_date(it["date"]), it["reading_time"],
                  topics_html, toc, body_html, paper_block(it["papers"]),
-                 ask_invitation(cfg), nav_prev, nav_next)
+                 corrections_block(it), ask_invitation(cfg), nav_prev, nav_next)
 
     return page_shell(cfg, content, title=it["title"], description=it["summary"],
                       path=it["url"], og_type="article", body_class="page-issue",
@@ -1370,6 +1469,11 @@ FAVICON = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
 
 CACHEBUST = datetime.now().strftime("%Y%m%d%H%M")
 
+# Drafts are built only by the local preview server, never by a real build,
+# so an unfinished issue can be read as a full page without any risk of it
+# reaching the published site.
+INCLUDE_DRAFTS = False
+
 
 
 
@@ -1425,6 +1529,13 @@ def generate(check_only=False, quiet=False):
     for topic, items in topics.items():
         emit("topics/%s/index.html" % slugify(topic), build_topic_page(cfg, topic, items))
 
+    if INCLUDE_DRAFTS:
+        drafts = load_drafts(cfg)
+        for d in drafts:
+            d["is_draft"] = True
+            emit("drafts/%s/index.html" % d["slug"], build_issue(cfg, d, None, None))
+        emit("drafts/index.html", build_draft_index(cfg, drafts))
+
     emit("glossary/index.html", build_glossary(cfg, glossary_entries))
     if cfg.get("feedback_form_url"):
         emit("ask/index.html", build_feedback_page(cfg))
@@ -1445,9 +1556,14 @@ def generate(check_only=False, quiet=False):
     emit("sitemap.xml", build_sitemap(cfg, urls))
     emit("robots.txt", "User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n" % cfg["url"].rstrip("/"))
 
+    # "b" carries the whole issue as plain text so the archive can search
+    # inside articles, not just their titles and summaries. It is fetched only
+    # when a reader actually types, so it costs nothing on page load.
     index = [{"t": it["title"], "u": it["url"], "s": plain_text(it["summary"], 180),
               "d": it["date"].isoformat(), "n": it["number"],
-              "g": [slugify(x) for x in it["topics"]]} for it in issues]
+              "g": [slugify(x) for x in it["topics"]],
+              "c": len(as_list(it["meta"].get("corrections"))),
+              "b": plain_text(it["body"]).lower()} for it in issues]
     emit("search-index.json", json.dumps(index, ensure_ascii=False))
 
     if cfg.get("domain"):
@@ -1634,8 +1750,10 @@ def serve():
 
 
 def main():
+    global INCLUDE_DRAFTS
     args = sys.argv[1:]
     check_only = "--check" in args
+    INCLUDE_DRAFTS = "--serve" in args
 
     if check_only:
         print("Checking content (nothing will be written)…")

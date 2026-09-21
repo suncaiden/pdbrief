@@ -58,6 +58,12 @@ identical, and anything the editor does not recognise is preserved untouched.
 Press **⌘S** or click Save. The file is written for you and the site rebuilds
 in about a second.
 
+**Seeing a draft as a real page.** The writing desk shows a live preview, but
+to read a draft as a full page, click **Drafts** in the desk header or visit
+<http://localhost:8000/drafts/>. These pages carry a warning banner and exist
+only on your machine: a real build leaves them out of the site, the feed, the
+sitemap and the search index entirely.
+
 **2. Publish**
 
 Open **GitHub Desktop**. Your changes are listed on the left. Type a short note
@@ -116,6 +122,7 @@ papers:
 | `papers` | no | One entry per study. Builds the citation box at the bottom. |
 | `issue` | no | Force an issue number. Otherwise numbered automatically by date. |
 | `draft` | no | `draft: true` keeps an issue off the site while you write it. |
+| `corrections` | no | A dated list, published at the foot of the issue. See below. |
 
 **Issue numbers are automatic.** The oldest issue is number 1 and each new one
 increments. You never have to track it.
@@ -142,6 +149,21 @@ The single most important finding.
 
 `:::key` (key takeaway), `:::plain` (in plain terms), `:::caution` (a warning
 against over-reading), `:::note`, and `:::context`. Close each one with `:::`.
+
+### Correcting a published issue
+
+Your editorial policy promises that corrections are published on the issue
+rather than edited away. Add them to the issue's frontmatter:
+
+```yaml
+corrections:
+  - date: 2026-10-01
+    note: "Corrected the participant count from 190 to 194."
+```
+
+They appear in a marked block at the foot of that issue. The writing desk does
+not manage this field, but it will not disturb it either: anything you add to
+the frontmatter by hand is preserved when you save from the editor.
 
 ### The house structure
 
@@ -227,7 +249,8 @@ Every build regenerates `_site/` from scratch:
 
 - The homepage, with the latest issue featured
 - A page for every issue, at `/issues/<slug>/`
-- `/archive/` — every issue, with live search and topic filters
+- `/archive/` — every issue, with topic filters and search that looks inside
+  the full text of each issue, not just titles and summaries
 - `/topics/` and a page per topic, so a reader can follow one thread over time
 - `/glossary/` — every term, searchable
 - An RSS feed at `/feed.xml`, with full article text

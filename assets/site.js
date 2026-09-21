@@ -111,14 +111,37 @@
   var noResults = document.getElementById("no-results");
   var activeTopic = "all";
 
+  // Full issue text, fetched the first time someone searches. Until it
+  // arrives, searching still works across titles, summaries and topics.
+  var fullText = null, fullTextAsked = false;
+
+  function loadFullText() {
+    if (fullTextAsked) return;
+    fullTextAsked = true;
+    fetch("/search-index.json")
+      .then(function (r) { return r.json(); })
+      .then(function (list) {
+        fullText = {};
+        list.forEach(function (item) { fullText[item.u] = item.b || ""; });
+        applyArchiveFilters();
+      })
+      .catch(function () { /* titles and summaries still search fine */ });
+  }
+
   function applyArchiveFilters() {
     var q = (search && search.value ? search.value : "").trim().toLowerCase();
     var shown = 0;
+    if (q) loadFullText();
 
     rows.forEach(function (row) {
       var topics = row.getAttribute("data-topics") || "";
       var matchesTopic = activeTopic === "all" || topics.split(" ").indexOf(activeTopic) !== -1;
       var matchesText = !q || row.textContent.toLowerCase().indexOf(q) !== -1;
+      if (!matchesText && q && fullText) {
+        var link = row.querySelector(".arch-link");
+        var body = link && fullText[link.getAttribute("href")];
+        if (body && body.indexOf(q) !== -1) matchesText = true;
+      }
       var visible = matchesTopic && matchesText;
       row.hidden = !visible;
       if (visible) shown++;
@@ -132,7 +155,8 @@
     if (countEl) {
       countEl.textContent = shown === rows.length
         ? "Showing all " + shown + " issue" + (shown === 1 ? "" : "s")
-        : "Showing " + shown + " of " + rows.length + " issues";
+        : "Showing " + shown + " of " + rows.length + " issues" +
+          (q && fullText ? ", searching the full text of each" : "");
     }
     if (noResults) noResults.hidden = shown !== 0;
   }

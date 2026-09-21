@@ -48,7 +48,7 @@ Both groups got worse, at almost exactly the same rate.
 | Confidence interval | −1.56 to 3.39 |   |
 | p-value | 0.47 |   |
 
-The numbers slightly favoured placebo, but nowhere near enough to mean anything. A {{p-value}} of 0.47 is what you expect when nothing is happening. The {{confidence interval}} is the more useful number here: it comfortably includes zero, and its narrowness means the trial was large enough to rule out the sort of benefit the 2017 study had suggested.
+The numbers slightly favoured placebo, though nowhere near enough to mean anything. A {{p-value}} of 0.47 is roughly what you get from tossing a coin. The {{confidence interval}} is the more useful number here: it comfortably includes zero, and its narrowness means the trial was large enough to rule out the sort of benefit the 2017 study had suggested.
 
 The absence of an effect held across the secondary measures too: {{non-motor symptoms}}, quality of life, medication requirements and imaging. There was no subgroup that clearly benefited. The drug was safe and well tolerated. It simply did not work.
 
@@ -60,13 +60,13 @@ The reason was not the statistics. Regulators had inspected King's College Hospi
 
 *The Lancet* asked the corresponding author's institution to investigate, and attached the notice while that work goes on.
 
-It is worth being precise about what this does and does not mean.
+An expression of concern gets misread in both directions, so it is worth spelling out.
 
-**It does not mean the result is wrong.** An expression of concern is a flag, not a verdict. It says a question has been raised that has not yet been answered.
+The notice does not say the result is wrong. It raises a question that has not yet been answered, and that is all it is designed to do.
 
-**It does not mean anyone falsified anything.** Inspection findings of this kind more often concern record-keeping, consent documentation, staff training, and oversight than deliberate misconduct.
+Nor does it say anyone falsified anything. Inspections of this kind usually turn up problems with record-keeping, consent paperwork, staff training and who was supervising whom, rather than deliberate misconduct. Those are serious failings without being dishonest ones.
 
-**It does mean the conclusion is provisional.** One of six sites is under question. Until the investigation reports, nobody, including the trial's own authors, can say with certainty how much the affected data influenced the result.
+What it does say is that the conclusion is provisional. One of six sites is under question, and until the investigation reports, nobody can put a number on how much that site's data shaped the result. The trial's own authors cannot either.
 
 :::caution
 If you or someone you care for is taking a GLP-1 drug for diabetes or weight management, none of this changes that. Those drugs work for what they were designed to do. This trial asked a different question: whether exenatide slows Parkinson's. Its answer, pending review, was no.
@@ -74,11 +74,11 @@ If you or someone you care for is taking a GLP-1 drug for diabetes or weight man
 
 ## Why it matters
 
-**A decade-long hypothesis was tested properly.** A negative trial from a well-run study is a real contribution. It stops other groups spending years on the same idea, and it stops patients enrolling in studies of something that does not help.
+A hypothesis that had run for a decade finally got a proper test. Negative results from well-run trials rarely make headlines, but they earn their keep: other groups stop pouring years into the same idea, and patients stop enrolling in studies of something that will not help them.
 
-**It shows what phase 2 results are worth.** The 2017 trial was not fraudulent or incompetent. It was small, and small trials produce unstable estimates. Chance, a strong {{placebo}} response, and the enthusiasm that surrounds an early positive result can combine to produce a promising number that evaporates under scrutiny. This happens constantly, in every area of medicine.
+The 2017 trial was not fraudulent, and the people who ran it were not careless. It was simply small. Small trials produce unstable estimates, and chance, a strong {{placebo}} response and the excitement around an early positive result can push a number far enough to look real. Then a bigger trial arrives and it is gone. This happens constantly, in every corner of medicine.
 
-**And it shows the correction machinery working in public.** An inspection found problems. A journal attached a warning. An investigation is under way, and its outcome will be published. This is slow and unglamorous, and it is the part of science that gets reported least. That is exactly why we are reporting it.
+The last part is the one almost nobody writes about. An inspection turned up problems. A journal attached a warning. An investigation is running, and whatever it finds will be published. It is slow and it is unglamorous, and the rest of this story makes no sense without it.
 
 ## Reading the two trials together
 
@@ -90,7 +90,7 @@ If you or someone you care for is taking a GLP-1 drug for diabetes or weight man
 | Result | 3.08-point benefit | no difference |
 | Status | published, no concerns raised | under an expression of concern |
 
-Several explanations remain open, and nobody yet knows which is right.
+Nobody yet knows which of these is right, and several are still in play.
 
 It may be that assessing people on their usual medication, as the French trial did, is more forgiving, capturing a modest symptomatic effect rather than true disease modification. It may be that 12 months is short enough for a small early difference to appear and 96 weeks long enough for it to wash out. It may be that the two drugs genuinely differ in how much reaches the brain. Or the French result may simply have been a false positive, of the same kind the 2017 exenatide trial now appears to have been.
 
@@ -98,11 +98,11 @@ Until the investigation into the exenatide paper concludes, there is one more po
 
 ## What this doesn't tell us
 
-**Whether the exenatide result will stand.** That depends on an investigation that has not reported. If a substantial share of data came from the affected site, the analysis may need redoing.
+Whether the exenatide result stands depends on an investigation that has not reported yet. If a large share of the data came from the site under question, the whole analysis may need redoing.
 
-**Whether GLP-1 drugs as a class are finished in Parkinson's.** Two drugs, two trials, two opposite answers. That is not enough to close a question.
+It also tells us nothing about GLP-1 drugs as a class. Two drugs, two trials, two opposite answers is not a body of evidence, and anyone declaring the class dead is getting ahead of the data.
 
-**Whether either drug might work in people at an earlier stage.** Both trials enrolled people who already had a diagnosis, by which point a great deal of damage is done.
+And it says nothing about giving either drug earlier. Both trials recruited people who already had a diagnosis, and by that stage a great deal of the damage has already been done.
 
 ## What to watch next
 
@@ -113,5 +113,5 @@ Whether the lixisenatide finding replicates in a larger trial. That is now the d
 And whether trial design shifts earlier. The argument that treatments must start before diagnosis, in the {{prodromal}} stage identified by tests like the {{seed amplification assay}} we covered two weeks ago, gets stronger every time a trial in diagnosed patients comes back empty.
 
 :::plain
-A big, careful trial of exenatide found it does no good in Parkinson's, contradicting a smaller 2017 trial that had raised hopes. The paper reporting it has since been flagged by its journal because inspectors found serious problems at one of the six hospitals involved, and an investigation is under way. Nothing about your treatment changes. What changes is how much weight to put on that "no" until the review is finished.
+A big, careful trial of exenatide found it does no good in Parkinson's, contradicting a smaller 2017 trial that had raised hopes. The paper reporting it has since been flagged by its journal because inspectors found serious problems at one of the six hospitals involved, and an investigation is under way. Nothing about your treatment changes. The open question is how much weight that "no" can carry until the review finishes.
 :::

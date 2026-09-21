@@ -10,7 +10,7 @@ You do not need a science degree to tell a strong study from a weak one. You nee
 
 Size is the single most useful signal available to a non-specialist. A study of 20 people can suggest an idea. It cannot establish one. Small studies produce unstable results: chance alone will hand a few of them a striking finding that vanishes when someone tries again with 200 participants.
 
-A rough guide for treatment trials: under 50 people is preliminary, 50 to 200 is worth attention, and several hundred over multiple years is the kind of evidence that changes practice.
+As a rough guide for treatment trials, under 50 people is preliminary. Fifty to 200 deserves attention. Several hundred, followed over years, is the kind of evidence that changes practice.
 
 ## 2. Was there a comparison group, chosen at random?
 
@@ -52,7 +52,7 @@ So ask the second question: how big was it, and would a person living with the d
 
 ## 8. Who paid for it, and who ran it?
 
-Funding does not invalidate research, and most drug trials are necessarily funded by the companies that make the drug. But it is worth knowing. Independently funded studies of a treatment tend to report smaller effects than company-funded ones.
+Funding does not invalidate research, and most drug trials are paid for by the companies that make the drug. Knowing who paid still tells you something. Independently funded studies of a treatment tend to report smaller effects than company-funded ones.
 
 Good papers state their funding and conflicts of interest openly. The information is usually near the end.
 
@@ -63,5 +63,5 @@ A single study is a data point. Science advances when independent groups reprodu
 This is the reason PD Brief keeps an [archive](/archive/) rather than only publishing the newest thing: watching a claim get confirmed, qualified, or overturned across several years is where the real understanding lives.
 
 :::key
-Three questions get you most of the way: How many people were in it? Was there a randomised comparison group? And was the effect big enough that someone would notice? If a piece of coverage does not answer those, it has not told you whether the finding matters.
+How many people were in it, was there a randomised comparison group, and was the effect big enough that anyone would notice? Coverage that cannot answer those three has not really told you anything.
 :::

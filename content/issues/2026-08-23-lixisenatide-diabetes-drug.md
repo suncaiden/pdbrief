@@ -50,7 +50,7 @@ The headline is the first row. The placebo group followed the expected trajector
 
 The difference of 3.08 points was {{statistical significance|statistically significant}} (95% confidence interval 0.86 to 5.30, p=0.007).
 
-After the two-month washout, when nobody had taken the study drug for eight weeks, the gap was still visible: motor scores off medication were 17.7 in the lixisenatide group against 20.6 on placebo. That detail matters, because it hints the drug had done something lasting rather than simply masking symptoms while it was in the bloodstream. But the {{confidence interval}} on that washout difference runs from 0.1 to 5.8. It only just excludes zero, and a range that wide is consistent with an effect that is real and large, or real and negligible.
+After the two-month washout, when nobody had taken the study drug for eight weeks, the gap was still visible: motor scores off medication were 17.7 in the lixisenatide group against 20.6 on placebo. Eight weeks with no drug in anyone's system, and the two groups still had not converged. That hints at something lasting, rather than symptoms being masked while the drug was circulating. But the {{confidence interval}} on that washout difference runs from 0.1 to 5.8. It only just excludes zero, and a range that wide is consistent with an effect that is real and large, or real and negligible.
 
 The side effects were not incidental. Nearly half the treatment group experienced nausea against 12% on placebo, and 13% vomited against 3%. Some participants needed their dose reduced.
 
@@ -68,13 +68,13 @@ Nothing here supports asking your doctor for a GLP-1 drug to treat Parkinson's. 
 
 ## What this doesn't tell us
 
-**Whether the drug slowed the disease or improved symptoms.** This is the hard part. A drug that makes symptoms better looks identical, on a rating scale, to a drug that slows the damage, at least for a while. The washout result leans toward genuine modification, but two months is a short washout for a disease that moves over decades.
+The hard part is telling apart two things that look identical on a rating scale. A drug that eases symptoms and a drug that slows the underlying damage produce the same numbers, at least for a while. The washout leans towards the second, but eight weeks is a blink for a disease that moves over decades.
 
-**Whether it works in people further along.** Everyone here was within three years of diagnosis. Results in early disease often do not transfer to people who have had Parkinson's for fifteen years.
+Then there is who was in the trial. Everyone was within three years of diagnosis, and findings in early disease have a poor record of transferring to someone fifteen years in.
 
-**Whether the tolerability is workable.** A trial can support participants through nausea with close monitoring. Sustaining a daily injection with that side-effect profile for years, in ordinary life, is a different proposition.
+Tolerability is its own question. A trial can walk people through nausea with regular check-ins and dose adjustments. Doing that yourself, with a daily injection, for years, is a different proposition entirely.
 
-**Whether it holds up at scale.** 156 participants is a reasonable {{phase 2 trial}}. It is not a {{phase 3 trial}}. The history of Parkinson's research is full of promising mid-size trials that did not survive a larger one — as next week's issue shows.
+And 156 participants, while a respectable {{phase 2 trial}}, is not a {{phase 3 trial}}. Parkinson's research is littered with promising mid-size trials that collapsed when someone tried them on a larger group. Next week's issue is about one of them.
 
 ## What to watch next
 

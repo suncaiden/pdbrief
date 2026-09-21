@@ -10,9 +10,9 @@ Oftentimes, the findings are published in journals that are difficult to access 
 
 ## What PD Brief does
 
-Every week, we read newly published Parkinson's research and write up one or two studies in plain language. Each issue explains what the researchers set out to learn, what they did, what they found and why it matters. It also covers the part most coverage skips: what the study does not tell us.
+Every week, we read newly-published research on Parkinson's and translate the complex jargon into comprehensible content. Each issue will strive to explain what the researchers set out to learn, their methods of conducting their research, their eventual findings, and why their work matters.
 
-Issues take about five to ten minutes to read. No scientific background is assumed. Technical terms are explained where they appear, and every one of them is collected in the [glossary](/glossary/).
+Issues will take around five to ten minutes to read. No scientific background is required: making this knowledge available to the public is our main goal. Technical terms used in issues will be explained and collected in the [glossary](/glossary/).
 
 ## About the editor {#editor}
 

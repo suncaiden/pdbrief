@@ -1,7 +1,7 @@
 ---
 title: About PD Brief
 slug: about
-description: "Why PD Brief exists, who writes it, how studies are chosen, and what its limits are."
+description: "Why PD Brief exists, who writes it, and how studies are chosen."
 ---
 
 Parkinson's research is moving faster than at any point in its history. Very little of that reaches the people it is actually about.
@@ -56,12 +56,6 @@ Negative results are covered deliberately. A well-run trial showing that a promi
 **Corrections.** Mistakes will happen. When one is found, the issue is corrected and the correction is noted at the bottom of that issue rather than edited away without a word.
 
 **Credit.** Every issue links to the original paper, with authors, journal, and DOI. The findings belong to the researchers who did the work. This publication only translates them.
-
-## Limits worth stating
-
-This is a summary, not a substitute. A 1,200-word account of a study cannot carry everything the original does, and the choice of what to leave out is a judgement made by a person who can get it wrong.
-
-Anyone who wants to check the reasoning should follow the links to the source papers. Abstracts are almost always free to read, and many papers now are too.
 
 ## Get in touch
 

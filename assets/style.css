@@ -64,6 +64,8 @@
 
 /* --- Base --------------------------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; }
+/* Anything marked hidden stays hidden, whatever display a class gives it. */
+[hidden] { display: none !important; }
 
 html {
   -webkit-text-size-adjust: 100%;

@@ -597,7 +597,9 @@ LAYOUT = """<!doctype html>
 <meta name="twitter:image" content="{{social_image}}">
 <meta name="theme-color" content="#fcfaf5">
 <link rel="alternate" type="application/rss+xml" title="{{site_title}} weekly issues" href="/feed.xml">
+<link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 {{verification}}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -783,6 +785,9 @@ def load_glossary():
             warn("Glossary term '%s' has no definition under it." % term)
             continue
         entry = {"term": term, "definition": definition, "slug": slugify(term)}
+        if any(e["slug"] == entry["slug"] for e in entries):
+            warn("The glossary defines '%s' twice. Only the first definition is used." % term)
+            continue
         entries.append(entry)
         GLOSSARY[entry["slug"]] = entry
         # allow a plural form to resolve to the same entry
@@ -821,6 +826,11 @@ def load_issues(cfg):
         summary = meta.get("summary") or plain_text(body, 200)
         if not meta.get("summary"):
             warn("%s has no 'summary:' -- one was generated from the first lines." % name)
+        if d > date.today():
+            warn("%s is dated %s, which has not happened yet. It still goes live as soon "
+                 "as it is pushed." % (name, pretty_date(d)))
+        if not as_list(meta.get("papers")):
+            warn("%s lists no study, so it will be missing from the sources page." % name)
 
         items.append({
             "file": name,
@@ -850,6 +860,36 @@ def load_issues(cfg):
                  % (it["slug"], it["file"], seen[it["slug"]]))
         seen[it["slug"]] = it["file"]
     return items
+
+
+def unify_topics(issues):
+    """Make every spelling of a topic ("clinical trials", "Clinical Trials")
+    use one name, so it gets one topic page instead of two fighting over the
+    same address. The spelling used most often wins; ties go to the earliest."""
+    counts, first_seen = {}, {}
+    for it in sorted(issues, key=lambda x: x["date"]):
+        for t in it["topics"]:
+            key = slugify(t)
+            counts.setdefault(key, {})
+            counts[key][t] = counts[key].get(t, 0) + 1
+            first_seen.setdefault((key, t), len(first_seen))
+    canonical = {key: sorted(names, key=lambda n: (-names[n], first_seen[(key, n)]))[0]
+                 for key, names in counts.items()}
+    for key, names in counts.items():
+        if len(names) > 1:
+            others = [n for n in names if n != canonical[key]]
+            warn("The topic '%s' is also written as %s. They are shown together as '%s'; "
+                 "use one spelling to keep things tidy."
+                 % (canonical[key], ", ".join("'%s'" % o for o in others), canonical[key]))
+    for it in issues:
+        seen, topics = set(), []
+        for t in it["topics"]:
+            key = slugify(t)
+            if key not in seen:
+                seen.add(key)
+                topics.append(canonical[key])
+        it["topics"] = topics
+    return issues
 
 
 def load_drafts(cfg):
@@ -1640,7 +1680,7 @@ def generate(check_only=False, quiet=False):
 
     cfg = load_config()
     glossary_entries = load_glossary()
-    issues = load_issues(cfg)
+    issues = unify_topics(load_issues(cfg))
     pages = load_pages()
 
     if not check_only:
@@ -1766,6 +1806,22 @@ def snapshot():
     return stamps
 
 
+def running_preview():
+    """The port of a PD Brief preview already running on this Mac, or None.
+
+    Double-clicking the launcher twice used to start a second copy on the next
+    port along; now the second click simply opens the one that is running."""
+    import urllib.request
+    for port in range(8000, 8020):
+        try:
+            with urllib.request.urlopen("http://127.0.0.1:%d/api/issues" % port, timeout=0.4) as r:
+                if "issues" in json.loads(r.read().decode("utf-8")):
+                    return port
+        except Exception:
+            continue
+    return None
+
+
 def serve():
     import http.server
     import socketserver
@@ -1779,6 +1835,18 @@ def serve():
     except Exception as exc:            # the site must still preview without it
         admin = None
         print("  (writing desk unavailable: %s)" % exc)
+
+    already = running_preview()
+    if already:
+        url = "http://localhost:%d/admin/" % already
+        print("\n  PD Brief is already running at http://localhost:%d" % already)
+        if "--open" in sys.argv:
+            import webbrowser
+            webbrowser.open(url)
+            print("  Opened the writing desk in your browser. You can close this window.\n")
+        else:
+            print("  Writing desk at %s\n" % url)
+        return 0
 
     port = 8000
     httpd = None
@@ -1910,6 +1978,9 @@ def main():
         generate(check_only=True)
         print("\n  Check finished. Nothing was written.")
         return 1 if WARNINGS else 0
+
+    if "--serve" in args and running_preview():
+        return serve()      # only opens the copy that is already running
 
     generate()
     print("\n  Output: _site/")

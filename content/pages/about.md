@@ -24,37 +24,26 @@ I'm not a doctor or a researcher. Each issue links to the paper it's based on, s
 
 ## Who this is for
 
-Anyone who wants to follow Parkinson's research without a medical degree:
-
-- **People living with Parkinson's**, who have a direct stake in where the research is going
-- **Family members and caregivers**, who often end up doing the reading
-- **Students and early researchers** looking for a way into an unfamiliar literature
-- **Clinicians and allied health professionals** who want a quick orientation outside their specialty
-- **Anyone curious** about how medical knowledge actually accumulates
+PD Brief is for anyone who wants to follow Parkinson's research without a medical degree. That includes people living with Parkinson's, and the family members and caregivers who often end up doing the reading for them. It's also for students who are curious about the field and don't know where to start.
 
 ## How studies are chosen
 
-There are far more Parkinson's papers published each week than could be covered. Selection favours studies that:
+Far more Parkinson's papers come out each week than we could ever cover, so we look for studies that report something new, come from peer-reviewed journals, and are big or careful enough that the result is likely to hold up. If we ever write about a preprint, a paper that hasn't been peer reviewed yet, we'll say so clearly.
 
-- report an original finding rather than restating existing knowledge
-- come from peer-reviewed journals, with preprints clearly labelled when included
-- would genuinely change how someone understands the field
-- are large or rigorous enough that the finding is likely to hold
-
-Negative results are covered deliberately. A well-run trial showing that a promising treatment does not work is as important as one showing that it does, and it is far less likely to be reported anywhere else.
+We also cover trials that didn't work. A well-run trial showing that a promising treatment fails is just as useful as one showing that it succeeds, and it gets far less attention.
 
 ## Editorial policy {#policy}
 
-**Independence.** PD Brief is not affiliated with any journal, university, pharmaceutical company, patient organisation, or funder. Nobody pays for coverage. Nobody sees an issue before it is published.
+**Independence.** PD Brief isn't affiliated with any journal, university, drug company, patient organisation or funder, and nobody pays for coverage.
 
-**Honesty about uncertainty.** Most research findings are provisional. Issues say how confident anyone should be, and every issue includes a section on what the study does not establish.
+**Honesty about uncertainty.** Most research findings are provisional. Every issue says how much weight a result can bear and has a section on what the study doesn't show.
 
-**No medical advice.** PD Brief explains research. It does not recommend treatments, and nothing in it should be used to make decisions about anyone's care. Those conversations belong with your neurologist.
+**No medical advice.** PD Brief explains research. It doesn't recommend treatments, and nothing here should be used to make decisions about anyone's care. Those conversations belong with your neurologist.
 
-**Corrections.** Mistakes will happen. When one is found, the issue is corrected and the correction is noted at the bottom of that issue rather than edited away without a word.
+**Corrections.** Mistakes will happen. When we find one, we fix it and add a note at the bottom of the issue saying what changed.
 
-**Credit.** Every issue links to the original paper, with authors, journal, and DOI. The findings belong to the researchers who did the work. This publication only translates them.
+**Credit.** Every issue links to the original paper, with its authors, journal and DOI. The findings belong to the researchers who did the work.
 
 ## Get in touch
 
-Corrections, questions, and suggestions for studies to cover are all welcome. The quickest way to reach us is the [questions page](/ask/), which is read by the editor. Corrections are published on the issue they concern.
+Questions, corrections and suggestions for studies to cover are all welcome. The easiest way to reach us is the [questions page](/ask/), and every message gets read.

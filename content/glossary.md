@@ -12,7 +12,7 @@ Something measurable in the body, whether in blood, spinal fluid, skin or on a s
 
 ## Blinding
 
-Keeping people in a trial from knowing who got the real treatment and who got the placebo. In a double-blind trial neither the participants nor the doctors assessing them know. This matters enormously in Parkinson's, because expectation alone can genuinely improve movement for a while.
+Keeping people in a trial from knowing who got the real treatment and who got the placebo. In a double-blind trial neither the participants nor the doctors assessing them know. This matters a lot in Parkinson's, because simply expecting to improve can make movement better for a while.
 
 ## Cerebrospinal fluid
 
@@ -92,7 +92,7 @@ The process where independent experts examine a study before a journal publishes
 
 ## Phase 2 trial
 
-A mid-stage trial, usually a few dozen to a few hundred people, designed to look for early signs that a treatment works and to refine the dose. Encouraging phase 2 results are genuinely common; most of them do not survive a phase 3 trial.
+A mid-stage trial, usually a few dozen to a few hundred people, designed to look for early signs that a treatment works and to refine the dose. Encouraging phase 2 results are common, and most of them don't survive a phase 3 trial.
 
 ## Phase 3 trial
 
@@ -116,7 +116,7 @@ The stage before a disease is diagnosable, when subtle changes have begun but th
 
 ## P-value
 
-A number describing how likely it is that a result this striking could have appeared by chance alone if the treatment did nothing. Below 0.05 is the traditional threshold for calling a result statistically significant, but that cut-off is a convention, not a law of nature.
+A number describing how likely it is that a result this striking could have appeared by chance alone if the treatment did nothing. Below 0.05 is the traditional threshold for calling a result statistically significant, though that cut-off is only a convention.
 
 ## Randomised controlled trial
 
@@ -132,7 +132,7 @@ A laboratory test that takes a sample from a person, adds normal alpha-synuclein
 
 ## Statistical significance
 
-A finding is called statistically significant when it is unlikely to have arisen by chance. It says nothing about whether the finding is large, useful, or meaningful to a patient — a common and consequential misunderstanding.
+A finding is called statistically significant when it is unlikely to have arisen by chance. It says nothing about whether the finding is large, useful or meaningful to a patient, and the two ideas get mixed up all the time.
 
 ## Substantia nigra
 

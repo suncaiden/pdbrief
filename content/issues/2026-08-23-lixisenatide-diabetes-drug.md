@@ -19,7 +19,7 @@ Every medicine currently prescribed for Parkinson's treats the symptoms. {{Levod
 This trial tested an unlikely candidate: a drug developed for type 2 diabetes.
 
 :::key
-After 12 months, people taking lixisenatide showed essentially no worsening in their motor symptoms (a change of −0.04 points), while the placebo group declined by 3.04 points on the standard rating scale. It is a genuine signal. It is also a small one, in a modest trial, bought at the cost of considerable nausea.
+After 12 months, people taking lixisenatide showed essentially no worsening in their motor symptoms (a change of −0.04 points), while the placebo group declined by 3.04 points on the standard rating scale. The signal looks real, but it's small, the trial was modest, and a lot of people felt sick on the drug.
 :::
 
 ## Why a diabetes drug?
@@ -52,15 +52,15 @@ The difference of 3.08 points was {{statistical significance|statistically signi
 
 After the two-month washout, when nobody had taken the study drug for eight weeks, the gap was still visible: motor scores off medication were 17.7 in the lixisenatide group against 20.6 on placebo. Eight weeks with no drug in anyone's system, and the two groups still had not converged. That hints at something lasting, rather than symptoms being masked while the drug was circulating. But the {{confidence interval}} on that washout difference runs from 0.1 to 5.8. It only just excludes zero, and a range that wide is consistent with an effect that is real and large, or real and negligible.
 
-The side effects were not incidental. Nearly half the treatment group experienced nausea against 12% on placebo, and 13% vomited against 3%. Some participants needed their dose reduced.
+The side effects were a real problem. Nearly half the treatment group experienced nausea against 12% on placebo, and 13% vomited against 3%. Some participants needed their dose reduced.
 
 ## Why it matters
 
 A 3-point difference on a scale that runs past 100 is not something a person would necessarily feel after one year. Its importance is as a proof of principle.
 
-If the effect is real and keeps building, three points a year adds up to fifteen over five years, well past the point where patients notice a difference. The reason to take this seriously is not the size of the gap at 12 months but the possibility that the underlying process was slowed.
+If the effect is real and keeps building, three points a year adds up to fifteen over five years, well past the point where patients notice a difference. What makes it worth taking seriously is the chance that the disease itself slowed down.
 
-There is also a strategic argument. GLP-1 drugs are manufactured at enormous scale and are already in the world's pharmacies. A repurposed treatment does not need the decade a novel compound requires.
+There's a practical reason for interest too. GLP-1 drugs are manufactured at enormous scale and are already in the world's pharmacies. A repurposed treatment does not need the decade a novel compound requires.
 
 :::caution
 Nothing here supports asking your doctor for a GLP-1 drug to treat Parkinson's. This was one trial, of one drug in the class, in 156 people, for one year. GLP-1 medicines carry real risks and side effects, and taking one outside a trial for this purpose is not supported by the evidence.

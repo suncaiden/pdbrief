@@ -20,7 +20,7 @@ Last week's issue covered a French trial in which a diabetes drug appeared to ho
 That trial found nothing. And in May this year, the paper reporting it was placed under formal review.
 
 :::key
-In a {{phase 3 trial}} of 194 people followed for almost two years, weekly exenatide made no difference to Parkinson's symptoms compared with placebo. Separately, in May 2026 *The Lancet* attached an {{expression of concern}} to the paper after regulators inspecting one of the six hospitals found serious problems with how trials there were run. The finding and the flag are two different things, and both are worth understanding.
+In a {{phase 3 trial}} of 194 people followed for almost two years, weekly exenatide made no difference to Parkinson's symptoms compared with placebo. Separately, in May 2026 *The Lancet* attached an {{expression of concern}} to the paper after regulators inspecting one of the six hospitals found serious problems with how trials there were run. The trial result and the journal's warning are separate stories, and this issue covers both.
 :::
 
 ## The hope that led here
@@ -29,7 +29,7 @@ Exenatide had one of the better stories in Parkinson's research.
 
 A {{phase 2 trial}} published in 2017 followed about 60 people for 48 weeks and found that those on exenatide were, on average, around 4 points better on the motor scale than those on placebo. The gap also persisted 12 weeks after everyone stopped the drug. For a field that had watched candidate after candidate fail, this was a real result, and it drove a decade of follow-on work.
 
-It was still a small trial. That is what {{phase 2 trial|phase 2}} means: a signal worth chasing, not a conclusion. Chasing it properly is exactly what this new trial did.
+It was still a small trial, though, and {{phase 2 trial|phase 2}} results are meant to be followed up with bigger ones. That's what this new trial set out to do.
 
 ## What they did
 
@@ -78,7 +78,7 @@ A hypothesis that had run for a decade finally got a proper test. Negative resul
 
 The 2017 trial was not fraudulent, and the people who ran it were not careless. It was simply small. Small trials produce unstable estimates, and chance, a strong {{placebo}} response and the excitement around an early positive result can push a number far enough to look real. Then a bigger trial arrives and it is gone. This happens constantly, in every corner of medicine.
 
-The last part is the one almost nobody writes about. An inspection turned up problems. A journal attached a warning. An investigation is running, and whatever it finds will be published. It is slow and it is unglamorous, and the rest of this story makes no sense without it.
+The journal's side of this rarely gets written about. An inspection found problems, the journal attached a warning, and an investigation is now running whose findings will be published. It's slow, unglamorous work, and it's how mistakes in published research get caught.
 
 ## Reading the two trials together
 
@@ -94,21 +94,21 @@ Nobody yet knows which trial is closer to the truth, and there is more than one 
 
 It may be that assessing people on their usual medication, as the French trial did, is more forgiving, capturing a modest symptomatic effect rather than true disease modification. It may be that 12 months is short enough for a small early difference to appear and 96 weeks long enough for it to wash out. It may be that the two drugs genuinely differ in how much reaches the brain. Or the French result may simply have been a false positive, of the same kind the 2017 exenatide trial now appears to have been.
 
-Until the investigation into the exenatide paper concludes, there is one more possibility that cannot be dismissed: that the negative result is itself unreliable. It is unlikely: one site out of six, in a trial whose result was resoundingly flat. But "unlikely" is not "ruled out".
+Until the investigation into the exenatide paper concludes, there is one more possibility that cannot be dismissed: that the negative result is itself unreliable. That seems unlikely, since only one of the six sites is in question and the result was very flat, but it can't be ruled out yet.
 
 ## What this doesn't tell us
 
 Whether the exenatide result stands depends on an investigation that has not reported yet. If a large share of the data came from the site under question, the whole analysis may need redoing.
 
-It also tells us nothing about GLP-1 drugs as a class. Two drugs, two trials, two opposite answers is not a body of evidence, and anyone declaring the class dead is getting ahead of the data.
+It also tells us nothing about GLP-1 drugs as a class. Two trials of two different drugs that disagree don't add up to much evidence either way, and anyone writing off the whole class is getting ahead of the data.
 
 And it says nothing about giving either drug earlier. Both trials recruited people who already had a diagnosis, and by that stage a great deal of the damage has already been done.
 
 ## What to watch next
 
-The investigation's outcome. *The Lancet* will publish it, and it will either lift the notice, correct the paper, or retract it. That is the single most consequential thing pending in this story.
+The investigation's outcome. *The Lancet* will publish it, and it will either lift the notice, correct the paper, or retract it. That's the biggest open question in this story.
 
-Whether the lixisenatide finding replicates in a larger trial. That is now the decisive question for this line of research.
+Whether the lixisenatide finding replicates in a larger trial. That will decide where this line of research goes.
 
 And whether trial design shifts earlier. The argument that treatments must start before diagnosis, in the {{prodromal}} stage identified by tests like the {{seed amplification assay}} we covered two weeks ago, gets stronger every time a trial in diagnosed patients comes back empty.
 

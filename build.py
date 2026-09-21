@@ -703,7 +703,9 @@ def paper_block(papers):
     return ('<section class="papers" aria-label="Source studies"><h2 class="papers-head">%s</h2>'
             '<ul class="paper-list">%s</ul>'
             '<p class="papers-note">Follow the links to read the original papers. '
-            'Some journals charge for access; abstracts are usually free.</p></section>'
+            'Some journals charge for access; abstracts are usually free. '
+            'Every study covered so far is listed on the '
+            '<a href="/sources/">sources page</a>.</p></section>'
             % (heading, "".join(rows)))
 
 
@@ -1333,6 +1335,70 @@ def build_topic_page(cfg, topic, items):
                       path="/topics/%s/" % slugify(topic))
 
 
+def build_sources_page(cfg, issues):
+    """Every paper covered, grouped by the issue that covered it."""
+    covered = [it for it in issues if it["papers"]]
+    total = sum(len(it["papers"]) for it in covered)
+    journals = sorted({str(p.get("journal", "")).strip()
+                       for it in covered for p in it["papers"] if p.get("journal")},
+                      key=str.lower)
+
+    blocks = []
+    for it in covered:
+        rows = []
+        for paper in it["papers"]:
+            title = esc(str(paper.get("title", "Untitled study")))
+            link = paper.get("url") or (("https://doi.org/%s" % paper["doi"]) if paper.get("doi") else "")
+            title_html = ('<a href="%s" target="_blank" rel="noopener">%s</a>' % (esc(link), title)
+                          if link else title)
+            bits = []
+            if paper.get("authors"):
+                bits.append(esc(str(paper["authors"])))
+            if paper.get("journal"):
+                bits.append("<em>%s</em>" % esc(str(paper["journal"])))
+            if paper.get("year"):
+                bits.append(esc(str(paper["year"])))
+            access = ""
+            if paper.get("access"):
+                label = str(paper["access"])
+                cls = "open" if ("open" in label.lower() or "free" in label.lower()) else "closed"
+                access = ' <span class="access access-%s">%s</span>' % (cls, esc(label))
+            doi = ""
+            if paper.get("doi"):
+                doi = ('<p class="paper-doi">DOI: <a href="https://doi.org/%s" target="_blank" '
+                       'rel="noopener">%s</a></p>' % (esc(str(paper["doi"])), esc(str(paper["doi"]))))
+            rows.append('<li class="paper"><p class="paper-title">%s%s</p>'
+                        '<p class="paper-meta">%s</p>%s</li>'
+                        % (title_html, access, ", ".join(bits), doi))
+
+        blocks.append(
+            '<section class="src-issue">'
+            '<div class="src-head"><p class="src-no">Issue %s &middot; %s</p>'
+            '<h2 class="src-title"><a href="%s">%s</a></h2></div>'
+            '<ul class="paper-list">%s</ul></section>'
+            % (it["number"], short_date(it["date"]), it["url"], esc(it["title"]), "".join(rows)))
+
+    lede = ("Every study %s has written about, grouped by the issue that covered it. "
+            "%d paper%s so far, across %d journal%s. Follow any link to read the original."
+            % (esc(cfg["title"]), total, "" if total == 1 else "s",
+               len(journals), "" if len(journals) == 1 else "s"))
+
+    content = """<div class="page-head"><div class="wrap">
+      <h1>Sources</h1>
+      <p class="page-lede">%s</p>
+    </div></div>
+    <div class="wrap wrap-narrow sources">%s
+      <p class="src-note">Some journals charge for the full paper. Abstracts are almost always
+      free, and a DOI link will always reach the paper's permanent home.</p>
+    </div>""" % (lede, "".join(blocks) or
+                 '<p class="empty-note">No studies recorded yet.</p>')
+
+    return page_shell(cfg, content, title="Sources",
+                      description="Every study covered by %s, with authors, journal and DOI, "
+                                  "grouped by the issue that summarised it." % cfg["title"],
+                      path="/sources/")
+
+
 def build_glossary(cfg, entries):
     if not entries:
         content = ('<div class="page-head"><div class="wrap"><h1>Glossary</h1>'
@@ -1536,6 +1602,7 @@ def generate(check_only=False, quiet=False):
             emit("drafts/%s/index.html" % d["slug"], build_issue(cfg, d, None, None))
         emit("drafts/index.html", build_draft_index(cfg, drafts))
 
+    emit("sources/index.html", build_sources_page(cfg, issues))
     emit("glossary/index.html", build_glossary(cfg, glossary_entries))
     if cfg.get("feedback_form_url"):
         emit("ask/index.html", build_feedback_page(cfg))
@@ -1547,7 +1614,8 @@ def generate(check_only=False, quiet=False):
     emit("favicon.svg", FAVICON)
 
     urls = [{"path": "/", "lastmod": issues[0]["date"].isoformat() if issues else None},
-            {"path": "/archive/"}, {"path": "/topics/"}, {"path": "/glossary/"}]
+            {"path": "/archive/"}, {"path": "/topics/"}, {"path": "/glossary/"},
+            {"path": "/sources/"}]
     urls += [{"path": it["url"], "lastmod": it["date"].isoformat()} for it in issues]
     urls += [{"path": "/topics/%s/" % slugify(t)} for t in topics]
     urls += [{"path": "/%s/" % p["slug"]} for p in pages]

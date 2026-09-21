@@ -700,3 +700,20 @@ a.tag:hover { color: var(--accent); }
   color: var(--text); margin-bottom: 1.5rem;
 }
 .draft-banner strong { color: var(--warn-ink); }
+
+/* --- Sources page ------------------------------------------------------- */
+.sources { padding: 2.5rem 0 4rem; }
+.src-issue { padding-top: 1.6rem; margin-bottom: 2.4rem; border-top: 1px solid var(--text); }
+.src-issue:first-child { padding-top: 1.2rem; }
+.src-head { margin-bottom: 1.1rem; }
+.src-no {
+  font-family: var(--font-sans); font-size: .72em; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 0 .35rem;
+}
+.src-title { font-family: var(--font-serif); font-size: 1.35em; font-weight: 600; margin: 0; line-height: 1.3; }
+.src-title a { color: inherit; text-decoration: none; }
+.src-title a:hover { color: var(--accent); text-decoration: underline; }
+.src-note {
+  font-size: .88em; color: var(--muted); line-height: 1.6;
+  padding-top: 1.2rem; border-top: 1px solid var(--border); margin: 0;
+}

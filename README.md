@@ -252,6 +252,9 @@ Every build regenerates `_site/` from scratch:
 - `/archive/` — every issue, with topic filters and search that looks inside
   the full text of each issue, not just titles and summaries
 - `/topics/` and a page per topic, so a reader can follow one thread over time
+- `/sources/` — every study you have covered, grouped by issue, with authors,
+  journal, year and a DOI link. Built automatically from the `papers` field, so
+  it stays correct without any upkeep.
 - `/glossary/` — every term, searchable
 - An RSS feed at `/feed.xml`, with full article text
 - `sitemap.xml` and `robots.txt` for search engines

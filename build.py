@@ -1322,8 +1322,8 @@ def build_topics_index(cfg, issues):
 
     content = """<div class="page-head"><div class="wrap">
       <h1>Topics</h1>
-      <p class="page-lede">Parkinson's research moves along several tracks at once. Follow a single
-      thread to see how the thinking has developed issue by issue.</p>
+      <p class="page-lede">Parkinson's research can be conducted along a variety of tracks.
+      Follow one of these threads to take a deeper look at a specific one.</p>
     </div></div>
     <div class="wrap"><div class="topic-grid">%s</div></div>""" % (cards or
       '<p class="empty-note">Topics appear here once your issues have <code>topics:</code> set.</p>')
@@ -1355,10 +1355,6 @@ def build_topic_page(cfg, topic, items):
 def build_sources_page(cfg, issues):
     """Every paper covered, grouped by the issue that covered it."""
     covered = [it for it in issues if it["papers"]]
-    total = sum(len(it["papers"]) for it in covered)
-    journals = sorted({str(p.get("journal", "")).strip()
-                       for it in covered for p in it["papers"] if p.get("journal")},
-                      key=str.lower)
 
     blocks = []
     for it in covered:
@@ -1395,10 +1391,8 @@ def build_sources_page(cfg, issues):
             '<ul class="paper-list">%s</ul></section>'
             % (it["number"], short_date(it["date"]), it["url"], esc(it["title"]), "".join(rows)))
 
-    lede = ("Every study %s has written about, grouped by the issue that covered it. "
-            "%d paper%s so far, across %d journal%s. Follow any link to read the original."
-            % (esc(cfg["title"]), total, "" if total == 1 else "s",
-               len(journals), "" if len(journals) == 1 else "s"))
+    lede = ("Information and links to the original studies that %s has covered so far."
+            % esc(cfg["title"]))
 
     content = """<div class="page-head"><div class="wrap">
       <h1>Sources</h1>

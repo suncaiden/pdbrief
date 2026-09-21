@@ -541,6 +541,7 @@ LAYOUT = """<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{page_title}}</title>
 <meta name="description" content="{{page_description}}">
+{{author_meta}}
 <link rel="canonical" href="{{canonical}}">
 <meta property="og:type" content="{{og_type}}">
 <meta property="og:site_name" content="{{site_title}}">
@@ -639,6 +640,14 @@ var t=localStorage.getItem('pdb-theme'); if(t){d.setAttribute('data-theme',t);}
 </body>
 </html>
 """
+
+
+def byline(cfg):
+    """'By <name>', linked to the editor's note on the About page."""
+    name = cfg.get("editor_name", "").strip()
+    if not name:
+        return ""
+    return 'By <a href="/about/#editor">%s</a>' % esc(name)
 
 
 def issue_card(it, featured=False):
@@ -930,6 +939,8 @@ def page_shell(cfg, content, title=None, description=None, path="/",
         extra_body=extra_body,
         cachebust=CACHEBUST,
         social_image=cfg["url"].rstrip("/") + "/assets/social-card.png",
+        author_meta=('<meta name="author" content="%s">' % esc(cfg["editor_name"].strip())
+                     if cfg.get("editor_name", "").strip() else ""),
         verification=(
             '<meta name="google-site-verification" content="%s">'
             % esc(cfg["google_site_verification"])
@@ -997,6 +1008,7 @@ def build_home(cfg, issues):
     </article>
   </div>
 </section>""" % (esc(cfg["tagline"]), esc(cfg["description"]),
+                 (byline(cfg) + ". " if byline(cfg) else "") +
                  "%d issue%s published since %s." % (
                      len(issues), "" if len(issues) == 1 else "s",
                      issues[-1]["date"].strftime("%B %Y")),
@@ -1167,7 +1179,10 @@ def build_issue(cfg, it, prev_issue, next_issue):
         "headline": it["title"],
         "description": plain_text(it["summary"], 300),
         "datePublished": it["date"].isoformat(),
-        "author": {"@type": "Organization", "name": cfg["title"]},
+        "author": ({"@type": "Person", "name": cfg["editor_name"].strip(),
+                    "url": cfg["url"].rstrip("/") + "/about/#editor"}
+                   if cfg.get("editor_name", "").strip()
+                   else {"@type": "Organization", "name": cfg["title"]}),
         "publisher": {"@type": "Organization", "name": cfg["title"]},
         "mainEntityOfPage": cfg["url"].rstrip("/") + it["url"],
         "isAccessibleForFree": True,
@@ -1197,7 +1212,7 @@ def build_issue(cfg, it, prev_issue, next_issue):
       <h1 class="issue-title">%s</h1>
       <p class="issue-summary">%s</p>
       <div class="issue-meta">
-        <time datetime="%s">%s</time>
+        %s<time datetime="%s">%s</time>
         <span class="dot" aria-hidden="true">&middot;</span>
         <span>%s min read</span>
       </div>
@@ -1219,6 +1234,8 @@ def build_issue(cfg, it, prev_issue, next_issue):
     <nav class="pager" aria-label="Other issues">%s%s</nav>
   </div>
 </article>""" % (banner, it["number"], esc(it["title"]), esc(it["summary"]),
+                 ('<span class="byline">%s</span><span class="dot" aria-hidden="true">'
+                  '&middot;</span>' % byline(cfg)) if byline(cfg) else "",
                  it["date"].isoformat(), pretty_date(it["date"]), it["reading_time"],
                  topics_html, toc, body_html, paper_block(it["papers"]),
                  corrections_block(it), ask_invitation(cfg), nav_prev, nav_next)

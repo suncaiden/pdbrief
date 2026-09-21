@@ -317,10 +317,15 @@ a.tag:hover { color: var(--accent); }
 }
 .issue-summary { font-size: 1.15em; color: var(--text-soft); line-height: 1.55; margin-bottom: 1.3rem; }
 .issue-meta {
-  display: flex; align-items: center; gap: .55rem; font-size: .88em; color: var(--muted);
+  display: flex; flex-wrap: wrap; align-items: center; gap: .55rem; font-size: .88em; color: var(--muted);
   padding-bottom: 1.1rem; margin-bottom: 1.1rem; border-bottom: 1px solid var(--border);
 }
 .issue-body { padding-bottom: 3rem; }
+.byline a, .hero-note a {
+  color: var(--text-soft); text-decoration: underline;
+  text-decoration-color: var(--border-strong); text-underline-offset: 2px;
+}
+.byline a:hover, .hero-note a:hover { color: var(--accent); text-decoration-color: currentColor; }
 
 /* --- Table of contents -------------------------------------------------- */
 .toc {

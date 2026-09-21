@@ -188,6 +188,7 @@ are ignored by the build.
 | What | Where |
 | --- | --- |
 | Site name, tagline, description, navigation | `site.json` |
+| Your name on the byline (`editor_name`) | `site.json` — leave it empty to publish without a byline |
 | Glossary terms | `content/glossary.md` — `## Term` then a paragraph |
 | About page | `content/pages/about.md` |
 | How we read a study | `content/pages/how-we-read-a-study.md` |

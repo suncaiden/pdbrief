@@ -16,6 +16,12 @@ Every week, we read newly published Parkinson's research and write up one or two
 
 Issues take about five to ten minutes to read. No scientific background is assumed. Technical terms are explained where they appear, and every one of them is collected in the [glossary](/glossary/).
 
+## About the editor {#editor}
+
+PD Brief is run by me, Caiden Sun. I'm a high school student, and I started it in 2026. I choose the studies, read the papers and put each issue together.
+
+I'm not a doctor or a researcher, so I stick to what each paper actually reports and link to it so you can check my reading against the original. If something looks wrong, tell me on the [questions page](/ask/). Corrections go on the issue they concern, where everyone can see them.
+
 ## Who this is for
 
 Anyone who wants to follow Parkinson's research without a medical degree:

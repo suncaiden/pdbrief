@@ -4,11 +4,9 @@ slug: about
 description: "Why PD Brief exists, who writes it, and how studies are chosen."
 ---
 
-Parkinson's research is moving faster than at any point in its history. Very little of that reaches the people it is actually about.
+Parkinson's research is advancing at a rapid rate. However, the spread of this knowledge to the general public has been slower.
 
-The findings are published in journals that cost money to read, written in language built for other specialists. What escapes into the wider world usually arrives as a headline (*breakthrough*, *cure within reach*, *hope for millions*) that overstates a small study and leaves out everything needed to judge it. Somewhere between an inaccessible paper and a misleading headline, there should be an honest account of what was actually found.
-
-That is what this is.
+Oftentimes, the findings are published in journals that are difficult to access or written in jargon meant for specialists to comprehend. Smaller studies can be overlooked, which is the gap that PD Brief was created to fill.
 
 ## What PD Brief does
 

@@ -64,6 +64,7 @@
 
   function markDirty() {
     state.dirty = true;
+    state.editSeq = (state.editSeq || 0) + 1;   // lets a save tell if you kept typing
     els.saveState.textContent = "Not saved yet";
     els.saveState.className = "save-state dirty";
     schedulePreview();
@@ -912,6 +913,7 @@
     state.file = data.file || null;
     state.replaces = data.replaces || null;
     $("btn-rewrite").hidden = !(state.file && !data.draft);
+    updateViewLink({ slug: data.slug, title: data.title, draft: data.draft });
     renderChips();
     renderPapers();
     autosize(els.title);
@@ -1131,6 +1133,7 @@
       if (!live.length && !drafts.length) {
         els.list.innerHTML = '<p class="empty-desk">Nothing here yet.<br>Start your first issue above.</p>';
       }
+      state.listed = res.issues.map(function (i) { return i.file; });
 
       function addLabel(text) {
         var p = document.createElement("p");
@@ -1158,9 +1161,10 @@
 
   function openIssue(file) {
     if (state.dirty && !confirm("This issue has changes you have not saved. Open a different one anyway?")) return;
-    api("/api/issue/" + encodeURIComponent(file)).then(function (data) {
+    return api("/api/issue/" + encodeURIComponent(file)).then(function (data) {
       if (data.error) { toast("Could not open that issue.", true); return; }
       fill(data);
+      rememberOpen(file);
       loadList(file);
     });
   }
@@ -1177,15 +1181,17 @@
 
   /* ----------------------------------------------------------------- saving */
 
-  function save(replace) {
+  // quiet: an automatic save of a draft, which should not interrupt with messages.
+  function save(replace, quiet) {
     if (state.saving) return;
     var meta = collect();
-    if (!meta.title) { toast("Give the issue a headline first.", true); els.title.focus(); return; }
-    if (!meta.date) { toast("Give the issue a date first.", true); els.date.focus(); return; }
+    if (!meta.title) { if (!quiet) { toast("Give the issue a headline first.", true); els.title.focus(); } return; }
+    if (!meta.date) { if (!quiet) { toast("Give the issue a date first.", true); els.date.focus(); } return; }
 
     state.saving = true;
+    var seq = state.editSeq;
     els.saveBtn.disabled = true;
-    els.saveState.textContent = "Saving";
+    els.saveState.textContent = quiet ? "Saving draft" : "Saving";
 
     api("/api/save", {
       method: "POST", headers: { "Content-Type": "application/json" },
@@ -1196,26 +1202,47 @@
         markDirty();
         if (confirm(res.error + "\n\nPublish this version in its place? The current one " +
                     "is taken off the site (you can still get it back from the trash).")) {
-          state.saving = false;
-          save(res.conflict);
+          // After this save has fully finished, so the retry is not refused as a duplicate.
+          setTimeout(function () { save(res.conflict); }, 0);
         }
         return;
       }
-      if (!res.ok) { toast(res.error || "Could not save.", true); markDirty(); return; }
+      if (!res.ok) {
+        if (quiet) {
+          els.saveState.textContent = "Not saved: " + (res.error || "could not save");
+          els.saveState.className = "save-state dirty";
+        } else { toast(res.error || "Could not save.", true); markDirty(); }
+        return;
+      }
       state.file = res.file;
+      rememberOpen(res.file);
       // Pin the web address. Otherwise it would follow the headline, and editing
       // the headline of a published issue would quietly break every link to it.
       if (!els.slug.value.trim() && res.slug) els.slug.value = res.slug;
-      markClean(res.saved_at);
+      if (state.editSeq === seq) {
+        markClean(res.saved_at);
+      } else {
+        // Typing carried on while this was saving; those words are not saved yet.
+        els.saveState.textContent = "Saved at " + res.saved_at + ", newer changes not yet";
+        els.saveState.className = "save-state dirty";
+      }
       $("btn-rewrite").hidden = !!meta.draft;
       state.replaces = null;
-      toast(meta.draft ? "Saved as a draft"
-                       : res.replaced ? "Published in place of the old version. Push it in GitHub Desktop."
-                       : "Saved. Push it in GitHub Desktop to put it on pdbrief.org");
+      updateViewLink(meta);
+      if (!quiet) {
+        toast(meta.draft ? "Saved as a draft"
+                         : res.replaced ? "Published in place of the old version. Push it in GitHub Desktop."
+                         : "Saved. Push it in GitHub Desktop to put it on pdbrief.org");
+      }
       loadList(res.file);
     }).catch(function (err) {
-      toast(String(err.message || err), true);
-      markDirty();
+      if (quiet) {
+        els.saveState.textContent = "Not saved: the desk is not answering";
+        els.saveState.className = "save-state dirty";
+      } else {
+        toast(String(err.message || err), true);
+        markDirty();
+      }
     }).finally(function () {
       state.saving = false;
       els.saveBtn.disabled = false;
@@ -1223,6 +1250,33 @@
   }
 
   els.saveBtn.addEventListener("click", function () { save(); });
+
+  // Drafts save themselves every 30 seconds, so closing the browser by mistake
+  // loses nothing. A published issue is only ever written when you press Save,
+  // so a half-finished edit can never slip out with your next push.
+  setInterval(function () {
+    if (state.dirty && els.draft.checked && !state.saving &&
+        els.title.value.trim() && els.date.value) save(null, true);
+  }, 30000);
+
+  function rememberOpen(file) {
+    try {
+      if (file) localStorage.setItem("pdb-desk-last", file);
+      else localStorage.removeItem("pdb-desk-last");
+    } catch (e) {}
+  }
+
+  // "Open the site" becomes "View this issue" once the issue exists as a page.
+  function updateViewLink(meta) {
+    var link = $("btn-view"), slug = slugify(meta.slug || meta.title || "");
+    if (state.file && slug) {
+      link.href = (meta.draft ? "/drafts/" : "/issues/") + slug + "/";
+      link.textContent = "View this issue";
+    } else {
+      link.href = "/";
+      link.textContent = "Open the site";
+    }
+  }
   document.addEventListener("keydown", function (e) {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") { e.preventDefault(); save(); }
   });
@@ -1236,6 +1290,7 @@
     }).then(function (res) {
       if (!res.ok) { toast(res.error || "Could not delete.", true); return; }
       state.file = null; state.dirty = false;
+      rememberOpen(null);
       return api("/api/new").then(function (r) {
         fill({ date: r.date, draft: true, papers: [blankPaper()], topics: [], body: "" });
         loadList(null);
@@ -1292,9 +1347,13 @@
 
   api("/api/glossary").then(function (res) { state.glossary = res.terms || []; });
 
-  loadList()
-    .then(function () { return api("/api/new"); })
-    .then(function (res) {
+  // Start where you left off: the issue you last had open, if it still exists.
+  loadList().then(function () {
+    var last = null;
+    try { last = localStorage.getItem("pdb-desk-last"); } catch (e) {}
+    if (last && (state.listed || []).indexOf(last) !== -1) return openIssue(last);
+    return api("/api/new").then(function (res) {
       fill({ date: res.date, draft: true, papers: [blankPaper()], topics: [], body: "" });
     });
+  });
 })();

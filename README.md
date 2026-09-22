@@ -67,7 +67,10 @@ locked in. Opening an issue and saving it again leaves the file semantically
 identical, and anything the editor does not recognise is preserved untouched.
 
 Press **⌘S** or click Save. The file is written for you and the site rebuilds
-in about a second.
+in about a second. Drafts also save themselves every 30 seconds; a published
+issue is only written when you press Save, so a half-finished edit to it can
+never go out with your next push. The desk reopens whichever issue you last had
+open, and **View this issue** in the header opens it as a full page.
 
 **Seeing a draft as a real page.** The writing desk shows a live preview, but
 to read a draft as a full page, click **Drafts** in the desk header or visit

@@ -480,7 +480,7 @@ a.tag:hover { color: var(--accent); }
 @media (max-width: 640px) { .pager { grid-template-columns: 1fr; } .pager-next { text-align: left; } }
 
 /* --- Archive ------------------------------------------------------------ */
-.archive { padding: 2.5rem 0 4rem; }
+.archive { padding-top: 2.5rem; padding-bottom: 4rem; }
 .archive-controls { display: grid; gap: 1rem; margin-bottom: 1.2rem; }
 .search-wrap { position: relative; }
 .search-wrap input {
@@ -573,7 +573,7 @@ a.tag:hover { color: var(--accent); }
 .gl-entry dd { margin: 0; color: var(--text-soft); line-height: 1.6; }
 
 /* --- 404 and empty states ---------------------------------------------- */
-.notfound { padding: 4rem 0 3rem; text-align: center; }
+.notfound { padding-top: 4rem; padding-bottom: 3rem; text-align: center; }
 .notfound h1 { font-family: var(--font-serif); font-size: clamp(2rem, 5vw, 3rem); }
 .notfound .page-lede { margin: 0 auto 2rem; }
 .empty { padding: 5rem 0; text-align: center; }
@@ -629,7 +629,7 @@ a.tag:hover { color: var(--accent); }
 }
 
 /* --- Ask a question ----------------------------------------------------- */
-.ask-page { padding: 2.5rem 0 4rem; }
+.ask-page { padding-top: 2.5rem; padding-bottom: 4rem; }
 .ask-what { margin-bottom: 2.5rem; }
 .ask-what h2 { font-size: 1.15em; margin-bottom: .8em; }
 .ask-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .9rem; }
@@ -727,7 +727,7 @@ a.tag:hover { color: var(--accent); }
 .draft-banner strong { color: var(--warn-ink); }
 
 /* --- Sources page ------------------------------------------------------- */
-.sources { padding: 2.5rem 0 4rem; }
+.sources { padding-top: 2.5rem; padding-bottom: 4rem; }
 .src-issue { padding-top: 1.6rem; margin-bottom: 2.4rem; border-top: 1px solid var(--text); }
 .src-issue:first-child { padding-top: 1.2rem; }
 .src-head { margin-bottom: 1.1rem; }
@@ -741,4 +741,35 @@ a.tag:hover { color: var(--accent); }
 .src-note {
   font-size: .88em; color: var(--muted); line-height: 1.6;
   padding-top: 1.2rem; border-top: 1px solid var(--border); margin: 0;
+}
+
+/* --- Phones: a little more room ---------------------------------------- */
+/* Slightly looser line spacing and a bit more air between blocks, so small
+   screens do not feel packed. Desktop is unchanged. */
+@media (max-width: 640px) {
+  body { line-height: 1.7; }
+  .hero { padding: 2.9rem 0 2.4rem; }
+  .hero-title { margin-bottom: .45em; }
+  .hero-tagline { line-height: 1.6; margin-bottom: 1.5rem; }
+  .section-head { margin-bottom: 2.1rem; }
+  .feature-summary { line-height: 1.7; }
+  .card { padding: 1.9rem 0; }
+  .card-title { margin: .6em 0 .5em; }
+  .card-summary { line-height: 1.65; margin-bottom: 1.1rem; }
+  .card-source { margin-bottom: 1.2rem; }
+  .tags { row-gap: .45rem; }
+  .page-lede { line-height: 1.7; }
+  .issue-summary { line-height: 1.65; }
+  .issue-meta { row-gap: .35rem; }
+  .prose { line-height: 1.8; }
+  .prose p { margin-bottom: 1.35em; }
+  .prose li { margin-bottom: .7em; }
+  .callout { margin: 2.3em 0; }
+  .arch-link { padding: 1.6rem .2rem; gap: .6rem; }
+  .arch-summary { line-height: 1.6; }
+  .filters { gap: .55rem; }
+  .gl-entry { padding: 1.2rem 0; }
+  .paper-list { gap: 1.5rem; }
+  .footer-grid { gap: 2.2rem; }
+  .footer-col a { padding: .45rem 0; }
 }

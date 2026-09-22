@@ -1775,7 +1775,7 @@ def generate(check_only=False, quiet=False):
     urls = [{"path": "/", "lastmod": issues[0]["date"].isoformat() if issues else None},
             {"path": "/archive/"}, {"path": "/topics/"}, {"path": "/glossary/"},
             {"path": "/sources/"}]
-    urls += [{"path": it["url"], "lastmod": it["date"].isoformat()} for it in issues]
+    urls += [{"path": it["url"], "lastmod": last_changed(it).isoformat()} for it in issues]
     urls += [{"path": "/topics/%s/" % slugify(t)} for t in topics]
     urls += [{"path": "/%s/" % p["slug"]} for p in pages]
     if cfg.get("feedback_form_url"):

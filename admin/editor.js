@@ -912,6 +912,7 @@
       : [blankPaper()];
     state.file = data.file || null;
     state.replaces = data.replaces || null;
+    state.wasPublished = !!(data.file && !data.draft);
     $("btn-rewrite").hidden = !(state.file && !data.draft);
     updateViewLink({ slug: data.slug, title: data.title, draft: data.draft });
     renderChips();
@@ -1228,6 +1229,7 @@
       }
       $("btn-rewrite").hidden = !!meta.draft;
       state.replaces = null;
+      state.wasPublished = !meta.draft;
       updateViewLink(meta);
       if (!quiet) {
         toast(meta.draft ? "Saved as a draft"
@@ -1283,7 +1285,7 @@
 
   $("btn-delete").addEventListener("click", function () {
     if (!state.file) { toast("This issue has not been saved yet.", true); return; }
-    if (!confirm("Delete this issue for good?\n\nThis cannot be undone from here.")) return;
+    if (!confirm("Delete this issue?\n\nYou can undo this for a few seconds afterwards.")) return;
     api("/api/delete", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ file: state.file })
@@ -1334,7 +1336,17 @@
   [els.title, els.date, els.slug, els.summary].forEach(function (el) {
     el.addEventListener("input", markDirty);
   });
-  els.draft.addEventListener("change", markDirty);
+  els.draft.addEventListener("change", function () {
+    // Turning a published issue back into a draft takes it off the site at the
+    // next push, which is easy to do by accident, so check first.
+    if (els.draft.checked && state.file && state.wasPublished &&
+        !confirm("Make this published issue a draft again?\n\nIt will disappear from " +
+                 "pdbrief.org the next time you push.")) {
+      els.draft.checked = false;
+      return;
+    }
+    markDirty();
+  });
   els.title.addEventListener("input", function () { autosize(els.title); });
 
   $("btn-theme").addEventListener("click", function () {

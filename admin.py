@@ -434,7 +434,8 @@ def restore_issue(trashed):
 def add_glossary_term(payload):
     """Append a new entry to content/glossary.md from the desk."""
     term = re.sub(r"\s+", " ", str(payload.get("term", ""))).strip()
-    definition = re.sub(r"\s+", " ", str(payload.get("definition", ""))).strip()
+    # A leading # would turn the definition into a heading in glossary.md.
+    definition = re.sub(r"\s+", " ", str(payload.get("definition", ""))).strip().lstrip("#").strip()
     if not term or not definition:
         return {"ok": False, "error": "Give the word and a definition."}
     if len(term) > 80 or term.startswith("#"):

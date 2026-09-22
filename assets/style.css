@@ -78,6 +78,7 @@ html {
 }
 
 body {
+  overflow-wrap: break-word;
   margin: 0;
   background: var(--bg);
   color: var(--text);
@@ -427,6 +428,8 @@ a.tag:hover { color: var(--accent); }
 .gloss-pop[hidden] { display: none; }
 .gloss-term { font-weight: 700; margin: 0 0 .3rem; color: var(--accent); font-size: .95em; }
 .gloss-def { margin: 0; color: var(--text-soft); line-height: 1.5; }
+.gloss-more { margin: .6rem 0 0; font-size: .85em; }
+.gloss-more a { font-weight: 600; }
 .gloss-close {
   position: absolute; top: .35rem; right: .45rem; background: none; border: 0;
   font-size: 1.3rem; line-height: 1; color: var(--muted); cursor: pointer; padding: .2rem .4rem;
@@ -563,6 +566,9 @@ a.tag:hover { color: var(--accent); }
 .gl-list { margin: 0; }
 .gl-entry { padding: 1rem 0; border-bottom: 1px solid var(--border); }
 .gl-entry[hidden] { display: none; }
+/* The entry a glossary pop-up linked to is picked out when the page opens. */
+.gl-entry:target dt { color: var(--accent); }
+.gl-entry:target { box-shadow: inset 3px 0 0 var(--accent); padding-left: .9rem; }
 .gl-entry dt { font-weight: 700; font-size: 1.05em; margin-bottom: .3rem; }
 .gl-entry dd { margin: 0; color: var(--text-soft); line-height: 1.6; }
 

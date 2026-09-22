@@ -25,6 +25,8 @@
       var next = currentlyDark() ? "light" : "dark";
       root.setAttribute("data-theme", next);
       store("pdb-theme", next);
+      var bar = document.getElementById("theme-color");
+      if (bar) bar.setAttribute("content", next === "dark" ? "#17150f" : "#fcfaf5");
       themeBtn.setAttribute("title", next === "dark" ? "Switch to light colours" : "Switch to dark colours");
     });
   }
@@ -76,6 +78,8 @@
     hidePop();
     popTerm.textContent = btn.getAttribute("data-term") || "";
     popDef.textContent = btn.getAttribute("data-def") || "";
+    var more = document.getElementById("gloss-pop-link");
+    if (more) more.setAttribute("href", "/glossary/#term-" + (btn.getAttribute("data-slug") || ""));
     pop.hidden = false;
 
     var r = btn.getBoundingClientRect();
@@ -174,6 +178,16 @@
           (q && fullText ? ", searching the full text of each" : "");
     }
     if (noResults) noResults.hidden = shown !== 0;
+    rememberInAddress(q);
+  }
+
+  function rememberInAddress(q) {
+    if (!window.history || !history.replaceState) return;
+    var params = new URLSearchParams(window.location.search);
+    if (q) params.set("q", q); else params.delete("q");
+    if (activeTopic !== "all") params.set("topic", activeTopic); else params.delete("topic");
+    var qs = params.toString();
+    history.replaceState(null, "", window.location.pathname + (qs ? "?" + qs : ""));
   }
 
   if (search) search.addEventListener("input", applyArchiveFilters);
@@ -189,13 +203,14 @@
     });
   });
   if (rows.length) {
-    applyArchiveFilters();
-    // Allow /archive/?topic=biomarkers to open pre-filtered.
-    var wanted = new URLSearchParams(window.location.search).get("topic");
-    if (wanted) {
-      var match = document.querySelector('.filter[data-topic="' + wanted + '"]');
-      if (match) match.click();
-    }
+    // Allow /archive/?topic=biomarkers and ?q=word to open pre-filtered. Read
+    // them before the first filter pass, which rewrites the address.
+    var params = new URLSearchParams(window.location.search);
+    var wantedQ = params.get("q"), wanted = params.get("topic");
+    if (wantedQ && search) search.value = wantedQ;
+    var match = wanted && document.querySelector('.filter[data-topic="' + wanted + '"]');
+    if (match) match.click();     // runs the filters itself
+    else applyArchiveFilters();
   }
 
   /* --- Wide tables ------------------------------------------------------ */

@@ -341,8 +341,8 @@ def inline(text):
         GLOSSARY_USED.add(key)
         return stash(
             '<button type="button" class="gloss" data-term="%s" data-def="%s" '
-            'aria-expanded="false" aria-controls="gloss-pop">%s</button>'
-            % (esc(entry["term"]), esc(entry["definition"]), shown))
+            'data-slug="%s" aria-expanded="false" aria-controls="gloss-pop">%s</button>'
+            % (esc(entry["term"]), esc(entry["definition"]), esc(entry["slug"]), shown))
     text = re.sub(r"\{\{([^}]+)\}\}", gloss_sub, text)
 
     text = emphasis(text)
@@ -595,7 +595,7 @@ LAYOUT = """<!doctype html>
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="{{site_title}}: {{site_tagline}}">
 <meta name="twitter:image" content="{{social_image}}">
-<meta name="theme-color" content="#fcfaf5">
+<meta name="theme-color" content="#fcfaf5" id="theme-color">
 <link rel="alternate" type="application/rss+xml" title="{{site_title}} weekly issues" href="/feed.xml">
 <link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -610,6 +610,7 @@ LAYOUT = """<!doctype html>
 (function(){try{
 var d=document.documentElement;
 var t=localStorage.getItem('pdb-theme'); if(t){d.setAttribute('data-theme',t);}
+if(t==='dark'){var m=document.getElementById('theme-color');if(m)m.setAttribute('content','#17150f');}
 }catch(e){}})();
 </script>
 {{extra_head}}
@@ -674,6 +675,7 @@ var t=localStorage.getItem('pdb-theme'); if(t){d.setAttribute('data-theme',t);}
 <div class="gloss-pop" id="gloss-pop" role="dialog" aria-labelledby="gloss-pop-term" aria-live="polite" hidden>
   <p class="gloss-term" id="gloss-pop-term"></p>
   <p class="gloss-def" id="gloss-pop-def"></p>
+  <p class="gloss-more"><a id="gloss-pop-link" href="/glossary/">See it in the glossary</a></p>
   <button type="button" class="gloss-close" id="gloss-close" aria-label="Close definition">&times;</button>
 </div>
 
@@ -764,8 +766,17 @@ def paper_block(papers):
 # --------------------------------------------------------------------------
 
 def load_config():
-    with open(os.path.join(ROOT, "site.json"), encoding="utf-8") as f:
-        return json.load(f)
+    path = os.path.join(ROOT, "site.json")
+    with open(path, encoding="utf-8") as f:
+        text = f.read()
+    try:
+        return json.loads(text)
+    except ValueError as exc:
+        line = getattr(exc, "lineno", "?")
+        raise SystemExit(
+            "\n  site.json has a mistake on line %s: %s\n"
+            "  Usually a missing comma between two lines, or a missing quote mark.\n"
+            % (line, getattr(exc, "msg", exc)))
 
 
 def load_glossary():
@@ -852,6 +863,14 @@ def load_issues(cfg):
         if not it["number"]:
             it["number"] = idx
     items.sort(key=lambda x: (x["date"], x["number"]), reverse=True)
+
+    numbers = {}
+    for it in items:
+        numbers.setdefault(str(it["number"]), []).append(it["file"])
+    for num, files in numbers.items():
+        if len(files) > 1:
+            warn("Issues %s are all numbered %s. Remove the 'issue:' line from all but "
+                 "one of them." % (" and ".join(files), num))
 
     seen = {}
     for it in items:
@@ -1112,7 +1131,12 @@ def build_home(cfg, issues):
     <div class="center"><a class="btn btn-quiet" href="/archive/">See the full archive</a></div>
     </div></section>""" % "".join(issue_card(it) for it in rest))
 
-    return page_shell(cfg, hero + recent + subscribe_block(cfg), path="/")
+    site_schema = {"@context": "https://schema.org", "@type": "WebSite",
+                   "name": cfg["title"], "url": cfg["url"].rstrip("/") + "/",
+                   "description": cfg["description"], "inLanguage": cfg.get("language", "en")}
+    return page_shell(cfg, hero + recent + subscribe_block(cfg), path="/",
+                      extra_head='<script type="application/ld+json">%s</script>'
+                      % json.dumps(site_schema, ensure_ascii=False).replace("</", "<\\/"))
 
 
 def corrections_block(it):
@@ -1138,6 +1162,18 @@ def corrections_block(it):
     return ('<section class="corrections" aria-labelledby="corrections-head">'
             '<h2 class="corr-head" id="corrections-head">Corrections</h2>'
             '<ul class="corr-list">%s</ul></section>' % "".join(rows))
+
+
+def last_changed(it):
+    """The issue's date, or its latest correction if that is later."""
+    latest = it["date"]
+    for c in as_list(it["meta"].get("corrections")):
+        if isinstance(c, dict) and c.get("date"):
+            try:
+                latest = max(latest, parse_date(c["date"], it["file"]))
+            except Exception:
+                pass
+    return latest
 
 
 def feedback_link(cfg):
@@ -1263,6 +1299,8 @@ def build_issue(cfg, it, prev_issue, next_issue):
         "headline": it["title"],
         "description": plain_text(it["summary"], 300),
         "datePublished": it["date"].isoformat(),
+        "dateModified": last_changed(it).isoformat(),
+        "image": cfg["url"].rstrip("/") + "/assets/social-card.png",
         "author": ({"@type": "Person", "name": cfg["editor_name"].strip(),
                     "url": cfg["url"].rstrip("/") + "/about/#editor"}
                    if cfg.get("editor_name", "").strip()
@@ -1276,8 +1314,10 @@ def build_issue(cfg, it, prev_issue, next_issue):
             {"@type": "ScholarlyArticle", "name": p.get("title", ""),
              "identifier": ("https://doi.org/%s" % p["doi"]) if p.get("doi") else p.get("url", "")}
             for p in it["papers"]]
-    extra_head = ('<script type="application/ld+json">%s</script>'
-                  % json.dumps(schema, ensure_ascii=False).replace("</", "<\\/"))
+    extra_head = ('<meta property="article:published_time" content="%s">'
+                  '<script type="application/ld+json">%s</script>'
+                  % (it["date"].isoformat(),
+                     json.dumps(schema, ensure_ascii=False).replace("</", "<\\/")))
     if it.get("is_draft"):
         extra_head = '<meta name="robots" content="noindex, nofollow">' + extra_head
 
@@ -1559,6 +1599,7 @@ def build_404(cfg, issues):
       <div class="card-grid">%s</div>
     </div>""" % recent
     return page_shell(cfg, content, title="Page not found",
+                      extra_head='<meta name="robots" content="noindex">',
                       description="That page could not be found. Browse the %s archive of "
                                   "plain-language Parkinson's research summaries instead."
                                   % cfg["title"],
@@ -1672,7 +1713,10 @@ def clear_output():
 def generate(check_only=False, quiet=False):
     """Build the whole site. Returns the number of issues published."""
     global CACHEBUST, SOCIAL_VERSION
-    CACHEBUST = datetime.now().strftime("%Y%m%d%H%M%S")
+    # A fingerprint of the stylesheet and script: readers' browsers fetch them
+    # again only when they have actually changed, not on every daily rebuild.
+    CACHEBUST = _file_version(os.path.join(ASSETS, "style.css")) + \
+        _file_version(os.path.join(ASSETS, "site.js"))[:4]
     SOCIAL_VERSION = _file_version(os.path.join(ASSETS, "social-card.png"))
     del WARNINGS[:]
     GLOSSARY.clear()
@@ -1891,7 +1935,8 @@ def serve():
                     if not os.path.exists(target) and not os.path.exists(target.rstrip("/") + "/index.html"):
                         page = os.path.join(OUT, "404.html")
                         if os.path.exists(page):
-                            body = open(page, "rb").read()
+                            with open(page, "rb") as fh:
+                                body = fh.read()
                             self.send_response(404)
                             self.send_header("Content-Type", "text/html; charset=utf-8")
                             self.send_header("Content-Length", str(len(body)))

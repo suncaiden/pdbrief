@@ -854,10 +854,29 @@
   });
 
   // Paste as plain text, so nothing from another site drags its styling in.
+  // Lines that start with a bullet or a number (as Google Docs and Word copy
+  // their lists) become real lists rather than paragraphs beginning with "•".
+  var PASTE_BULLET = /^\s*[\u2022\u25CF\u25E6\u25AA\u2023\u2043\-*]\s+/;
+  var PASTE_NUMBER = /^\s*\d{1,3}[.)]\s+/;
   els.compose.addEventListener("paste", function (e) {
     e.preventDefault();
     var text = (e.clipboardData || window.clipboardData).getData("text/plain");
-    document.execCommand("insertText", false, text);
+    var lines = text.replace(/\r\n?/g, "\n").split("\n");
+    var hasList = lines.some(function (l) { return PASTE_BULLET.test(l) || PASTE_NUMBER.test(l); });
+    if (!hasList) { document.execCommand("insertText", false, text); return; }
+    var html = "", open = null;
+    lines.forEach(function (l) {
+      var kind = PASTE_BULLET.test(l) ? "ul" : (PASTE_NUMBER.test(l) ? "ol" : null);
+      if (kind) {
+        if (open !== kind) { if (open) html += "</" + open + ">"; html += "<" + kind + ">"; open = kind; }
+        html += "<li>" + esc(l.replace(kind === "ul" ? PASTE_BULLET : PASTE_NUMBER, "").trim()) + "</li>";
+      } else {
+        if (open) { html += "</" + open + ">"; open = null; }
+        if (l.trim()) html += "<p>" + esc(l.trim()) + "</p>";
+      }
+    });
+    if (open) html += "</" + open + ">";
+    document.execCommand("insertHTML", false, html);
   });
 
   els.compose.addEventListener("blur", ensureTrailingParagraph);

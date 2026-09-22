@@ -30,21 +30,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
+      # build.py uses only Python's standard library, so the Python that comes
+      # with the runner is enough. Nothing to install, and nothing to break
+      # when GitHub moves ubuntu-latest to a newer Ubuntu.
       - name: Build the site
-        run: python3 build.py
+        run: python3 --version && python3 build.py
 
       - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Upload the built site
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: _site
 

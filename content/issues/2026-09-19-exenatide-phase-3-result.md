@@ -2,7 +2,7 @@
 # Trial figures and the expression of concern verified 2 September 2026.
 # Volume and page numbers not confirmed; DOI is the citation of record.
 title: "The bigger trial said no. Then the paper was flagged."
-date: "2026-08-30"
+date: "2026-09-19"
 slug: "exenatide-phase-3-result"
 summary: "A large trial of exenatide, the GLP-1 drug the field had pinned real hope on, found no benefit in Parkinson's. More than a year later, the journal flagged the paper after inspectors found serious problems at one of the hospitals that ran it."
 topics: [Clinical Trials, Drug Repurposing, Disease Modification, Research Integrity]

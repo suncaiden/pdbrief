@@ -1,7 +1,7 @@
 ---
 # Figures verified against the paper (NEJM 2024;390:1176-1185) on 2 September 2026.
 title: "A diabetes drug that seemed to slow Parkinson's down"
-date: "2026-08-23"
+date: "2026-09-12"
 slug: "lixisenatide-diabetes-drug"
 summary: "In a year-long French trial, people with early Parkinson's who took the diabetes drug lixisenatide did not get worse, while those on placebo did. The gap was small and nearly half of those on the drug had nausea, so this is a case for a bigger trial rather than a new treatment."
 topics: [Clinical Trials, Drug Repurposing, Disease Modification]

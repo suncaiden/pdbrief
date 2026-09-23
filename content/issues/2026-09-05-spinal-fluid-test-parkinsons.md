@@ -1,7 +1,7 @@
 ---
 # Figures verified against the paper (PMC10627170) on 2 September 2026.
 title: "A spinal fluid test that spots Parkinson's before diagnosis"
-date: "2026-08-16"
+date: "2026-09-05"
 slug: "spinal-fluid-test-parkinsons"
 summary: "A test that detects misfolded alpha-synuclein in spinal fluid identified Parkinson's in 88% of people who had it, and was positive in most people who had warning signs but no diagnosis. It's the closest anyone has come to a biological test for the disease."
 topics: [Biomarkers, Diagnosis, Early Detection]

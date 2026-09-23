@@ -213,6 +213,7 @@ are ignored by the build.
 | What | Where |
 | --- | --- |
 | Site name, tagline, description, navigation | `site.json` |
+| The logo | `assets/logo.png` (light) and `assets/logo-dark.png` (dark mode); the tab and phone icons are `assets/favicon-32.png`, `assets/favicon-96.png` and `assets/apple-touch-icon.png` |
 | Your name on the byline (`editor_name`) | `site.json` — leave it empty to publish without a byline |
 | Glossary terms | `content/glossary.md` — `## Term` then a paragraph |
 | About page | `content/pages/about.md` |

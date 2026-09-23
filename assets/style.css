@@ -140,10 +140,14 @@ code {
   gap: 1rem; min-height: 4.5rem;
 }
 
-.brand { display: flex; align-items: center; gap: .7rem; text-decoration: none; color: var(--text); }
-.brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.brand { display: flex; align-items: center; gap: .6rem; text-decoration: none; color: var(--text); }
 .brand-name { font-weight: 700; font-size: 1.18em; letter-spacing: -.02em; }
-.brand-sub { font-size: .74em; color: var(--muted); letter-spacing: .01em; }
+.brand-mark {
+  width: 2.15rem; height: 2.15rem; flex: none;
+  background: url("/assets/logo.png") center/contain no-repeat;
+}
+/* The mark is drawn in the dark ink; dark mode uses the pale version. */
+:root[data-theme="dark"] .brand-mark { background-image: url("/assets/logo-dark.png"); }
 
 .site-nav { display: flex; align-items: center; gap: .35rem; }
 .nav-link {
@@ -174,7 +178,6 @@ code {
 .nav-toggle-bars span { display: block; width: 16px; height: 2px; background: currentColor; border-radius: 2px; }
 
 @media (max-width: 900px) {
-  .brand-sub { display: none; }
   .nav-toggle { display: flex; }
   .site-nav {
     position: absolute; top: 100%; left: 0; right: 0; flex-direction: column;
@@ -667,9 +670,7 @@ a.tag:hover { color: var(--accent); }
 }
 
 /* --- Editorial layout: details the restyled rules above depend on -------- */
-.brand { align-items: baseline; }
 .brand-name { font-family: var(--font-serif); font-size: 1.5em; font-weight: 700; letter-spacing: -.02em; }
-.brand-sub { font-size: .72em; letter-spacing: .04em; }
 
 .hero-title { font-weight: 700; }
 .feature-title { margin-top: .25em; }

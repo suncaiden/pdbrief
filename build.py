@@ -598,7 +598,7 @@ LAYOUT = """<!doctype html>
 <meta name="theme-color" content="#fcfaf5" id="theme-color">
 <link rel="alternate" type="application/rss+xml" title="{{site_title}} weekly issues" href="/feed.xml">
 <link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-96.png" sizes="96x96" type="image/png">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 {{verification}}
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -621,10 +621,8 @@ if(t==='dark'){var m=document.getElementById('theme-color');if(m)m.setAttribute(
 <header class="site-header">
   <div class="wrap header-inner">
     <a class="brand" href="/">
-      <span class="brand-text">
-        <span class="brand-name">{{site_title}}</span>
-        <span class="brand-sub">Parkinson's research, explained</span>
-      </span>
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">{{site_title}}</span>
     </a>
 
     <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
@@ -1662,14 +1660,6 @@ def build_sitemap(cfg, urls):
             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n%s</urlset>\n' % entries)
 
 
-FAVICON = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-<rect width="32" height="32" rx="7" fill="#8a3324"/>
-<g fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round">
-<path d="M7 24c0-8 4-12 9-12s9 4 9 12"/><circle cx="16" cy="7.5" r="2.8"/>
-<path d="M11.5 24v-4.5M16 24v-7M20.5 24v-4.5"/></g></svg>
-"""
-
-
 # --------------------------------------------------------------------------
 # Main
 # --------------------------------------------------------------------------
@@ -1770,7 +1760,6 @@ def generate(check_only=False, quiet=False):
 
     emit("404.html", build_404(cfg, issues))
     emit("feed.xml", build_feed(cfg, issues))
-    emit("favicon.svg", FAVICON)
 
     urls = [{"path": "/", "lastmod": issues[0]["date"].isoformat() if issues else None},
             {"path": "/archive/"}, {"path": "/topics/"}, {"path": "/glossary/"},

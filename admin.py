@@ -13,7 +13,9 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import threading
+import time
 from datetime import date, datetime
 
 import build
@@ -218,6 +220,40 @@ def read_issue(filename):
     }
 
 
+_status_cache = {"at": 0, "value": None}
+
+
+def publish_status():
+    """How much work is sitting on this Mac and not yet on pdbrief.org.
+
+    Counted from git: files changed since the last commit, plus commits that
+    have not been pushed. Cached for a few seconds so typing stays quick.
+    """
+    if time.time() - _status_cache["at"] < 5 and _status_cache["value"]:
+        return _status_cache["value"]
+
+    def git(*args):
+        return subprocess.run(("git", "-C", build.ROOT) + args, capture_output=True,
+                              text=True, timeout=5)
+
+    out = {"ok": True, "changed": 0, "unpushed": 0, "repo": ""}
+    try:
+        r = git("status", "--porcelain", "--", "content", "assets", "site.json")
+        out["changed"] = len([l for l in r.stdout.splitlines() if l.strip()])
+        r = git("rev-list", "--count", "@{u}..HEAD")
+        out["unpushed"] = int(r.stdout.strip() or 0) if r.returncode == 0 else 0
+        r = git("remote", "get-url", "origin")
+        url = r.stdout.strip()
+        if url.startswith("git@github.com:"):
+            url = "https://github.com/" + url.split(":", 1)[1]
+        out["repo"] = url[:-4] if url.endswith(".git") else url
+    except Exception as exc:                       # git missing, no remote, etc.
+        out = {"ok": False, "error": str(exc)[:120], "changed": 0, "unpushed": 0, "repo": ""}
+
+    _status_cache.update(at=time.time(), value=out)
+    return out
+
+
 def glossary_terms():
     with RENDER_LOCK:
         build.GLOSSARY.clear()
@@ -278,6 +314,14 @@ def _render_preview(payload):
     if not papers:
         warnings.append("Fill in the study behind this issue, so readers can find the "
                         "original paper.")
+    when = str(meta.get("date") or "")[:10]
+    if when and not meta.get("draft"):
+        try:
+            if build.parse_date(when, "editor") > date.today():
+                warnings.append("The date is in the future. The issue still goes live as "
+                                "soon as you push.")
+        except Exception:
+            pass
     elif not all(str(p.get("doi") or p.get("url") or "").strip() for p in papers):
         warnings.append("A study has no DOI, so readers cannot follow a link to it.")
 
@@ -530,6 +574,10 @@ def handle_get(handler, path):
             _send(handler, {"error": "Not found"}, 404)
         else:
             _send(handler, data)
+        return True
+
+    if path == "/api/status":
+        _send(handler, publish_status())
         return True
 
     if path == "/api/new":

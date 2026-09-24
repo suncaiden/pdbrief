@@ -66,6 +66,9 @@ Under the hood it still reads and writes ordinary Markdown files, so nothing is
 locked in. Opening an issue and saving it again leaves the file semantically
 identical, and anything the editor does not recognise is preserved untouched.
 
+When something is saved but not yet on pdbrief.org, the desk header shows a
+small amber chip such as "2 commits to push". Clicking it opens GitHub Desktop.
+
 Press **⌘S** or click Save. The file is written for you and the site rebuilds
 in about a second. Drafts also save themselves every 30 seconds; a published
 issue is only written when you press Save, so a half-finished edit to it can

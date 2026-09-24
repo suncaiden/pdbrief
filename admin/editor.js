@@ -1237,6 +1237,7 @@
                          : "Saved. Push it in GitHub Desktop to put it on pdbrief.org");
       }
       loadList(res.file);
+      refreshPushChip();
     }).catch(function (err) {
       if (quiet) {
         els.saveState.textContent = "Not saved: the desk is not answering";
@@ -1260,6 +1261,24 @@
     if (state.dirty && els.draft.checked && !state.saving &&
         els.title.value.trim() && els.date.value) save(null, true);
   }, 30000);
+
+  // A quiet reminder that saved work is still only on this Mac.
+  function refreshPushChip() {
+    var chip = $("push-chip");
+    api("/api/status").then(function (s) {
+      if (!s.ok) { chip.hidden = true; return; }
+      var bits = [];
+      if (s.changed) bits.push(s.changed + (s.changed === 1 ? " saved change" : " saved changes"));
+      if (s.unpushed) bits.push(s.unpushed + (s.unpushed === 1 ? " commit" : " commits"));
+      if (!bits.length) { chip.hidden = true; return; }
+      chip.textContent = bits.join(" and ") + " to push";
+      chip.title = "Still only on this Mac. Open GitHub Desktop to publish.";
+      if (s.repo) chip.href = "x-github-client://openRepo/" + s.repo;
+      chip.hidden = false;
+    }).catch(function () { chip.hidden = true; });
+  }
+  refreshPushChip();
+  setInterval(refreshPushChip, 20000);
 
   function rememberOpen(file) {
     try {

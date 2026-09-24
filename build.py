@@ -283,6 +283,8 @@ CALLOUT_LABELS = {
 
 GLOSSARY = {}      # slug -> {"term":..., "definition":...}
 GLOSSARY_USED = set()
+GLOSSARY_USES = {}    # slug -> [issues that explain the word], for the glossary page
+RENDERING = None      # the issue currently being rendered, if any
 PLAIN_GLOSS = False   # when True, glossary terms render as plain words (used for the RSS feed)
 
 
@@ -339,6 +341,10 @@ def inline(text):
             warn("Glossary term '%s' is used in an article but not defined in content/glossary.md" % term)
             return stash(shown)
         GLOSSARY_USED.add(key)
+        if RENDERING is not None:
+            seen = GLOSSARY_USES.setdefault(entry["slug"], [])
+            if RENDERING not in seen:
+                seen.append(RENDERING)
         return stash(
             '<button type="button" class="gloss" data-term="%s" data-def="%s" '
             'data-slug="%s" aria-expanded="false" aria-controls="gloss-pop">%s</button>'
@@ -1272,7 +1278,13 @@ def build_feedback_page(cfg):
 
 
 def build_issue(cfg, it, prev_issue, next_issue):
-    body_html, headings = markdown(it["body"])
+    global RENDERING
+    # Remember which issues explain a word, so the glossary can link back.
+    RENDERING = None if it.get("is_draft") else it
+    try:
+        body_html, headings = markdown(it["body"])
+    finally:
+        RENDERING = None
 
     toc = ""
     if len(headings) >= 3:
@@ -1382,6 +1394,8 @@ def build_archive(cfg, issues):
         for it in by_year[year]:
             topics_attr = " ".join(slugify(t) for t in it["topics"])
             tags = "".join('<span class="tag tag-static">%s</span>' % esc(t) for t in it["topics"][:3])
+            if as_list(it["meta"].get("corrections")):
+                tags += '<span class="tag tag-corrected">Corrected</span>' 
             rows.append("""<li class="arch-row" data-topics="%s">
   <a class="arch-link" href="%s">
     <span class="arch-no">%s</span>
@@ -1532,6 +1546,16 @@ def build_sources_page(cfg, issues):
                       path="/sources/")
 
 
+def gl_uses(entry):
+    """'Explained in Issue 2, Issue 3' under a glossary definition."""
+    uses = GLOSSARY_USES.get(entry["slug"], [])
+    if not uses:
+        return ""
+    links = ", ".join('<a href="%s">Issue %s</a>' % (it["url"], esc(it["number"]))
+                      for it in sorted(uses, key=lambda i: i["date"]))
+    return '<p class="gl-uses">Explained in %s</p>' % links
+
+
 def build_glossary(cfg, entries):
     if not entries:
         content = ('<div class="page-head"><div class="wrap"><h1>Glossary</h1>'
@@ -1545,8 +1569,8 @@ def build_glossary(cfg, entries):
     jump = "".join('<a href="#letter-%s">%s</a>' % (k, k) for k in sorted(groups))
     blocks = []
     for letter in sorted(groups):
-        items = "".join('<div class="gl-entry" id="term-%s"><dt>%s</dt><dd>%s</dd></div>'
-                        % (e["slug"], esc(e["term"]), inline(e["definition"]))
+        items = "".join('<div class="gl-entry" id="term-%s"><dt>%s</dt><dd>%s%s</dd></div>'
+                        % (e["slug"], esc(e["term"]), inline(e["definition"]), gl_uses(e))
                         for e in groups[letter])
         blocks.append('<section class="gl-group"><h2 id="letter-%s" class="gl-letter">%s</h2>'
                       '<dl class="gl-list">%s</dl></section>' % (letter, letter, items))
@@ -1642,12 +1666,17 @@ def build_feed(cfg, issues):
   <atom:link href="%s/feed.xml" rel="self" type="application/rss+xml"/>
   <description>%s</description>
   <language>%s</language>
+  <image>
+    <url>%s/assets/favicon-96.png</url>
+    <title>%s</title>
+    <link>%s/</link>
+  </image>
   <lastBuildDate>%s</lastBuildDate>
 %s
 </channel>
 </rss>
 """ % (esc(cfg["title"]), base, base, esc(cfg["description"]),
-       cfg.get("language", "en"), last, "\n".join(items))
+       cfg.get("language", "en"), base, esc(cfg["title"]), base, last, "\n".join(items))
 
 
 def build_sitemap(cfg, urls):
@@ -1711,6 +1740,7 @@ def generate(check_only=False, quiet=False):
     del WARNINGS[:]
     GLOSSARY.clear()
     GLOSSARY_USED.clear()
+    GLOSSARY_USES.clear()
 
     cfg = load_config()
     glossary_entries = load_glossary()

@@ -574,6 +574,10 @@ a.tag:hover { color: var(--accent); }
 .gl-entry:target { box-shadow: inset 3px 0 0 var(--accent); padding-left: .9rem; }
 .gl-entry dt { font-weight: 700; font-size: 1.05em; margin-bottom: .3rem; }
 .gl-entry dd { margin: 0; color: var(--text-soft); line-height: 1.6; }
+.gl-uses { font-size: .82em; color: var(--muted); margin: .5rem 0 0; }
+.gl-uses a { font-weight: 600; text-decoration: none; }
+.gl-uses a:hover { text-decoration: underline; }
+.tag-corrected { color: var(--warn-ink); }
 
 /* --- 404 and empty states ---------------------------------------------- */
 .notfound { padding-top: 4rem; padding-bottom: 3rem; text-align: center; }

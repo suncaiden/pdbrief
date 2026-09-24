@@ -1077,7 +1077,8 @@ def subscribe_block(cfg):
 def build_home(cfg, issues):
     if not issues:
         body = ('<div class="wrap"><div class="empty"><h1>No issues yet</h1>'
-                '<p>Add your first Markdown file to <code>content/issues/</code> and rebuild.</p></div></div>')
+                '<p>Open the writing desk and click <strong>Start a new issue</strong>. '
+                'It will appear here as soon as you save it.</p></div></div>')
         return page_shell(cfg, body, path="/")
 
     latest = issues[0]
@@ -1431,8 +1432,10 @@ def build_archive(cfg, issues):
   <p class="results-count" id="results-count" aria-live="polite"></p>
   %s
   <p class="no-results" id="no-results" hidden>No issues match that. Try a different word or clear the filter.</p>
-</div>""" % ("All %d issues so far, newest first." % len(issues) if len(issues) != 1
-             else "The first issue is below.", filters, "".join(sections))
+</div>""" % ("No issues yet." if not issues else
+             "The first issue is below." if len(issues) == 1 else
+             "All %d issues so far, newest first." % len(issues),
+             filters, "".join(sections))
 
     return page_shell(cfg, content, title="Archive",
                       description="Every issue of %s, newest first: newly published "

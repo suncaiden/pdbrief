@@ -209,6 +209,7 @@ def read_issue(filename):
 
     return {
         "file": os.path.basename(path),
+        "mtime": int(os.path.getmtime(path)),
         "title": meta.get("title", ""),
         "date": str(meta.get("date", ""))[:10],
         "slug": meta.get("slug", ""),
@@ -358,6 +359,15 @@ def save_issue(payload):
     renamed = bool(old_path and os.path.exists(old_path)
                    and os.path.basename(old_path) != name)
 
+    # If the file changed since this window opened it -- a second desk window,
+    # or an edit made by hand -- do not quietly write over the other version.
+    seen_at = payload.get("mtime")
+    if seen_at and old_path and os.path.exists(old_path) and not payload.get("force"):
+        if int(os.path.getmtime(old_path)) > int(seen_at):
+            return {"ok": False, "stale": True,
+                    "error": "This issue changed on disk after you opened it, perhaps in "
+                             "another writing desk window."}
+
     # Two published issues sharing a web address means one quietly disappears
     # from the site. A draft may share it, though: that is how a rewrite is
     # written while the original stays live. Publishing the draft then offers
@@ -426,7 +436,7 @@ def save_issue(payload):
             pass
 
     return {"ok": True, "file": name, "renamed": renamed, "replaced": replacing,
-            "trashed": trashed,
+            "trashed": trashed, "mtime": int(os.path.getmtime(path)),
             "slug": build.slugify(meta["slug"]),
             "url": "/issues/%s/" % build.slugify(meta["slug"]),
             "saved_at": datetime.now().strftime("%H:%M:%S")}
@@ -438,12 +448,25 @@ def issue_slug(data, filename):
     return build.slugify(data.get("slug") or re.sub(r"^\d{4}-\d{2}-\d{2}-", "", filename[:-3]))
 
 
+def prune_trash(days=60):
+    """Forget trashed issues nobody restored within a couple of months."""
+    cutoff = time.time() - days * 86400
+    try:
+        for name in os.listdir(TRASH_DIR):
+            path = os.path.join(TRASH_DIR, name)
+            if os.path.isfile(path) and os.path.getmtime(path) < cutoff:
+                os.remove(path)
+    except OSError:
+        pass
+
+
 def move_to_trash(filename):
     """Move an issue file into .trash/ and return the name it was given there."""
     path = safe_issue_path(filename)
     if not path or not os.path.exists(path):
         return None
     os.makedirs(TRASH_DIR, exist_ok=True)
+    prune_trash()
     stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     trashed, n = "%s--%s" % (stamp, os.path.basename(path)), 2
     while os.path.exists(os.path.join(TRASH_DIR, trashed)):     # never overwrite

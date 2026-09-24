@@ -911,6 +911,7 @@
         })
       : [blankPaper()];
     state.file = data.file || null;
+    state.mtime = data.mtime || null;
     state.replaces = data.replaces || null;
     state.wasPublished = !!(data.file && !data.draft);
     $("btn-rewrite").hidden = !(state.file && !data.draft);
@@ -1197,8 +1198,20 @@
     api("/api/save", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ meta: meta, body: getBody(), original_file: state.file,
+                             mtime: state.mtime, force: !!state.forceSave,
                              replace: typeof replace === "string" ? replace : null })
     }).then(function (res) {
+      if (!res.ok && res.stale) {
+        markDirty();
+        if (!quiet && confirm(res.error + "\n\nKeep this version and overwrite the other one?")) {
+          state.forceSave = true;
+          setTimeout(function () { save(replace); }, 0);
+        } else if (quiet) {
+          els.saveState.textContent = "Not saved: changed in another window";
+          els.saveState.className = "save-state dirty";
+        }
+        return;
+      }
       if (!res.ok && res.conflict) {
         markDirty();
         if (confirm(res.error + "\n\nPublish this version in its place? The current one " +
@@ -1216,6 +1229,8 @@
         return;
       }
       state.file = res.file;
+      state.mtime = res.mtime || null;
+      state.forceSave = false;
       rememberOpen(res.file);
       // Pin the web address. Otherwise it would follow the headline, and editing
       // the headline of a published issue would quietly break every link to it.

@@ -1085,7 +1085,7 @@ def build_home(cfg, issues):
     rest = issues[1:7]
     # Deliberately not "This week's issue": the label must stay true after a
     # gap between issues, without waiting for a rebuild.
-    latest_label = "Most recent issue"
+    latest_label = "The latest issue"
     topics_html = "".join('<a class="tag" href="/topics/%s/">%s</a>' % (slugify(t), esc(t))
                           for t in latest["topics"][:4])
 

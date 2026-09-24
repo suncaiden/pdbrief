@@ -1083,9 +1083,9 @@ def build_home(cfg, issues):
 
     latest = issues[0]
     rest = issues[1:7]
-    # "This week's issue" is only true while it is; otherwise it reads as stale.
-    age = (date.today() - latest["date"]).days
-    latest_label = "This week's issue" if age <= 7 else "The latest issue"
+    # Deliberately not "This week's issue": the label must stay true after a
+    # gap between issues, without waiting for a rebuild.
+    latest_label = "Most recent issue"
     topics_html = "".join('<a class="tag" href="/topics/%s/">%s</a>' % (slugify(t), esc(t))
                           for t in latest["topics"][:4])
 

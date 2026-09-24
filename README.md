@@ -91,9 +91,9 @@ GitHub rebuilds and deploys the site automatically. The live version updates in
 a minute or two. Saving in the writing desk only changes the copy on your Mac;
 nothing reaches pdbrief.org until you push.
 
-GitHub also rebuilds the site once a day on its own, so date-dependent wording
-("This week's issue" becoming "The latest issue") stays accurate in a week when
-you do not push anything.
+GitHub also rebuilds the site once a day on its own, so an issue you dated
+ahead of time goes live on its own date even in a week when you do not push
+anything.
 
 From a terminal instead: `git add . && git commit -m "Issue 4" && git push`
 

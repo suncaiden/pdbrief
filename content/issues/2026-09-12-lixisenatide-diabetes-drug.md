@@ -12,6 +12,7 @@ papers:
     year: 2024
     doi: "10.1056/NEJMoa2312323"
     access: "Free abstract"
+draft: true
 ---
 
 Every medicine currently prescribed for Parkinson's treats the symptoms. {{Levodopa}} restores movement, sometimes dramatically, but the nerve cells keep dying underneath. Nothing on the market slows that down. Finding a treatment that does, a {{disease-modifying treatment}}, is the central unsolved problem of the field.

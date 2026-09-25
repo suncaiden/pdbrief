@@ -1074,12 +1074,49 @@ def subscribe_block(cfg):
     </div></section>""" % (lead, tail))
 
 
+def for_editor(reader, editor):
+    """Empty pages have two audiences: visitors to the published site, and the
+    editor looking at the local preview. Only the preview gets instructions."""
+    return editor if INCLUDE_DRAFTS else reader
+
+
 def build_home(cfg, issues):
+    site_schema = {"@context": "https://schema.org", "@type": "WebSite",
+                   "name": cfg["title"], "url": cfg["url"].rstrip("/") + "/",
+                   "description": cfg["description"], "inLanguage": cfg.get("language", "en")}
+    home_head = ('<script type="application/ld+json">%s</script>'
+                 % json.dumps(site_schema, ensure_ascii=False).replace("</", "<\\/"))
+
     if not issues:
-        body = ('<div class="wrap"><div class="empty"><h1>No issues yet</h1>'
-                '<p>Open the writing desk and click <strong>Start a new issue</strong>. '
-                'It will appear here as soon as you save it.</p></div></div>')
-        return page_shell(cfg, body, path="/")
+        # A site with nothing published still has to introduce itself, so it
+        # keeps the headline and says plainly that the first issue is coming.
+        # No cadence promise here: there is nothing yet to back it up.
+        heading, note = for_editor(
+            ("The first issue is on its way",
+             "PD Brief explains a newly published Parkinson&rsquo;s study in everyday language, "
+             "start to finish, in about five to ten minutes. Nothing has gone out yet."),
+            ("No issues yet",
+             "Open the writing desk and click <strong>Start a new issue</strong>. It appears "
+             "here as soon as you save it. Anything in progress is under Drafts."))
+        body = """<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Free to read</p>
+    <h1 class="hero-title">%s</h1>
+    <p class="hero-tagline">%s</p>
+    <p class="hero-note">%s</p>
+  </div>
+</section>
+
+<section class="latest">
+  <div class="wrap">
+    <div class="section-head"><h2 class="section-title">%s</h2></div>
+    <article class="feature">
+      <p class="feature-summary">%s</p>
+      <p class="feature-more"><a href="/about/">What PD Brief covers</a></p>
+    </article>
+  </div>
+</section>""" % (esc(cfg["tagline"]), esc(cfg["description"]), byline(cfg), heading, note)
+        return page_shell(cfg, body, path="/", extra_head=home_head)
 
     latest = issues[0]
     rest = issues[1:7]
@@ -1136,12 +1173,8 @@ def build_home(cfg, issues):
     <div class="center"><a class="btn btn-quiet" href="/archive/">See the full archive</a></div>
     </div></section>""" % "".join(issue_card(it) for it in rest))
 
-    site_schema = {"@context": "https://schema.org", "@type": "WebSite",
-                   "name": cfg["title"], "url": cfg["url"].rstrip("/") + "/",
-                   "description": cfg["description"], "inLanguage": cfg.get("language", "en")}
     return page_shell(cfg, hero + recent + subscribe_block(cfg), path="/",
-                      extra_head='<script type="application/ld+json">%s</script>'
-                      % json.dumps(site_schema, ensure_ascii=False).replace("</", "<\\/"))
+                      extra_head=home_head)
 
 
 def corrections_block(it):
@@ -1412,14 +1445,17 @@ def build_archive(cfg, issues):
         sections.append('<section class="arch-year"><h2 class="year-head">%d</h2>'
                         '<ul class="arch-list">%s</ul></section>' % (year, "".join(rows)))
 
-    content = """<div class="page-head">
-  <div class="wrap">
-    <h1>Archive</h1>
-    <p class="page-lede">%s Search for a word or pick a topic to narrow the list.</p>
-  </div>
-</div>
-<div class="wrap archive">
-  <div class="archive-controls">
+    # With nothing to search or filter, the controls are dead weight, so the
+    # empty archive is just a sentence.
+    if not issues:
+        lede = for_editor("No issues have been published yet.",
+                          "No issues yet. Anything in progress is under Drafts.")
+        controls = ""
+    else:
+        lede = ("The first issue is below." if len(issues) == 1 else
+                "All %d issues so far, newest first." % len(issues))
+        lede += " Search for a word or pick a topic to narrow the list."
+        controls = """<div class="archive-controls">
     <div class="search-wrap">
       <label class="sr-only" for="archive-search">Search issues</label>
       <input type="search" id="archive-search" placeholder="Search every issue&hellip;"
@@ -1430,12 +1466,18 @@ def build_archive(cfg, issues):
     </div>
   </div>
   <p class="results-count" id="results-count" aria-live="polite"></p>
+  <p class="no-results" id="no-results" hidden>No issues match that. Try a different word or clear the filter.</p>""" % filters
+
+    content = """<div class="page-head">
+  <div class="wrap">
+    <h1>Archive</h1>
+    <p class="page-lede">%s</p>
+  </div>
+</div>
+<div class="wrap archive">
   %s
-  <p class="no-results" id="no-results" hidden>No issues match that. Try a different word or clear the filter.</p>
-</div>""" % ("No issues yet." if not issues else
-             "The first issue is below." if len(issues) == 1 else
-             "All %d issues so far, newest first." % len(issues),
-             filters, "".join(sections))
+  %s
+</div>""" % (lede, controls, "".join(sections))
 
     return page_shell(cfg, content, title="Archive",
                       description="Every issue of %s, newest first: newly published "
@@ -1465,7 +1507,9 @@ def build_topics_index(cfg, issues):
       Follow one of these threads to take a deeper look at a specific one.</p>
     </div></div>
     <div class="wrap"><div class="topic-grid">%s</div></div>""" % (cards or
-      '<p class="empty-note">Topics appear here once your issues have <code>topics:</code> set.</p>')
+      for_editor(
+        '<p class="empty-note">Topics will appear here as issues are published.</p>',
+        '<p class="empty-note">Topics appear here once your issues have <code>topics:</code> set.</p>'))
 
     return page_shell(cfg, content, title="Topics",
                       description="Browse Parkinson's disease research summaries by topic.",
@@ -1541,7 +1585,7 @@ def build_sources_page(cfg, issues):
       <p class="src-note">Some journals charge for the full paper, but the abstract is almost
       always free. DOI links keep working even if a journal moves its website.</p>
     </div>""" % (lede, "".join(blocks) or
-                 '<p class="empty-note">No studies recorded yet.</p>')
+                 '<p class="empty-note">No studies covered yet.</p>')
 
     return page_shell(cfg, content, title="Sources",
                       description="Every study covered by %s, with authors, journal and DOI, "
@@ -1611,18 +1655,29 @@ def build_static_page(cfg, page):
 
 
 def build_404(cfg, issues):
-    recent = "".join(issue_card(it) for it in issues[:3])
+    # Nothing published means no archive worth sending anyone to, and an empty
+    # "Recent issues" grid under a heading looks broken.
+    if issues:
+        lede = ("The link might be old, or there could be a typo in the address. "
+                "Every issue is listed in the archive.")
+        button = '<p><a class="btn btn-primary" href="/archive/">Go to the archive</a></p>'
+        recent = """<div class="wrap">
+      <div class="section-head"><h2 class="section-title">Recent issues</h2></div>
+      <div class="card-grid">%s</div>
+    </div>""" % "".join(issue_card(it) for it in issues[:3])
+    else:
+        lede = ("The link might be old, or there could be a typo in the address. "
+                "No issues are published at the moment.")
+        button = '<p><a class="btn btn-primary" href="/">Go to the home page</a></p>'
+        recent = ""
+
     content = """<div class="wrap wrap-narrow notfound">
       <p class="eyebrow">404</p>
       <h1>That page isn't here</h1>
-      <p class="page-lede">The link might be old, or there could be a typo in the address.
-      Every issue is listed in the archive.</p>
-      <p><a class="btn btn-primary" href="/archive/">Go to the archive</a></p>
+      <p class="page-lede">%s</p>
+      %s
     </div>
-    <div class="wrap">
-      <div class="section-head"><h2 class="section-title">Recent issues</h2></div>
-      <div class="card-grid">%s</div>
-    </div>""" % recent
+    %s""" % (lede, button, recent)
     return page_shell(cfg, content, title="Page not found",
                       extra_head='<meta name="robots" content="noindex">',
                       description="That page could not be found. Browse the %s archive of "

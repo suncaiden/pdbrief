@@ -13,6 +13,7 @@ papers:
     year: 2025
     doi: "10.1016/S0140-6736(24)02808-3"
     access: "Free abstract"
+draft: true
 ---
 
 Last week's issue covered a French trial in which a diabetes drug appeared to hold Parkinson's symptoms steady for a year. It ended on a larger trial of a closely related drug, exenatide, published in early 2025.

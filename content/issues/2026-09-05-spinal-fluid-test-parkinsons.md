@@ -12,6 +12,7 @@ papers:
     year: 2023
     doi: "10.1016/S1474-4422(23)00109-6"
     access: "Free abstract"
+draft: true
 ---
 
 For sixty years, diagnosing {{Parkinson's disease|Parkinson's}} has come down to a doctor watching how you move. There's no blood test for it, and no scan that settles the question. A neurologist takes a history, examines you, watches how you respond to medication and makes a judgement. In a meaningful share of cases that judgement turns out to be wrong.

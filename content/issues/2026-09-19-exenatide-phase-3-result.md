@@ -13,10 +13,9 @@ papers:
     year: 2025
     doi: "10.1016/S0140-6736(24)02808-3"
     access: "Free abstract"
-draft: true
 ---
 
-Last week's issue covered a French trial in which a diabetes drug appeared to hold Parkinson's symptoms steady for a year. It ended on a larger trial of a closely related drug, exenatide, published in early 2025.
+In 2024, a French trial reported that a diabetes drug appeared to hold Parkinson's symptoms steady for a year. Hopes for that class of drug rested on a larger trial of a closely related one, exenatide, published in early 2025.
 
 That trial found nothing. And in May this year, the paper reporting it was placed under formal review.
 
@@ -111,7 +110,7 @@ The investigation's outcome. *The Lancet* will publish it, and it will either li
 
 Whether the lixisenatide finding replicates in a larger trial. That will decide where this line of research goes.
 
-And whether trial design shifts earlier. The argument that treatments must start before diagnosis, in the {{prodromal}} stage identified by tests like the {{seed amplification assay}} we covered two weeks ago, gets stronger every time a trial in diagnosed patients comes back empty.
+And whether trial design shifts earlier. The argument that treatments must start before diagnosis, in the {{prodromal}} stage identified by tests like the {{seed amplification assay}}, gets stronger every time a trial in diagnosed patients comes back empty.
 
 :::plain
 A big, careful trial of exenatide found it does no good in Parkinson's, contradicting a smaller 2017 trial that had raised hopes. The paper reporting it has since been flagged by its journal because inspectors found serious problems at one of the six hospitals involved, and an investigation is under way. Nothing about your treatment changes. The open question is how much weight that "no" can carry until the review finishes.

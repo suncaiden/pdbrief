@@ -1,10 +1,10 @@
 ---
 # Trial figures and the expression of concern verified 2 September 2026.
 # Volume and page numbers not confirmed; DOI is the citation of record.
-title: "The bigger trial said no. Then the paper was flagged."
+title: "The drug didn't work. A year later, the paper was flagged."
 date: "2026-09-19"
 slug: "exenatide-phase-3-result"
-summary: "A large trial of exenatide, the GLP-1 drug the field had pinned real hope on, found no benefit in Parkinson's. More than a year later, the journal flagged the paper after inspectors found serious problems at one of the hospitals that ran it."
+summary: "A trial of a promising GLP-1 drug, exenatide, found no benefit in treating Parkinson's Disease.Over a year later, the paper was flagged after inspectors found serious problems at one of the hospitals that ran it."
 topics: [Clinical Trials, Drug Repurposing, Disease Modification, Research Integrity]
 papers:
   - title: "Exenatide once a week versus placebo as a potential disease-modifying treatment for people with Parkinson's disease in the UK: a phase 3, multicentre, double-blind, parallel-group, randomised, placebo-controlled trial"
@@ -15,12 +15,12 @@ papers:
     access: "Free abstract"
 ---
 
-In 2024, a French trial reported that a diabetes drug appeared to hold Parkinson's symptoms steady for a year. Hopes for that class of drug rested on a larger trial of a closely related one, exenatide, published in early 2025.
+In 2024, a French trial reported that a drug that is used to treat diabetes surprisingly appeared to alleviate Parkinson's symptoms. Hopes for that class of drug rested on a larger trial of a closely related one, exenatide, which was published in early 2025.
 
-That trial found nothing. And in May this year, the paper reporting it was placed under formal review.
+That exenatide trial found no reportable benefit for Parkinson's. Then, in May of this year, the paper was flagged and placed under review.
 
 :::key
-In a {{phase 3 trial}} of 194 people followed for almost two years, weekly exenatide made no difference to Parkinson's symptoms compared with placebo. Separately, in May 2026 *The Lancet* attached an {{expression of concern}} to the paper after regulators inspecting one of the six hospitals found serious problems with how trials there were run. The trial result and the journal's warning are separate stories, and this issue covers both.
+In a {{phase 3 trial}} of 194 people followed for almost two years, weekly exenatide was found to make no perceivable difference to Parkinson's symptoms when compared with placebo treatments. Separately, in May 2026, *The Lancet* added an {{Expression of concern|expression of concern}} to the paper after inspectors at one of the hospitals the study was held at found serious problems with how trials there were run.
 :::
 
 ## The hope that led here

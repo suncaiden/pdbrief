@@ -4,7 +4,7 @@
 title: "The drug didn't work. A year later, the paper was flagged."
 date: "2026-09-19"
 slug: "exenatide-phase-3-result"
-summary: "A trial of a promising GLP-1 drug, exenatide, found no benefit in treating Parkinson's Disease.Over a year later, the paper was flagged after inspectors found serious problems at one of the hospitals that ran it."
+summary: "A trial of a promising GLP-1 drug, exenatide, found no benefit in treating Parkinson's Disease. Over a year later, the paper was flagged after inspectors found serious problems at one of the hospitals that ran it."
 topics: [Clinical Trials, Drug Repurposing, Disease Modification, Research Integrity]
 papers:
   - title: "Exenatide once a week versus placebo as a potential disease-modifying treatment for people with Parkinson's disease in the UK: a phase 3, multicentre, double-blind, parallel-group, randomised, placebo-controlled trial"
@@ -13,105 +13,86 @@ papers:
     year: 2025
     doi: "10.1016/S0140-6736(24)02808-3"
     access: "Free abstract"
+draft: true
 ---
 
-In 2024, a French trial reported that a drug that is used to treat diabetes surprisingly appeared to alleviate Parkinson's symptoms. Hopes for that class of drug rested on a larger trial of a closely related one, exenatide, which was published in early 2025.
+In 2024, a French trial reported that a drug that is used to treat diabetes appeared to stop symptoms from getting worse, a surprising result considering Parkinson's continually gets worse over time. Hopes for that class of drug rested on a larger trial of a closely related one, exenatide, which was published in early 2025.
 
-That exenatide trial found no reportable benefit for Parkinson's. Then, in May of this year, the paper was flagged and placed under review.
+That exenatide trial found no reportable benefit for Parkinson's. Then, in May 2026, the paper was flagged and placed under review.
 
 :::key
 In a {{phase 3 trial}} of 194 people followed for almost two years, weekly exenatide was found to make no perceivable difference to Parkinson's symptoms when compared with placebo treatments. Separately, in May 2026, *The Lancet* added an {{Expression of concern|expression of concern}} to the paper after inspectors at one of the hospitals the study was held at found serious problems with how trials there were run.
 :::
 
-## The hope that led here
+## A promising drug
 
-Exenatide had one of the better stories in Parkinson's research.
+Exenatide was considered to be one of the most-promising treatments for Parkinson's.
 
-A {{phase 2 trial}} published in 2017 followed about 60 people for 48 weeks and found that those on exenatide were, on average, around 4 points better on the motor scale than those on placebo. The gap also persisted 12 weeks after everyone stopped the drug. For a field that had watched candidate after candidate fail, this was a real result, and it drove a decade of follow-on work.
+A {{phase 2 trial}} published in 2017 tracked about 60 people for 48 weeks and found that those using exenatide were around 4 points better on the motor scale than those on placebo. This improvement also continued for a duration of around 12 weeks after the treatment ended, suggesting long-lasting results. This led to more follow-up research.
 
-It was still a small trial, though, and {{phase 2 trial|phase 2}} results are meant to be followed up with bigger ones. That's what this new trial set out to do.
+However, this was still a relatively small trial. This Phase 3 trial was designed to follow up on the hopeful results that the phase 2 trial provided.
 
-## What they did
+## What this trial did
 
-The trial enrolled 194 people with Parkinson's across six research hospitals in the UK. Participants were randomly assigned to a weekly injection of 2 mg exenatide or a matching placebo, {{blinding|double-blind}}, and followed for 96 weeks, close to two years and roughly twice the length of the earlier trial.
+The trial enrolled 194 Parkinson's patients across six different hospitals in the UK. Participants were randomly assigned to a weekly injection of either 2 mg of exenatide or a placebo. They kept the assignment {{blinding|double-blind}}and followed for 96 weeks, which was close to two years and roughly twice the length of the earlier trial.
 
-The {{primary endpoint}} was the motor examination score on the {{MDS-UPDRS}}, measured in the practically-defined off state: participants withheld their usual Parkinson's medication overnight before assessment. This is a deliberately demanding choice. It strips out the effect of levodopa and tries to reveal the underlying state of the disease.
+The {{primary endpoint}} was the motor examination score on the {{MDS-UPDRS}}. Prior to examination, participants had to withhold their usual Parkinson's medication overnight to prevent interference with the results, clearing out the affects of levodopa and revealing the true state of the disease without meds.
 
-## What they found
+## Their results
 
-Both groups got worse, at almost exactly the same rate.
+The exenatide did not stop symptoms from worsening, and the two groups got worse at almost the same rate.
 
 |   | Exenatide | Placebo |
 | --- | --- | --- |
 | Worsening in motor score over 96 weeks | 5.7 points | 4.5 points |
-| Difference, adjusted | 0.92 points, favouring placebo |   |
-| Confidence interval | −1.56 to 3.39 |   |
+| Difference, adjusted | 0.92 points, favoring placebo |   |
+| Coefficient | −1.56 to 3.39 |   |
 | p-value | 0.47 |   |
 
-The numbers slightly favoured placebo, though nowhere near enough to mean anything. A {{p-value}} of 0.47 means that if the drug did nothing at all, a gap this size would still turn up almost half the time. The {{confidence interval}} is the more useful number here: it comfortably includes zero, and its narrowness means the trial was large enough to rule out the sort of benefit the 2017 study had suggested.
+The results slightly favored placebo, although the difference was insignificant and do not suggest anything meaningful. The {{P-value|p-value}} of 0.47 means that if the drug did nothing at all, this apparent gap in motor score would appear around half of the time. The coefficient is more important to consider here. A negative coefficient means that the exenatide was better, whereas a positive coefficient favors placebo. The range included zero and is narrow enough to show that the trial was large enough to rule out the 2017 trial's possible benefit because there is no meaningful difference.
 
-The absence of an effect held across the secondary measures too: {{non-motor symptoms}}, quality of life, medication requirements and imaging. There was no subgroup that clearly benefited. The drug was safe and well tolerated. It simply did not work.
+The research found that no particular subgroup clearly benefited and that there were no adverse affects to the medication; it simply did not benefit patients with Parkinson's.
 
-## Then the paper was flagged
+## **The paper was flagged**
 
-On 18 May 2026, more than a year after publication, *The Lancet* issued an {{expression of concern}} about the paper.
+On May 18th 2026, more than a year after publication, *The Lancet* issued an {{expression of concern}} about the paper.
 
-The reason was not the statistics. Regulators had inspected King's College Hospital NHS Foundation Trust, one of the six sites, and found department-wide problems with how clinical trials there were being conducted, overseen and governed. Some findings were graded **critical** and others **major**, the two most serious categories in a {{good clinical practice}} inspection.
+At one of the six sites, King's College Hospital NHS Foundation Trust, regulators found department-wide problems with how clinical trials held there were being conducted and overseen. Some findings were graded **critical** and others **major**, two serious categories in an inspection like this.
 
-*The Lancet* asked the corresponding author's institution to investigate, and attached the notice while that work goes on.
+*The Lancet* asked the corresponding author's institution to investigate, attaching the notice alongside this request.
 
-An expression of concern gets misread in both directions, so it is worth spelling out.
+This expression of concern, however, does not mean that the study's result is wrong or should be disregarded. It simply raises a concern that has to be investigated.
 
-The notice does not say the result is wrong. It raises a question that has not yet been answered, and that is all it is designed to do.
-
-Nor does it say anyone falsified anything. Inspections of this kind usually turn up problems with record-keeping, consent paperwork, staff training and who was supervising whom, rather than deliberate misconduct. Those are serious failings without being dishonest ones.
-
-What it does say is that the conclusion is provisional. One of six sites is under question, and until the investigation reports, nobody can put a number on how much that site's data shaped the result. The trial's own authors cannot either.
+Until this investigation is resolved, the result should be taken with a grain of salt since nobody can pin down how much of an influence that this questionable site had on the data.
 
 :::caution
-If you or someone you care for is taking a GLP-1 drug for diabetes or weight management, none of this changes that. Those drugs work for what they were designed to do. This trial asked a different question: whether exenatide slows Parkinson's. Its answer, pending review, was no.
+If you know somebody who is taking a GLP-1 drug for diabetes or weight management, this info does **NOT** change its efficacy. Those drugs work for what they were designed to do. This trial was focused on evaluating exenatide's impact on Parkinson's specifically.
 :::
 
-## Why it matters
+## Comparison of the two trials
 
-A hypothesis that had run for a decade finally got a proper test. Negative results from well-run trials rarely make headlines, but they earn their keep: other groups stop pouring years into the same idea, and patients stop enrolling in studies of something that will not help them.
-
-The 2017 trial was not fraudulent, and the people who ran it were not careless. It was simply small. Small trials produce unstable estimates, and chance, a strong {{placebo}} response and the excitement around an early positive result can push a number far enough to look real. Then a bigger trial arrives and it is gone. This happens constantly, in every corner of medicine.
-
-The journal's side of this rarely gets written about. An inspection found problems, the journal attached a warning, and an investigation is now running whose findings will be published. It's slow, unglamorous work, and it's how mistakes in published research get caught.
-
-## Reading the two trials together
-
-|   | Lixisenatide (France, 2024) | Exenatide (UK, 2025) |
+|   | Lixisenatide (France, 2024) | Exenatide (UK, early 2025) |
 | --- | --- | --- |
-| Participants | 156 | 194 |
+| Participants | ~150 | ~195 |
 | Duration | 12 months | 96 weeks |
 | Assessed | on medication | off medication |
-| Result | 3.08-point benefit | no difference |
-| Status | published, no concerns raised | under an expression of concern |
+| Result | 3.08-point benefit over placebo | no meaningful difference |
+| Status | published w/ no concerns raised | under an expression of concern |
 
-Nobody yet knows which trial is closer to the truth, and there is more than one way to explain the gap.
+At the moment, it is difficult to determine which study is closer to the truth.
 
-It may be that assessing people on their usual medication, as the French trial did, is more forgiving, capturing a modest symptomatic effect rather than true disease modification. It may be that 12 months is short enough for a small early difference to appear and 96 weeks long enough for it to wash out. It may be that the two drugs genuinely differ in how much reaches the brain. Or the French result may simply have been a false positive, of the same kind the 2017 exenatide trial now appears to have been.
+The two trials differ in how patients were assessed. The French trial captured patients while they were on medication, possibly giving a more forgiving picture of symptomatic effect rather than the underlying state of disease that the exenatide trial looked for. Another difference is in duration. The 12 months for the lixisenatide trial could have showed a small early difference that disappears when the trial reaches a longer period closer to 96 weeks. It could also be a fundamental difference in the drugs or a false positive in the French trial, similar to what the 2017 exenatide trial might be.
 
-Until the investigation into the exenatide paper concludes, there is one more possibility that cannot be dismissed: that the negative result is itself unreliable. That seems unlikely, since only one of the six sites is in question and the result was very flat, but it can't be ruled out yet.
+Until this ongoing investigation into the 2025 trial is concluded, one more possibility is that the negative result itself is unreliable. Although this cannot be ruled out yet, this seems unlikely given that only one of the six sites is under scrutiny.
 
-## What this doesn't tell us
+## **Why it matters**
 
-Whether the exenatide result stands depends on an investigation that has not reported yet. If a large share of the data came from the site under question, the whole analysis may need redoing.
+This hypothesis was able to reach a large-scale phase 3 trial after almost a decade. Although this result came out to be negative, it can benefit the research community because other groups can pivot away from ideas that have proven to not work and patients will stop enrolling in studies of something that will not help them.
 
-It also tells us nothing about GLP-1 drugs as a class. Two trials of two different drugs that disagree don't add up to much evidence either way, and anyone writing off the whole class is getting ahead of the data.
+The 2017 trial was conducted thoughtfully, but its sample size was small, taking data from only around 60 people. Small trials can produce uncertain estimates and can inflate excitement around positive results, even if they may not hold up in a larger trial, a relatively common phenomenon.
 
-And it says nothing about giving either drug earlier. Both trials recruited people who already had a diagnosis, and by that stage a great deal of the damage has already been done.
-
-## What to watch next
-
-The investigation's outcome. *The Lancet* will publish it, and it will either lift the notice, correct the paper, or retract it. That's the biggest open question in this story.
-
-Whether the lixisenatide finding replicates in a larger trial. That will decide where this line of research goes.
-
-And whether trial design shifts earlier. The argument that treatments must start before diagnosis, in the {{prodromal}} stage identified by tests like the {{seed amplification assay}}, gets stronger every time a trial in diagnosed patients comes back empty.
+What's important to watch now is the impending conclusion of the investigation into the study. Once it is released, The Lancet will either retract the notice, correct the issue, or retract it altogether.
 
 :::plain
-A big, careful trial of exenatide found it does no good in Parkinson's, contradicting a smaller 2017 trial that had raised hopes. The paper reporting it has since been flagged by its journal because inspectors found serious problems at one of the six hospitals involved, and an investigation is under way. Nothing about your treatment changes. The open question is how much weight that "no" can carry until the review finishes.
+A large phase 3 trial of exenatide found it does not help with Parkinson's, contradicting a smaller 2017 trial that had raised hopes earlier. The paper reporting it has since been flagged by its journal because inspectors found concerning problems at one of the six hospitals involved, and an investigation is under way.
 :::

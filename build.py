@@ -14,7 +14,6 @@ Usage:
 import json
 import os
 import re
-import shutil
 import sys
 import html as htmllib
 from datetime import datetime, date, timezone
@@ -259,11 +258,34 @@ def render(template, **vars_):
     return re.sub(r"\{\{\s*([a-zA-Z0-9_]+)\s*\}\}", sub, template)
 
 
-def write(path, content):
-    full = os.path.join(OUT, path.lstrip("/"))
+# Every file the current build has put in _site/. Whatever is left over from
+# an earlier build is removed once the new one is complete.
+OUTPUT_FILES = set()
+
+
+def _replace_atomically(full, data):
+    """Write to a temporary file beside the target, then swap it into place, so
+    the preview server never hands out a missing or half-written file."""
     os.makedirs(os.path.dirname(full), exist_ok=True)
-    with open(full, "w", encoding="utf-8") as f:
-        f.write(content)
+    tmp = os.path.join(os.path.dirname(full), ".~%s.%d" % (os.path.basename(full), os.getpid()))
+    with open(tmp, "wb") as f:
+        f.write(data)
+    os.replace(tmp, full)
+    OUTPUT_FILES.add(full)
+
+
+def write(path, content):
+    _replace_atomically(os.path.join(OUT, path.lstrip("/")), content.encode("utf-8"))
+
+
+def copy_tree(src, dest):
+    """Copy a folder into _site/ the same way pages are written."""
+    for dirpath, _dirs, names in os.walk(src):
+        for name in names:
+            source = os.path.join(dirpath, name)
+            target = os.path.join(dest, os.path.relpath(source, src))
+            with open(source, "rb") as f:
+                _replace_atomically(target, f.read())
 
 
 # --------------------------------------------------------------------------
@@ -1775,16 +1797,18 @@ INCLUDE_DRAFTS = False
 
 
 
-def clear_output():
-    """Empty _site/ without deleting the directory itself, so a running
-    preview server keeps its working directory valid across rebuilds."""
-    os.makedirs(OUT, exist_ok=True)
-    for name in os.listdir(OUT):
-        path = os.path.join(OUT, name)
-        if os.path.isdir(path) and not os.path.islink(path):
-            shutil.rmtree(path)
-        else:
-            os.remove(path)
+def prune_output():
+    """Remove whatever this build did not write: pages of issues that became
+    drafts, renamed topics, files from a crashed build. Emptying _site/ first
+    instead left a gap mid-rebuild when the stylesheet and pages were missing,
+    and a page opened in that moment of the preview showed up unstyled."""
+    for dirpath, dirs, names in os.walk(OUT, topdown=False):
+        for name in names:
+            path = os.path.join(dirpath, name)
+            if path not in OUTPUT_FILES:
+                os.remove(path)
+        if dirpath != OUT and not os.listdir(dirpath):
+            os.rmdir(dirpath)
 
 
 def generate(check_only=False, quiet=False):
@@ -1805,9 +1829,7 @@ def generate(check_only=False, quiet=False):
     issues = unify_topics(load_issues(cfg))
     pages = load_pages()
 
-    if not check_only:
-        clear_output()
-
+    OUTPUT_FILES.clear()
     written = []
 
     def emit(path, content):
@@ -1876,10 +1898,11 @@ def generate(check_only=False, quiet=False):
 
     if not check_only:
         if os.path.isdir(ASSETS):
-            shutil.copytree(ASSETS, os.path.join(OUT, "assets"), dirs_exist_ok=True)
+            copy_tree(ASSETS, os.path.join(OUT, "assets"))
         static = os.path.join(ROOT, "static")
         if os.path.isdir(static):
-            shutil.copytree(static, OUT, dirs_exist_ok=True)
+            copy_tree(static, OUT)
+        prune_output()
 
     if not quiet:
         print("")

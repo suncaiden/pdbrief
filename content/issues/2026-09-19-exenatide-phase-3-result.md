@@ -13,7 +13,6 @@ papers:
     year: 2025
     doi: "10.1016/S0140-6736(24)02808-3"
     access: "Free abstract"
-draft: true
 ---
 
 In 2024, a French trial reported that a drug that is used to treat diabetes appeared to stop symptoms from getting worse, a surprising result considering Parkinson's continually gets worse over time. Hopes for that class of drug rested on a larger trial of a closely related one, exenatide, which was published in early 2025.

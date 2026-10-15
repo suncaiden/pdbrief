@@ -50,7 +50,7 @@ The exenatide did not stop symptoms from worsening, and the two groups got worse
 
 The results slightly favored placebo, although the difference was insignificant and does not suggest anything meaningful. The {{P-value|p-value}} of 0.47 means that if the drug did nothing at all, this apparent gap in motor score would appear around half of the time. The coefficient is more important to consider here. A negative coefficient means that the exenatide was better, whereas a positive coefficient favors placebo. The range included zero and is narrow enough to show that the trial was large enough to rule out the 2017 trial's possible benefit because there is no meaningful difference.
 
-The research found that there were no adverse effects to the medication; it simply did not benefit patients with Parkinson's.
+The research found that it simply did not benefit patients with Parkinson's.
 
 ## **The paper was flagged**
 

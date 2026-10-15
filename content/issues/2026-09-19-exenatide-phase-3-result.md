@@ -33,9 +33,9 @@ However, this was still a relatively small trial. This Phase 3 trial was designe
 
 ## What this trial did
 
-The trial enrolled 194 Parkinson's patients across six different hospitals in the UK. Participants were randomly assigned to a weekly injection of either 2 mg of exenatide or a placebo. They kept the assignment {{blinding|double-blind}}and followed for 96 weeks, which was close to two years and roughly twice the length of the earlier trial.
+The trial enrolled 194 Parkinson's patients across six different hospitals in the UK. Participants were randomly assigned to a weekly injection of either 2 mg of exenatide or a placebo. They kept the assignment {{blinding|double-blind}} and followed for 96 weeks, which was close to two years and roughly twice the length of the earlier trial.
 
-The {{primary endpoint}} was the motor examination score on the {{MDS-UPDRS}}. Prior to examination, participants had to withhold their usual Parkinson's medication overnight to prevent interference with the results, clearing out the affects of levodopa and revealing the true state of the disease without meds.
+The {{primary endpoint}} was the motor examination score on the {{MDS-UPDRS}}. Prior to examination, participants had to withhold their usual Parkinson's medication overnight to prevent interference with the results, clearing out the effects of levodopa and revealing the true state of the disease without meds.
 
 ## Their results
 
@@ -45,12 +45,12 @@ The exenatide did not stop symptoms from worsening, and the two groups got worse
 | --- | --- | --- |
 | Worsening in motor score over 96 weeks | 5.7 points | 4.5 points |
 | Difference, adjusted | 0.92 points, favoring placebo |   |
-| Coefficient | −1.56 to 3.39 |   |
+| 95% confidence interval | −1.56 to 3.39 |   |
 | p-value | 0.47 |   |
 
-The results slightly favored placebo, although the difference was insignificant and do not suggest anything meaningful. The {{P-value|p-value}} of 0.47 means that if the drug did nothing at all, this apparent gap in motor score would appear around half of the time. The coefficient is more important to consider here. A negative coefficient means that the exenatide was better, whereas a positive coefficient favors placebo. The range included zero and is narrow enough to show that the trial was large enough to rule out the 2017 trial's possible benefit because there is no meaningful difference.
+The results slightly favored placebo, although the difference was insignificant and does not suggest anything meaningful. The {{P-value|p-value}} of 0.47 means that if the drug did nothing at all, this apparent gap in motor score would appear around half of the time. The coefficient is more important to consider here. A negative coefficient means that the exenatide was better, whereas a positive coefficient favors placebo. The range included zero and is narrow enough to show that the trial was large enough to rule out the 2017 trial's possible benefit because there is no meaningful difference.
 
-The research found that no particular subgroup clearly benefited and that there were no adverse affects to the medication; it simply did not benefit patients with Parkinson's.
+The research found that no particular subgroup clearly benefited and that there were no adverse effects to the medication; it simply did not benefit patients with Parkinson's.
 
 ## **The paper was flagged**
 

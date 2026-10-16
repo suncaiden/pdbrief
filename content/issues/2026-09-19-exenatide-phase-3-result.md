@@ -15,25 +15,25 @@ papers:
     access: "Free abstract"
 ---
 
-In 2024, a French trial reported that a drug that is used to treat diabetes appeared to stop symptoms from getting worse, a surprising result considering Parkinson's continually gets worse over time. Hopes for that class of drug rested on a larger trial of a closely related one, exenatide, which was published in early 2025.
+In 2024, a French trial reported that a drug that is used to treat diabetes appeared to stop symptoms from getting worse, a surprising result considering Parkinson's continually gets worse over time. Optimism for future developments with that class of drug rested on a larger trial of a very similar one, exenatide, which was published in early 2025.
 
 That exenatide trial found no reportable benefit for Parkinson's. Then, in May 2026, the paper was flagged and placed under review.
 
 :::key
-In a {{phase 3 trial}} of 194 people followed for almost two years, weekly exenatide was found to make no perceivable difference to Parkinson's symptoms when compared with placebo treatments. Separately, in May 2026, *The Lancet* added an {{Expression of concern|expression of concern}} to the paper after inspectors at one of the hospitals the study was held at found serious problems with how trials there were run.
+A {{phase 3 trial}} of exenatide followed 194 people for almost two years, but made no perceivable difference to Parkinson's symptoms when compared with placebo treatments. Separately, in May 2026, *The Lancet* added an {{Expression of concern|expression of concern}} to the paper after inspectors at one of the hospitals the study was held at found serious problems with how trials there were run.
 :::
 
 ## A promising drug
 
-Exenatide was considered to be one of the most-promising treatments for Parkinson's.
+Exenatide was considered to be one of the most promising treatments for Parkinson's.
 
-A {{phase 2 trial}} published in 2017 tracked about 60 people for 48 weeks and found that those using exenatide were around 4 points better on the motor scale than those on placebo. This improvement also continued for a duration of around 12 weeks after the treatment ended, suggesting long-lasting results. This led to more follow-up research.
+A similar {{phase 2 trial}} published in 2017 tracked about 60 people for 48 weeks and found that those using exenatide ended up with symptoms around 4 points better on the motor scale than those on the placebo. This improvement also continued for a duration of around 12 weeks after the treatment ended, suggesting long-lasting results. This led to more follow-up research.
 
 However, this was still a relatively small trial. This Phase 3 trial was designed to follow up on the hopeful results that the phase 2 trial provided.
 
 ## What this trial did
 
-The trial enrolled 194 Parkinson's patients across six different hospitals in the UK. Participants were randomly assigned to a weekly injection of either 2 mg of exenatide or a placebo. They kept the assignment {{blinding|double-blind}} and followed for 96 weeks, which was close to two years and roughly twice the length of the earlier trial.
+The trial enrolled 194 Parkinson's patients across six different hospitals in the UK. Participants were randomly assigned to weekly dosages of either exenatide or a placebo. They followed these patients for 96 weeks, which was close to two years and almost twice the length of the earlier trial.
 
 The {{primary endpoint}} was the motor examination score on the {{MDS-UPDRS}}. Prior to examination, participants had to withhold their usual Parkinson's medication overnight to prevent interference with the results, clearing out the effects of levodopa and revealing the true state of the disease without meds.
 
@@ -48,13 +48,13 @@ The exenatide did not stop symptoms from worsening, and the two groups got worse
 | 95% confidence interval | −1.56 to 3.39 |   |
 | p-value | 0.47 |   |
 
-The results slightly favored placebo, although the difference was insignificant and does not suggest anything meaningful. The {{P-value|p-value}} of 0.47 means that if the drug did nothing at all, this apparent gap in motor score would appear around half of the time. The coefficient is more important to consider here. A negative coefficient means that the exenatide was better, whereas a positive coefficient favors placebo. The range included zero and is narrow enough to show that the trial was large enough to rule out the 2017 trial's possible benefit because there is no meaningful difference.
+The results slightly favored placebo, although the difference was insignificant and does not suggest anything meaningful. The {{P-value|p-value}} of 0.47 means that if the drug did nothing at all, this apparent gap in motor score would appear around half of the time. The confidence interval is more important to consider here. A negative means that the exenatide was better, whereas a positive favors placebo. The range included zero and is narrow enough to show that the trial was large enough to rule out the 2017 trial's possible benefit because there is no meaningful difference. It is important to note that the MDS-UPDRS scale has a range of 0 to 132, so this difference is close to negligible.
 
 The research found that it simply did not benefit patients with Parkinson's.
 
 ## **The paper was flagged**
 
-On May 18th 2026, more than a year after publication, *The Lancet* issued an {{expression of concern}} about the paper.
+On June 27th, 2026, more than a year after publication, *The Lancet* issued an {{expression of concern}} about the paper.
 
 At one of the six sites, King's College Hospital NHS Foundation Trust, regulators found department-wide problems with how clinical trials held there were being conducted and overseen. Some findings were graded **critical** and others **major**, two serious categories in an inspection like this.
 
@@ -72,7 +72,7 @@ If you know somebody who is taking a GLP-1 drug for diabetes or weight managemen
 
 |   | Lixisenatide (France, 2024) | Exenatide (UK, early 2025) |
 | --- | --- | --- |
-| Participants | ~150 | ~195 |
+| Participants | 156 | 194 |
 | Duration | 12 months | 96 weeks |
 | Assessed | on medication | off medication |
 | Result | 3.08-point benefit over placebo | no meaningful difference |

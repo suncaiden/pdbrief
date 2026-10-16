@@ -5,7 +5,7 @@ title: "The drug didn't work. A year later, the paper was flagged."
 date: "2026-09-19"
 slug: "exenatide-phase-3-result"
 summary: "A trial of a promising GLP-1 drug, exenatide, found no benefit in treating Parkinson's Disease. Over a year later, the paper was flagged after inspectors found serious problems at one of the hospitals that ran it."
-topics: [Clinical Trials, Drug Repurposing, Disease Modification, Research Integrity]
+topics: [Clinical Trials, Drug Repurposing, Research Integrity]
 papers:
   - title: "Exenatide once a week versus placebo as a potential disease-modifying treatment for people with Parkinson's disease in the UK: a phase 3, multicentre, double-blind, parallel-group, randomised, placebo-controlled trial"
     authors: "Vijiaratnam N, Girges C, Auld G, et al."

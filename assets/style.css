@@ -15,10 +15,10 @@
   --muted:         #6b6658;
   --border:        #e7e1d3;
   --border-strong: #d3cab6;
-  --accent:        #8a3324;
-  --accent-hover:  #6d2618;
-  --accent-soft:   #f6ebe6;
-  --accent-line:   #dcb5a9;
+  --accent:        #2f4560;   /* faded navy: 9.4:1 on the cream */
+  --accent-hover:  #27394f;
+  --accent-soft:   #e6ebf1;
+  --accent-line:   #b3bfcc;
   --on-accent:     #ffffff;
   --warn-soft:     #fbf1de;
   --warn-line:     #e0c186;
@@ -46,11 +46,11 @@
   --muted:         #9d9584;
   --border:        #373227;
   --border-strong: #4a4335;
-  --accent:        #e08a6e;
-  --accent-hover:  #eda88f;
-  --accent-soft:   #2e211b;
-  --accent-line:   #5d4034;
-  --on-accent:     #17150f;   /* the light clay accent needs dark text on it */
+  --accent:        #a7b9cc;
+  --accent-hover:  #c0cede;
+  --accent-soft:   #1d232b;
+  --accent-line:   #3d4a59;
+  --on-accent:     #17150f;   /* the light blue accent needs dark text on it */
   --warn-soft:     #2c2417;
   --warn-line:     #6b5527;
   --warn-ink:      #e6c58a;
@@ -656,7 +656,7 @@ a.tag:hover { color: var(--accent); }
     --bg: #fff; --bg-alt: #fff; --surface: #fff; --surface-alt: #f4f4f4;
     --text: #000; --text-soft: #222; --muted: #555;
     --border: #ccc; --border-strong: #999;
-    --accent: #7a2a1d; --accent-soft: #f6ebe6; --accent-line: #c9a397;
+    --accent: #263a52; --accent-soft: #e6ebf1; --accent-line: #a9b6c4;
     --warn-soft: #fff; --warn-line: #b08a3e; --warn-ink: #5c3d0a;
   }
   .site-header, .site-footer, .pager, .toc, .subscribe, .skip, .gloss-pop,

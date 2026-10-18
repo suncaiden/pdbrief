@@ -46,7 +46,7 @@
       "href": "/about/#policy"
     }
   ],
-  "buttondown_username": "",
+  "buttondown_username": "pdbrief",
   "buttondown_note": "Your Buttondown username: the part after buttondown.com/ in your newsletter's address. Once it is filled in and pushed, every issue, the homepage and pdbrief.org/subscribe/ get an email sign-up box.",
   "subscribe_url": "",
   "subscribe_note": "Only used if buttondown_username is empty: a link to any other newsletter's signup page.",

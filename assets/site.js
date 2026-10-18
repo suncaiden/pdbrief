@@ -232,6 +232,15 @@
   markScrollableTables();
   window.addEventListener("resize", markScrollableTables);
 
+  /* --- Email sign-up ---------------------------------------------------- */
+  // The form opens Buttondown in a new tab, so say here what happens next.
+  document.querySelectorAll(".signup-form").forEach(function (form) {
+    form.addEventListener("submit", function () {
+      var note = form.parentNode.querySelector(".signup-note");
+      if (note) note.hidden = false;
+    });
+  });
+
   /* --- Glossary page search -------------------------------------------- */
   var glossSearch = document.getElementById("gloss-search");
   if (glossSearch) {

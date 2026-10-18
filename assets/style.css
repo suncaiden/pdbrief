@@ -305,6 +305,40 @@ a.tag:hover { color: var(--accent); }
 /* --- Subscribe ---------------------------------------------------------- */
 .subscribe { background: none; color: inherit; padding: 2.5rem 0 3.5rem; border-top: 1px solid var(--border); }
 
+/* --- Email sign-up ------------------------------------------------------ */
+.signup { margin: 3rem 0 0; padding: 1.6rem 0 0; border-top: 1px solid var(--border); }
+.subscribe .signup, .signup-page .signup { margin-top: 0; padding-top: 0; border-top: 0; }
+.signup-head {
+  font-family: var(--font-serif); font-size: 1.35em; font-weight: 600;
+  margin: 0 0 .4em; color: var(--text);
+}
+.signup-lede { color: var(--text-soft); max-width: 52ch; margin: 0 0 1.1rem; font-size: .97em; line-height: 1.6; }
+.signup-form { display: flex; flex-wrap: wrap; gap: .6rem; max-width: 34rem; }
+.signup-form label { flex-basis: 100%; font-size: .9em; font-weight: 600; color: var(--text); }
+.signup-form input[type="email"] {
+  flex: 1 1 14rem; min-width: 0; padding: .78rem 1rem; font: inherit; font-size: 1em;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+}
+.signup-form input[type="email"]:focus { border-color: var(--accent); outline: 3px solid var(--accent-soft); outline-offset: 0; }
+.signup-form .btn { flex: 0 0 auto; }
+.signup-form .btn[disabled] { opacity: .55; cursor: not-allowed; }
+.signup-note {
+  margin: 1rem 0 0; padding: .8rem 1rem; max-width: 34rem; font-size: .95em; line-height: 1.55;
+  background: var(--accent-soft); border-left: 3px solid var(--accent); color: var(--text);
+}
+.signup-fine { margin: .8rem 0 0; max-width: 34rem; font-size: .85em; line-height: 1.55; color: var(--muted); }
+.signup-preview {
+  margin: 0 0 1rem; padding: .6rem .9rem; font-size: .88em;
+  background: var(--warn-soft); border: 1px solid var(--warn-line); color: var(--warn-ink);
+}
+.subscribe-more { margin: 1.6rem 0 0; color: var(--text-soft); font-size: .95em; }
+.signup-page { padding-top: 2.2rem; padding-bottom: 4rem; }
+.signup-next { margin-top: 2.5rem; }
+.signup-next h2 { font-family: var(--font-serif); font-size: 1.25em; margin: 0 0 .6em; }
+.signup-next li { margin: 0 0 .55em; color: var(--text-soft); line-height: 1.6; }
+@media (max-width: 640px) { .signup-form .btn { flex: 1 1 100%; } }
+
 /* --- Page heads --------------------------------------------------------- */
 .page-head {
   padding: clamp(2.5rem, 6vw, 4rem) 0 clamp(1.5rem, 3vw, 2.2rem);
@@ -626,7 +660,7 @@ a.tag:hover { color: var(--accent); }
     --warn-soft: #fff; --warn-line: #b08a3e; --warn-ink: #5c3d0a;
   }
   .site-header, .site-footer, .pager, .toc, .subscribe, .skip, .gloss-pop,
-  .ask-invite, .draft-banner { display: none !important; }
+  .ask-invite, .signup, .draft-banner { display: none !important; }
   body { background: #fff; color: #000; font-size: 11pt; }
   .prose { font-size: 11pt; }
   .wrap { max-width: none; padding: 0; }
@@ -697,7 +731,8 @@ a.tag:hover { color: var(--accent); }
 
 /* Quiet closing note */
 .subscribe-inner { text-align: left; }
-.subscribe-inner p { font-family: var(--font-sans); font-size: .95em; color: var(--muted); margin: 0; }
+.subscribe-inner > p { font-family: var(--font-sans); font-size: .95em; color: var(--muted); margin: 0; }
+.subscribe-inner .subscribe-more { margin-top: 1.6rem; }   /* below the sign-up box */
 .subscribe-inner a { color: var(--text); }
 
 /* Archive rows sit on the same hairline grid */

@@ -249,12 +249,34 @@ button, which avoids loading anything from Google onto your page.
 The page carries a standing note asking readers not to send medical questions,
 since answering those is outside what this publication can responsibly do.
 
-### Newsletter signups
+### Email sign-ups
 
-Set `subscribe_url` in `site.json` to a Buttondown, Substack, Mailchimp, or
-similar signup page, and the closing note at the foot of the homepage gains a
-"Get it by email" link. Leave it empty and the note points readers at the
-archive instead.
+Readers sign up through [Buttondown](https://buttondown.com), which is free for
+the first 100 subscribers, sends the confirmation email, and puts an unsubscribe
+link in every message. Set `buttondown_username` in `site.json` to the part after
+`buttondown.com/` in your newsletter's address, then push. That adds:
+
+- a sign-up box at the end of every issue and at the foot of the homepage
+- a page of its own at `/subscribe/`, the link to give support groups
+- "Get new issues by email" in the footer
+
+The form posts straight to Buttondown, with no script from them on the site. It
+opens Buttondown's confirmation page in a new tab, and the reader's page says what
+to do next. Each sign-up is tagged with where it came from (`utm_medium` is
+`issue`, `home` or `subscribe-page`, and on an issue `utm_campaign` is its web
+address), so Buttondown shows which pages bring in subscribers.
+
+In the preview, the boxes show even before a username is set, with a note and a
+disabled button, so you can see where they will go. The published site shows
+nothing until the username is filled in.
+
+**Sending an issue:** in Buttondown, write a new email with the headline, the
+summary and a link to the issue, and send it. Buttondown can also send new
+issues automatically from the feed at `/feed.xml`, but that is a paid add-on.
+
+If you use a different newsletter service, leave `buttondown_username` empty and
+put its signup page in `subscribe_url` instead; the homepage's closing note then
+links to it.
 
 ---
 

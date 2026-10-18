@@ -46,8 +46,10 @@
       "href": "/about/#policy"
     }
   ],
+  "buttondown_username": "",
+  "buttondown_note": "Your Buttondown username: the part after buttondown.com/ in your newsletter's address. Once it is filled in and pushed, every issue, the homepage and pdbrief.org/subscribe/ get an email sign-up box.",
   "subscribe_url": "",
-  "subscribe_note": "Add your newsletter signup link in site.json to turn this into a working button.",
+  "subscribe_note": "Only used if buttondown_username is empty: a link to any other newsletter's signup page.",
   "feedback_form_url": "https://docs.google.com/forms/d/e/1FAIpQLSdGhW76NYAEW_xPVIwflyBjDGnNsZmQoggvPRBk3tKSFg5IdA/viewform",
   "feedback_embed": true,
   "feedback_note": "Paste your Google Form address here to switch on the 'Ask a question' page. Use the full docs.google.com/forms/... /viewform link if you want the form shown inside the page; a forms.gle short link will be shown as a button instead.",

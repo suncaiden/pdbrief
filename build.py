@@ -1034,6 +1034,8 @@ def page_shell(cfg, content, title=None, description=None, path="/",
     links = list(cfg.get("footer_links", []))
     if cfg.get("feedback_form_url") and not any(l.get("href") == "/ask/" for l in links):
         links.insert(0, {"label": "Ask a question", "href": "/ask/"})
+    if signups_shown(cfg) and not any(l.get("href") == "/subscribe/" for l in links):
+        links.insert(0, {"label": "Get new issues by email", "href": "/subscribe/"})
     footer_links = "".join(
         '<a href="%s">%s</a>' % (item["href"], esc(item["label"]))
         for item in links)
@@ -1078,10 +1080,73 @@ def page_shell(cfg, content, title=None, description=None, path="/",
     )
 
 
+def buttondown_user(cfg):
+    """The Buttondown username from site.json, or "" if none (or a malformed one)."""
+    user = str(cfg.get("buttondown_username", "") or "").strip().strip("/")
+    if user.startswith("http") or "buttondown" in user:
+        user = user.rstrip("/").rsplit("/", 1)[-1]      # a pasted profile address
+    return user if re.fullmatch(r"[A-Za-z0-9_.-]{1,64}", user) else ""
+
+
+def signups_shown(cfg):
+    """Sign-up boxes appear once a Buttondown account is set, and always in the
+    local preview so the editor can see where they will go."""
+    return bool(buttondown_user(cfg)) or INCLUDE_DRAFTS
+
+
+def signup_box(cfg, placement, campaign="", heading=True):
+    """An email sign-up form posted straight to Buttondown. Buttondown asks for
+    the posting to be an ordinary form rather than a script, because it may need
+    to show a CAPTCHA, so it opens in a new tab and this page keeps its place."""
+    if not signups_shown(cfg):
+        return ""
+    user = buttondown_user(cfg)
+    if user:
+        action = "https://buttondown.com/api/emails/embed-subscribe/%s" % user
+        preview = ""
+        disabled = ""
+    else:
+        action = "#"
+        preview = ('<p class="signup-preview">Preview only. This box goes live on %s once '
+                   'your Buttondown username is added.</p>' % esc(cfg.get("domain") or "the site"))
+        disabled = " disabled"
+    head = ('<h2 class="signup-head" id="signup-head">Get new issues by email</h2>'
+            '<p class="signup-lede">One email each time a new issue is published. It&rsquo;s free, '
+            'and you can unsubscribe whenever you like.</p>') if heading else ""
+    hidden = ('<input type="hidden" name="embed" value="1">'
+              '<input type="hidden" name="utm_source" value="website">'
+              '<input type="hidden" name="utm_medium" value="%s">' % esc(placement))
+    if campaign:
+        hidden += '<input type="hidden" name="utm_campaign" value="%s">' % esc(campaign)
+    return ("""<section class="signup"%s>
+      %s%s
+      <form class="signup-form" action="%s" method="post" target="_blank" rel="noopener">
+        <label for="signup-email">Email address</label>
+        <input type="email" id="signup-email" name="email" autocomplete="email" required
+               aria-describedby="signup-fine">
+        %s
+        <button type="submit" class="btn btn-primary"%s>Subscribe</button>
+      </form>
+      <p class="signup-note" role="status" hidden>Almost done. Check your inbox for a
+      confirmation email and click the link inside it. If you can&rsquo;t find it, look in
+      your spam or promotions folder.</p>
+      <p class="signup-fine" id="signup-fine">Buttondown, the service PD Brief uses for email,
+      will send you a message to confirm. Your address is only used to send you PD Brief.</p>
+    </section>""" % (' aria-labelledby="signup-head"' if heading else ' aria-label="Email sign-up"',
+                     preview, head, action, hidden, disabled))
+
+
 def subscribe_block(cfg):
     """A closing invitation. Readers are sent to the questions page, never to
     the raw feed file, which looks broken to anyone without a reader app."""
     ask = '<a href="/ask/">send a question or a suggestion</a>' if cfg.get("feedback_form_url") else ""
+    if signups_shown(cfg):
+        tail = (" If you&rsquo;ve seen a study worth covering, or something here didn&rsquo;t "
+                "make sense, %s." % ask) if ask else ""
+        return ("""<section class="subscribe" aria-label="Keeping up with PD Brief"><div class="wrap wrap-narrow subscribe-inner">
+      %s
+      <p class="subscribe-more">Everything published so far is in the <a href="/archive/">archive</a>.%s</p>
+    </div></section>""" % (signup_box(cfg, "home"), tail))
     if cfg.get("subscribe_url"):
         lead = ('A new issue comes out every week. <a href="%s" target="_blank" rel="noopener">Get '
                 'it by email</a>, or catch up in the <a href="/archive/">archive</a>.'
@@ -1251,6 +1316,35 @@ def ask_invitation(cfg):
             'the study behind it, ask. Your question might end up shaping a future issue.</p>'
             '<a class="btn btn-primary" href="/ask/">Ask a question</a>'
             '</section>')
+
+
+def build_subscribe_page(cfg):
+    content = """<div class="page-head"><div class="wrap wrap-narrow">
+      <h1>Get PD Brief by email</h1>
+      <p class="page-lede">Each time a new issue is published, you&rsquo;ll get one email about
+      it. No ads, and no other mail.</p>
+    </div></div>
+
+    <div class="wrap wrap-narrow signup-page">
+      %s
+      <section class="signup-next">
+        <h2>What happens next</h2>
+        <ul>
+          <li>You&rsquo;ll get a confirmation email. Click the link in it, and you&rsquo;re
+          signed up.</li>
+          <li>Every email has an unsubscribe link at the bottom. One click takes you off the
+          list.</li>
+          <li>Your address is only used to send PD Brief. It is never sold or shared.</li>
+          <li>If you use a feed reader, you can follow PD Brief with the feed at
+          <a href="/feed.xml">%s/feed.xml</a> instead.</li>
+        </ul>
+      </section>
+    </div>""" % (signup_box(cfg, "subscribe-page", heading=False),
+                 esc(cfg.get("domain") or cfg["url"].split("//")[-1].rstrip("/")))
+    return page_shell(cfg, content, title="Get PD Brief by email",
+                      description="Sign up to get an email each time %s publishes a new "
+                                  "issue explaining Parkinson's research." % cfg["title"],
+                      path="/subscribe/")
 
 
 def embeddable_form(url):
@@ -1428,7 +1522,9 @@ def build_issue(cfg, it, prev_issue, next_issue):
                   '&middot;</span>' % byline(cfg)) if byline(cfg) else "",
                  it["date"].isoformat(), pretty_date(it["date"]), it["reading_time"],
                  topics_html, toc, body_html, paper_block(it["papers"]),
-                 corrections_block(it), ask_invitation(cfg), nav_prev, nav_next)
+                 corrections_block(it),
+                 signup_box(cfg, "issue", campaign=it["slug"]) + ask_invitation(cfg),
+                 nav_prev, nav_next)
 
     return page_shell(cfg, content, title=it["title"], description=it["summary"],
                       path=it["url"], og_type="article", body_class="page-issue",
@@ -1865,6 +1961,8 @@ def generate(check_only=False, quiet=False):
     emit("glossary/index.html", build_glossary(cfg, glossary_entries))
     if cfg.get("feedback_form_url"):
         emit("ask/index.html", build_feedback_page(cfg))
+    if signups_shown(cfg):
+        emit("subscribe/index.html", build_subscribe_page(cfg))
     for page in pages:
         emit("%s/index.html" % page["slug"], build_static_page(cfg, page))
 
@@ -1879,6 +1977,8 @@ def generate(check_only=False, quiet=False):
     urls += [{"path": "/%s/" % p["slug"]} for p in pages]
     if cfg.get("feedback_form_url"):
         urls.append({"path": "/ask/"})
+    if buttondown_user(cfg):
+        urls.append({"path": "/subscribe/"})
     emit("sitemap.xml", build_sitemap(cfg, urls))
     emit("robots.txt", "User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n" % cfg["url"].rstrip("/"))
 
